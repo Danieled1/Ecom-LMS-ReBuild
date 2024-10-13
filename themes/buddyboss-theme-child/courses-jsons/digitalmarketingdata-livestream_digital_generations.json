@@ -1,0 +1,41 @@
+{
+  "activeCourses": [
+    {
+      "generationName": "קורס DIGITAL MARKETING DATA LIVE 03/12/23",
+      "courseName": "DIGITAL MARKETING DATA - LIVE STREAM&DIGITAL",
+      "createdOn": "2023-05-02T13:26:27"
+    },
+    {
+      "generationName": "קורס DIGITAL MARKETING DATA LIVE 11/03/24",
+      "courseName": "DIGITAL MARKETING DATA - LIVE STREAM&DIGITAL",
+      "createdOn": "2023-11-28T13:22:24"
+    },
+    {
+      "generationName": "קורס DIGITAL MARKETING DATA LIVE 14/07/24",
+      "courseName": "DIGITAL MARKETING DATA - LIVE STREAM&DIGITAL",
+      "createdOn": "2024-03-13T18:40:31"
+    }
+  ],
+  "finishedCourses": [
+    {
+      "generationName": "קורס DIGITAL MARKETING DATA LIVE 01/02/23",
+      "courseName": "DIGITAL MARKETING DATA - LIVE STREAM&DIGITAL",
+      "createdOn": "2022-09-21T12:43:25"
+    },
+    {
+      "generationName": "קורס DIGITAL MARKETING DATA LIVE 22/05/23",
+      "courseName": "DIGITAL MARKETING DATA - LIVE STREAM&DIGITAL",
+      "createdOn": "2023-01-10T14:44:30"
+    }
+  ],
+  "openToRegister": {
+    "generations": [
+      {
+        "generationName": "קורס DIGITAL MARKETING DATA  25/11/24",
+        "courseName": "DIGITAL MARKETING DATA - LIVE STREAM&DIGITAL",
+        "createdOn": "2024-05-07T18:33:22"
+      }
+    ],
+    "digitalCourses": []
+  }
+}

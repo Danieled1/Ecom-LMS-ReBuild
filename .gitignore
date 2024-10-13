@@ -1,0 +1,43 @@
+# Ignore everything
+*
+
+# Unignore the .gitignore file
+!.gitignore
+
+# Unignore directories
+!*/
+
+# Unignore themes and plugins directories
+!themes/
+!plugins/
+
+# Ignore everything in themes and plugins directories
+themes/*
+plugins/*
+
+# Unignore our child theme and its contents
+!themes/buddyboss-theme-child/
+!themes/buddyboss-theme-child/**
+!themes/buddyboss-theme-child/**/
+
+# Unignore our custom plugins and their contents
+!plugins/ld_custom_functions/
+!plugins/ld_custom_functions/**
+!plugins/ld_custom_functions/**/
+!plugins/vimeo-lesson-sync/
+!plugins/vimeo-lesson-sync/**
+!plugins/vimeo-lesson-sync/**/
+
+# Exclude unnecessary files within included directories
+themes/buddyboss-theme-child/node_modules/
+themes/buddyboss-theme-child/*.log
+plugins/ld_custom_functions/node_modules/
+plugins/ld_custom_functions/*.log
+plugins/vimeo-lesson-sync/node_modules/
+plugins/vimeo-lesson-sync/*.log
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+

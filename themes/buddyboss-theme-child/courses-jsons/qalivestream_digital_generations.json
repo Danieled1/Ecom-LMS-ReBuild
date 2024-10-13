@@ -1,0 +1,121 @@
+{
+  "activeCourses": [
+    {
+      "generationName": "קורס QA LIVE 03/12/23",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2023-05-01T15:00:15"
+    },
+    {
+      "generationName": "קורס QA LIVE 06/11/23",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2023-08-10T19:27:05"
+    },
+    {
+      "generationName": "קורס QA LIVE 28/02/24",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2023-11-14T17:15:09"
+    },
+    {
+      "generationName": "קורס QA LIVE 17/06/24",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2024-02-13T14:43:58"
+    }
+  ],
+  "finishedCourses": [
+    {
+      "generationName": "קורס QA  15/11/20",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2020-10-13T12:10:08"
+    },
+    {
+      "generationName": "קורס QA  28/12/20",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2020-10-28T15:34:46"
+    },
+    {
+      "generationName": "קורס QA  21/03/21",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2020-11-29T12:50:14"
+    },
+    {
+      "generationName": "קורס QA LIVE 09/08/21",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2021-02-14T15:24:52"
+    },
+    {
+      "generationName": "קורס QA LIVE 07/06/21",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2021-03-02T18:34:34"
+    },
+    {
+      "generationName": "קורס QA LIVE 11/10/21",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2021-05-10T15:51:21"
+    },
+    {
+      "generationName": "קורס QA LIVE 26/12/21",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2021-06-15T12:18:28"
+    },
+    {
+      "generationName": "קורס QA LIVE 07/03/22",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2021-11-10T11:21:09"
+    },
+    {
+      "generationName": "קורס QA LIVE 17/04/22",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2021-12-06T13:54:20"
+    },
+    {
+      "generationName": "קורס QA LIVE 29/05/22",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2022-01-19T17:24:52"
+    },
+    {
+      "generationName": "קורס QA LIVE 08/05/22",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2022-03-03T13:47:20"
+    },
+    {
+      "generationName": "קורס QA LIVE 30/10/22",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2022-04-13T17:12:20"
+    },
+    {
+      "generationName": "קורס QA LIVE 15/08/22",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2022-04-25T12:54:03"
+    },
+    {
+      "generationName": "קורס QA LIVE 19/01/23",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2022-08-18T13:02:10"
+    },
+    {
+      "generationName": "קורס QA LIVE 19/03/23",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2022-11-02T17:59:49"
+    },
+    {
+      "generationName": "קורס QA LIVE 06/03/23",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2022-12-29T16:22:28"
+    },
+    {
+      "generationName": "קורס QA LIVE 10/07/23",
+      "courseName": "QA LIVE STREAM&DIGITAL",
+      "createdOn": "2023-03-02T13:31:45"
+    }
+  ],
+  "openToRegister": {
+    "generations": [
+      {
+        "generationName": "קורס QA LIVE 03/11/24",
+        "courseName": "QA LIVE STREAM&DIGITAL",
+        "createdOn": "2024-05-07T18:09:25"
+      }
+    ],
+    "digitalCourses": []
+  }
+}

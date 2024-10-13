@@ -1,0 +1,267 @@
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400&display=swap');
+
+/* Container */
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+/* Main content area */
+.content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+/* Header image and text */
+.header-image-wrapper {
+    width: 100%;
+    height: 350px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.header-image {
+    width: 1180px;
+    height: 350.09px;
+    position: relative;
+}
+
+.header-image img {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+.header-gradient-overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: linear-gradient(180deg, rgba(104, 54, 255, 0) 0%, rgba(104, 54, 255, 0.80) 100%);
+    border-radius: 20px;
+}
+
+.header-text {
+    width: 1080px;
+    height: 100%;
+    position: absolute;
+    top: 85.09px;
+    left: 50.46px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    font-family: Heebo sans-serif;
+
+}
+
+.header-title {
+    color: white;
+    font-size: 36px;
+    font-family: Heebo, sans-serif;
+    font-weight: 400;
+    line-height: 34.20px;
+    text-align: right;
+}
+
+.header-subtitle {
+    color: white;
+    font-size: 18px;
+    font-family: Heebo, sans-serif;
+    font-weight: 400;
+    text-align: right;
+}
+
+.color-purple{
+    color: var(--purple, #6836FF);
+    font-family: Heebo;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%;
+    margin-bottom: 18px;
+}
+.color-black{
+    color: var(--DARK, #333);
+}
+/* Truncate long titles */
+.truncate-title {
+    max-width: auto;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+}
+
+/* SECTIONS */
+.resume-status-section,
+.related-courses {
+    position: relative; /* Required for the pseudo-element positioning */
+    background: #fff;
+    padding: 16px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15);
+    margin-bottom: 20px;
+}
+
+/* Create a pseudo-element for the gradient border */
+.resume-status-section::after,
+.related-courses::after {
+    content: '';
+    position: absolute;
+    top: 0; /* Start the gradient 10% from the top to cover 80% of the card's height */
+    right: 0;
+    width: 5px; /* Width of the border */
+    height: 98%; /* Only take 80% of the card's height */
+    background: linear-gradient(0deg, #FCB72B 0%, #6836FF 100%);
+    border-radius: 0 20px 20px 0; /* Optional: rounds the right edge */
+}
+
+/* Header section with user info */
+.job-placement-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.job-placement-header .user-info {
+    display: flex;
+    align-items: center;
+}
+
+.job-placement-header .user-info h1 {
+    margin: 0 20px;
+    color: #333;
+}
+
+.job-placement-header .user-info img {
+    border-radius: 50%;
+    margin-right: 10px;
+    width: 100px;
+    height: 100px;
+    border: 2px solid #fff;
+}
+
+.job-placement-header .user-name {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.instructions {
+    text-align: center;
+}
+
+.instructions h2 {
+    margin-top: 0;
+}
+
+.resume-status-section p {
+    font-size: 1.1em;
+}
+
+/* Icon next to 'View Your Resume' link */
+.resume-status-section img {
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.resume-upload-notice {
+    font-weight: 600;
+    /* color: 0056b3; */
+
+    margin-bottom: 20px;
+}
+
+.related-courses header {
+    color: #0056b3;
+    margin-bottom: 20px;
+}
+
+/* Course progress bar styling */
+.ld-progress-bar,
+.ld-progress-bar-percentage {
+    height: 5px;
+    border-radius: 2px;
+}
+
+.ld-progress-bar {
+    background-color: #ddd;
+    margin-top: 10px;
+}
+
+.ld-progress-bar-percentage {
+    width: 0;
+    background-color: #0056b3;
+}
+
+/* Course title styling */
+.bb-course-title {
+    margin-top: 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+/* INTERVIEW STYLES */
+.interview-detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.label {
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.icon {
+    margin-right: 4px;
+    font-size: 18px;
+}
+
+.calendar {
+    color: #3498db;
+}
+
+.clock {
+    color: #f39c12;
+}
+
+.value {
+    color: #333;
+}
+
+.updated {
+    display: none;
+}
+
+@media (max-width: 1080px) {
+    .job-placement-header {
+        flex-direction: column;
+    }
+
+    .user-info {
+        text-align: center;
+        margin-bottom: 16px;
+    }
+
+    .instructions,
+    .resume-status-section,
+    #header {
+        text-align: center;
+    }
+
+    /* Add more styles as needed for responsiveness */
+}

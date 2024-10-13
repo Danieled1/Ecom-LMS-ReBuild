@@ -1,0 +1,77 @@
+/* General layout for the admin page */
+.wrap {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Email management section styling */
+.emailManagement {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background-color: #fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+/* Display and edit email sections */
+#emailDisplay, #emailEdit {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-grow: 2;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#emailText {
+    margin-right: 8px;
+}
+
+#editEmailBtn, #saveEmailBtn {
+    text-align: center;
+}
+
+/* Search box styling */
+.search-box {
+    flex-grow: 1;
+    max-width: 300px;
+    margin-left: 20px;
+}
+
+#user-search-input {
+    width: 100%;
+}
+
+/* Placement notes column styling */
+.column-placement_notes {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Table styling */
+.wp-list-table {
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Filter container styling */
+.filter-container {
+    display: flex;
+    justify-content: start;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-container select, .filter-container label {
+    padding: 5px 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

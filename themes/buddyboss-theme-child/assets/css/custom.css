@@ -1,0 +1,578 @@
+/*--------------------------------------------------------------
+This is your custom stylesheet.
+
+Add your own styles here to make theme updates easier.
+To override any styles from other stylesheets, simply copy them into here and edit away.
+
+Make sure to respect the media queries! Otherwise you may
+accidentally add desktop styles to the mobile layout.
+https://www.w3schools.com/css/css_rwd_mediaqueries.asp
+--------------------------------------------------------------*/
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&display=swap');
+
+:root {
+    --spacing-small: 8px;
+    --spacing-medium: 16px;
+    --spacing-large: 24px;
+    --spacing-xlarge: 32px;
+
+    --border-radius-small: 8px;
+    --border-radius-medium: 16px;
+    --border-radius-large: 20px;
+
+    --gap-small: 8px;
+    --gap-medium: 16px;
+    --gap-large: 24px;
+
+    --padding-small: 8px;
+    --padding-medium: 16px;
+    --padding-large: 24px;
+
+    --card-background: #FFFFFF;
+    --card-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+
+#page .bb-course-title a {
+    display: block;
+    /* Ensures the anchor behaves as a block-level element */
+    overflow: hidden;
+    /* Hide overflow content */
+    text-overflow: ellipsis;
+    /* Add ellipsis when text overflows */
+    white-space: nowrap;
+    /* Keep text on a single line */
+    max-height: 1.2em;
+    /* Maximum height for a single line of text */
+    line-height: 1.2em;
+    /* Line height to match the max-height for proper alignment */
+    width: 100%;
+    /* Set width to 100% of the parent container */
+    height: auto;
+    /* Set height to auto to accommodate the size of the content */
+}
+
+/* Hide 'My Courses' and 'My Certificates' tabs */
+#my-courses-personal-li,
+#certificates-personal-li {
+    display: none !important;
+}
+
+.bar-styles {
+    background: #9FEBC3 !important;
+}
+
+.card-course-header {
+    color: var(--purple, #6836FF) !important;
+    text-align: right !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    line-height: 22px !important;
+
+}
+
+.card-course-image-container {
+    border-radius: 20px !important;
+    background: #FFF !important;
+}
+
+.bb-course-items .bb-course-cover {
+    border-radius: var(--border-radius-large) !important;
+}
+
+.card-course-lessons-steps {
+    color: var(--Gray-4, #BDBDBD) !important;
+    text-align: right !important;
+    font-size: 16px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: 18px !important;
+}
+
+.card-course-status {
+    padding: 4px !important;
+    display: inline-flex;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 10px !important;
+    color: #fff !important;
+    text-align: center !important;
+    font-size: 16px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: 18px !important;
+
+}
+
+.bb-cover-list-item .ld-primary-background {
+    background: var(--purple, #9D83FF) !important;
+}
+
+.card-course-status-in-progress {
+    background: var(--orange, #FFD89C) !important;
+}
+
+.card-course-status-completed {
+    background: var(--green, #9FEBC3) !important;
+}
+
+.bb-card-course-details {
+    padding: 20px;
+}
+
+.learndash-wrapper .ld-status.ld-status-complete {
+    background-color: var(--green, #9FEBC3) !important;
+}
+
+.card-course-precent {
+    color: var(--Gray-3, #828282);
+    text-align: right;
+    font-family: Heebo;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.card-course-last-activity {
+    color: var(--Gray-4, #BDBDBD) !important;
+    text-align: right !important;
+    font-size: 12px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    line-height: 12px !important;
+
+}
+
+.bar-styles {
+    background: var(--green, #9FEBC3) !important;
+}
+
+.ld-progress-bar {
+    height: 1px;
+}
+
+.ld-progress-bar .ld-progress-bar-percentage {
+    height: 1px;
+}
+
+/* Main content area */
+.content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+/* Header image and text */
+.header-image-wrapper {
+    width: 100%;
+    height: 350px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.header-image {
+    width: 1180px;
+    height: 350.09px;
+    position: relative;
+}
+
+.header-image img {
+    width: 100%;
+    height: 100%;
+    border-radius: 0 0 20px 20px;
+}
+
+.header-gradient-overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: linear-gradient(180deg, rgba(104, 54, 255, 0) 0%, rgba(104, 54, 255, 0.80) 100%);
+    border-radius: 20px;
+}
+
+.header-text {
+    width: 1080px;
+    height: 100%;
+    position: absolute;
+    top: 130px;
+    left: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    font-family: Heebo sans-serif;
+
+}
+
+.header-title {
+    color: white;
+    font-size: 48px;
+    font-family: Heebo, sans-serif;
+    font-weight: 400;
+    line-height: 34.20px;
+    text-align: right;
+}
+
+.header-subtitle {
+    color: white;
+    font-size: 18px;
+    font-family: Heebo, sans-serif;
+    font-weight: 400;
+    text-align: right;
+}
+
+.learndash-wrapper .ld-course-status.ld-course-status-enrolled {
+    background: var(--W, #FFF) !important;
+    border-radius: 20px !important;
+    padding: 20px !important;
+}
+
+.course-content-container {
+    background: var(--W, #FFF) !important;
+    border-radius: 20px !important;
+    padding: 20px !important;
+}
+
+@media screen and (min-width: 800px) {
+    .bb-grid .bb-learndash-content-wrap {
+        padding-left: 0 !important;
+    }
+}
+
+.custom-course-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.course-certificate-infobar {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.course-content-tabs {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.ld-section-heading h2 {
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.ld-expand-button {
+    background-color: #6836FF;
+    /* Match the primary theme color */
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.ld-expand-button:hover {
+    background-color: #532ccc;
+    /* Darker hover state */
+}
+
+/* Styles for the icons inside the LearnDash tabs */
+.ld-tabs-navigation .ld-tab .ld-icon {
+    color: var(--purple, #6836FF);
+    text-align: right;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    /* 128.571% */
+}
+
+/* Styles for the text inside the LearnDash tabs */
+.ld-tabs-navigation .ld-tab .ld-text {
+    color: var(--DARK, #333);
+    text-align: right;
+    font-size: 16px;
+    font-family: Heebo;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+    /* 100% */
+}
+
+/* Styles for the tabs-container inside the course.php  */
+.learndash-wrapper .ld-tabs .ld-tabs-navigation {
+    display: flex;
+    width: 100%;
+    height: 37px;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid var(--Gray-5, #E0E0E0);
+    position: unset;
+}
+
+.activity-list .comment-item .activity-meta .buddyboss_edit_activity_cancel:focus,
+.activity-list .comment-item .activity-meta .buddyboss_edit_activity_comment.action-save:focus,
+.activity-list .comment-item .activity-meta .buddyboss_edit_activity_comment:focus,
+.buddypress .buddypress-wrap .comment-reply-link:focus,
+.buddypress .buddypress-wrap .generic-button a:focus,
+.buddypress .buddypress-wrap a.bp-title-button:focus,
+.buddypress .buddypress-wrap a.button:focus,
+.buddypress .buddypress-wrap button:focus,
+.buddypress .buddypress-wrap input[type=button]:focus,
+.buddypress .buddypress-wrap input[type=reset]:focus,
+.buddypress .buddypress-wrap input[type=submit]:focus,
+.buddypress .buddypress-wrap ul.button-nav:not(.button-tabs) li a:focus,
+.button:focus,
+button:focus,
+input[type=button]:focus,
+input[type=submit]:focus {
+    box-shadow: unset;
+}
+
+/* stlyes for "תוכן קורס" container*/
+.learndash-wrapper .ld-item-list {
+    margin: 0;
+}
+
+/* Styles for h2 inside course content ^ */
+.bb-template-v2 .learndash-wrapper .ld-item-list.ld-course-list .ld-section-heading h2,
+.bb-template-v2 .learndash-wrapper .ld-item-list.ld-lesson-list .ld-section-heading h2 {
+    color: var(--purple, #6836FF);
+    text-align: right;
+    font-family: Heebo;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+/* Styles for lesson items */
+.ld-item-list-items .ld-item-list-item {
+    border-radius: 10px;
+    border: 1px solid var(--Gray-5, #E0E0E0);
+    background: var(--W, #FFF);
+    margin-bottom: 10px;
+    /* Add some space between the items */
+}
+
+.learndash-wrapper .ld-item-list .ld-item-list-item .ld-item-list-item-preview {
+    display: flex;
+    padding: 8px 16px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    border-radius: 10px !important;
+    border: 1px solid var(--Gray-5, #E0E0E0);
+    background: var(--W, #FFF) !important;
+}
+
+.learndash-wrapper .ld-item-list-item.ld-item-lesson-item .ld-item-list-item-preview .ld-item-name .ld-item-title {
+    padding: unset;
+    color: var(--Gray-3, #828282);
+    text-align: right;
+    font-family: Heebo;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.learndash-wrapper .ld-status-icon,
+.i-progress {
+    border-radius: 6px;
+}
+
+.learndash-wrapper .ld-status-icon.ld-quiz-incomplete,
+.learndash-wrapper .ld-status-icon.ld-quiz-pending,
+.learndash-wrapper .ld-status-icon.ld-status-incomplete {
+    border: 1px solid var(--Gray-5, #E0E0E0);
+}
+
+.learndash-wrapper .ld-progress .ld-progress-bar .ld-progress-bar-percentage,
+.learndash-wrapper .ld-status-icon.ld-quiz-complete,
+.learndash-wrapper .ld-status-icon.ld-status-complete,
+.i-progress.i-progress-completed {
+    background-color: #1ED760 !important;
+}
+
+/* Styles for lms-topic-sidebar-data */
+.lms-topic-sidebar-wrapper .lms-topic-sidebar-data {
+    padding: 20px;
+    background: var(--GRAY, #F2F2F2);
+
+}
+
+/* Styles for learndash-sidebar - header items */
+.lms-topic-sidebar-course-navigation .ld-course-navigation {
+    margin: 0;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Styles for learndash course-entry-title  */
+
+.lms-topic-sidebar-course-navigation .ld-course-navigation .course-entry-title {
+    color: var(--purple, #6836FF);
+    text-align: right;
+    font-family: Heebo;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.course-completion-rate {
+    width: 100%;
+    padding: 10px;
+    color: white;
+    text-align: center;
+    border-radius: 10px;
+    transition: background 0.5s ease-in-out;
+}
+
+/* Styles for lesson listing items */
+
+.lms-topic-sidebar-wrapper .lms-lessions-list>ol.bb-lessons-list>li.lms-lesson-item {
+    display: flex;
+    height: 40px;
+    padding: unset;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    align-self: stretch;
+    border-radius: 10px;
+    border: 1px solid var(--Gray-5, #E0E0E0);
+    background: var(--W, #FFF);
+}
+
+.lms-topic-sidebar-wrapper .lms-course-quizzes-list>ul>li a.bb-lesson-head,
+.lms-topic-sidebar-wrapper .lms-lessions-list>ol>li a.bb-lesson-head {
+    color: var(--Gray-3, #828282);
+    text-align: right;
+    text-overflow: ellipsis;
+    font-family: Heebo;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 100%;
+    height: 100%;
+    padding: 8px 16px;
+
+}
+
+.lms-topic-sidebar-wrapper .lms-course-quizzes-list>ul,
+.lms-topic-sidebar-wrapper .lms-lessions-list>ol {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.bb-progress:after {
+    border-radius: unset;
+}
+
+
+
+
+#learndash-content>div>div.lms-topic-sidebar-wrapper>div::-webkit-scrollbar {
+    width: 5px;
+
+
+}
+
+#learndash-content>div>div.lms-topic-sidebar-wrapper>div::-webkit-scrollbar-track {
+    background-color: transparent;
+    /* Transparent track */
+}
+
+#learndash-content>div>div.lms-topic-sidebar-wrapper>div::-webkit-scrollbar-thumb {
+    background: var(--purple, #6836FF);
+    border-radius: 10px;
+    /* Rounded corners */
+    border: 1px solid transparent;
+    /* Just to avoid any thumb resizing issues */
+}
+
+#learndash-content>div>div.lms-topic-sidebar-wrapper>div:hover {
+    background: #f2f2f2;
+}
+
+/* Styles for header in lesson */
+#learndash-page-content>div>div.header-image-wrapper>div {
+    height: unset;
+    width: unset;
+}
+
+#learndash-page-content {
+    padding: 0 100px;
+}
+
+.header-text-lesson-container {
+    position: absolute;
+    top: 120px;
+    right: 0;
+    bottom: 0;
+    margin: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    font-family: Heebo sans-serif;
+    width: 585px;
+    gap: 20px;
+    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.15);
+}
+
+.header-lesson-title {
+    width: 100%;
+    color: var(--W, #FFF);
+    text-align: right;
+    /* h2 */
+    font-family: Heebo;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+span.bb-pages,span.bb-pages .bb-total {
+    color: var(--Purple-Light1, #EBE7FB);
+    text-align: right;
+    font-family: Heebo;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+div.bb-lms-header .bb-position {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: flex;
+    padding: 8px 4px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+}

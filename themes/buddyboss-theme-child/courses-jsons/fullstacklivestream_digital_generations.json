@@ -1,0 +1,81 @@
+{
+  "activeCourses": [
+    {
+      "generationName": "קורס FULLSTACK LIVE 20/09/23",
+      "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+      "createdOn": "2023-05-31T17:18:46"
+    },
+    {
+      "generationName": "קורס FULLSTACK LIVE 04/01/24",
+      "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+      "createdOn": "2023-08-27T16:10:17"
+    },
+    {
+      "generationName": "קורס FULLSTACK LIVE 21/01/24",
+      "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+      "createdOn": "2023-10-02T15:11:48"
+    },
+    {
+      "generationName": "קורס FULLSTACK LIVE 29/01/24",
+      "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+      "createdOn": "2024-01-04T10:16:43"
+    },
+    {
+      "generationName": "קורס FULLSTACK LIVE 30/06/24",
+      "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+      "createdOn": "2024-01-29T15:42:46"
+    }
+  ],
+  "finishedCourses": [
+    {
+      "generationName": "קורס FULLSTACK LIVE 16/12/21",
+      "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+      "createdOn": "2021-06-14T17:28:33"
+    },
+    {
+      "generationName": "קורס FULLSTACK LIVE 20/01/22",
+      "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+      "createdOn": "2021-12-14T15:07:33"
+    },
+    {
+      "generationName": "קורס FULLSTACK LIVE 25/05/22",
+      "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+      "createdOn": "2022-01-03T14:04:10"
+    },
+    {
+      "generationName": "קורס FULLSTACK LIVE 18/08/22",
+      "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+      "createdOn": "2022-04-29T12:52:50"
+    },
+    {
+      "generationName": "קורס FULLSTACK LIVE 14/11/22",
+      "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+      "createdOn": "2022-08-08T13:14:03"
+    },
+    {
+      "generationName": "קורס FULLSTACK LIVE 02/02/23",
+      "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+      "createdOn": "2022-10-02T17:22:51"
+    },
+    {
+      "generationName": "קורס FULLSTACK LIVE 12/03/23",
+      "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+      "createdOn": "2022-11-10T13:26:23"
+    },
+    {
+      "generationName": "קורס FULLSTACK LIVE 26/06/23",
+      "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+      "createdOn": "2023-02-21T16:42:45"
+    }
+  ],
+  "openToRegister": {
+    "generations": [
+      {
+        "generationName": "קורס FULLSTACK  28/10/24",
+        "courseName": "FULLSTACK LIVE STREAM&DIGITAL",
+        "createdOn": "2024-05-07T18:11:42"
+      }
+    ],
+    "digitalCourses": []
+  }
+}

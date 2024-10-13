@@ -1,0 +1,37 @@
+{
+    "openToRegister": {
+        "generations": [
+            {
+                "generationName": "קורס RETRO FULL STACK"
+            },
+            {
+                "generationName": "קורס RETRO CYBER"
+            },
+            {
+                "generationName": "קורס RETRO QA"
+            },
+            {
+                "generationName": "קורס RETRO DATA"
+            },
+            {
+                "generationName": "קורס RETRO AI"
+            },
+            {
+                "generationName": "קורס DIGITAL FULL STACK"
+            },
+            {
+                "generationName": "קורס DIGITAL CYBER"
+            },
+            {
+                "generationName": "קורס DIGITAL QA"
+            },
+            {
+                "generationName": "קורס DIGITAL DATA"
+            },
+            {
+                "generationName": "קורס DIGITAL AI"
+            }
+        ],
+        "digitalCourses": []
+    }
+}
