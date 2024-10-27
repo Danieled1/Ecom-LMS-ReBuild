@@ -536,31 +536,45 @@ input[type=submit]:focus {
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    font-family: Heebo sans-serif;
+    justify-content: flex-end;
+    gap: 4px;
+    align-items: flex-end;
+    font-family: Heebo;
     width: 585px;
-    gap: 20px;
-    box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.15);
 }
 
 .header-lesson-title {
     width: 100%;
     color: var(--W, #FFF);
     text-align: right;
-    /* h2 */
     font-family: Heebo;
     font-size: 24px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
 }
+.learndash-wrapper .ld-lesson-status{
+    border-radius: none;
+    background: transparent;
+}
+.learndash-wrapper .ld-breadcrumbs{
+    background-color: transparent;
+    padding: 0;
+}
+#learndash-course-header{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    margin: 0 !important;
+}
 
 span.bb-pages,span.bb-pages .bb-total {
     color: var(--Purple-Light1, #EBE7FB);
     text-align: right;
     font-family: Heebo;
-    font-size: 16px;
+    font-size: 18px;
     font-style: normal;
     font-weight: 400;
     line-height: 16px;
@@ -575,4 +589,70 @@ div.bb-lms-header .bb-position {
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
+}
+.ld-breadcrumbs-segments {
+    display: flex;
+    flex-direction: row; /* For RTL layout */
+    direction: rtl; /* Ensure direction is RTL for Hebrew */
+    align-items: center;
+    font-size: 1rem; /* Adjust to match your design requirements */
+    color: #333333; /* Make sure this matches the design */
+    padding: 4px;
+}
+
+.ld-breadcrumbs-segments span a {
+    color: #fff; /* Link color as per your design */
+    text-decoration: none; /* Remove underline if needed */
+    font-weight: 500; /* Match the weight from the Figma design */
+}
+
+.ld-breadcrumbs-segments span {
+    margin-left: 5px; /* Add spacing for better readability */
+    font-weight: 400; /* Set weight for non-link elements */
+}
+
+/* Add hover styles to breadcrumb links */
+.ld-breadcrumbs-segments span a:hover {
+    text-decoration: underline; /* Highlight link on hover */
+    color: #6836FF; /* Darker color for hover */
+}
+.ld-breadcrumbs-segments span::after {
+    content: '›'; /* Replace with your separator symbol */
+    margin: 0 8px; /* Adjust spacing */
+    color: #cccccc; /* Separator color */
+}
+
+/* Remove separator after the last breadcrumb */
+.ld-breadcrumbs-segments span:last-child::after {
+    content: '';
+}
+.sfwd-course-position{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.learndash_next_prev_link a, .learndash_next_prev_link span.empty-post{
+    width: 28px;
+    height: 28px;
+    padding: 4px;
+    border-radius: 8px !important;
+    border: 1px solid var(--W, #FFF);
+    min-width: unset;
+}
+#learndash-page-content .sfwd-course-nav .learndash_next_prev_link a{
+    background-color: transparent;
+}
+#learndash-page-content .sfwd-course-nav{
+    gap: 10px;
+}
+.learndash_next_prev_link a.prev-link, .learndash_next_prev_link span.prev-link{
+    margin-left: 10px;
+}
+.card-course-status-in-progress {
+    background: var(--orange, #FFD89C) !important;
+    height: 28px;
+    border-radius: 5px;
 }
