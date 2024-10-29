@@ -25,7 +25,7 @@ $user_tickets_query = new WP_Query($args);
 
                 <div class="header-image-wrapper">
                     <div class="header-image">
-                        <img src="https://via.placeholder.com/1180x350" alt="Header Image" />
+                        <img src="https://dev.digitalschool.co.il/wp-content/uploads/2024/10/Rectangle-12.png" />
                         <div class="header-gradient-overlay"></div>
                         <div class="header-text">
                             <div class="header-title">פניות ואישורים</div>

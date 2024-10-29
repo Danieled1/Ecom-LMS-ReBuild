@@ -23,7 +23,7 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 
 		<div class="header-image-wrapper">
 			<div class="header-image">
-				<img src="https://via.placeholder.com/1180x350" alt="Header Image" />
+				<img src="https://dev.digitalschool.co.il/wp-content/uploads/2024/10/placement-bg.png" alt="Header Image" />
 				<div class="header-gradient-overlay"></div>
 				<div class="header-text">
 					<div class="header-title">השמה לשוק העבודה</div>

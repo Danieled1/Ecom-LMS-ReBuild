@@ -68,7 +68,7 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes($course_id, $lessons); ?>
 <div class="<?php echo esc_attr(learndash_the_wrapper_class()); ?>">
     <div class="header-image-wrapper">
         <div class="header-image">
-            <img src="https://placehold.co/1180x350" alt="Header Image" />
+            <img src="https://dev.digitalschool.co.il/wp-content/uploads/2024/10/content.png" alt="Header Image" />
             <div class="header-gradient-overlay"></div>
             <div class="header-text">
                 <div class="header-title"><?php echo esc_html($course_title); ?></div>
