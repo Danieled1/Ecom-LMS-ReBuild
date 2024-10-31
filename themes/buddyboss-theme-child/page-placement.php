@@ -20,23 +20,58 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 
 <div class="container">
 	<div class="content">
-
 		<div class="header-image-wrapper">
 			<div class="header-image">
-				<img src="https://dev.digitalschool.co.il/wp-content/uploads/2024/10/placement-bg.png" alt="Header Image" />
+				<img src="https://dev.digitalschool.co.il/wp-content/uploads/2024/10/placement-bg.png"
+					alt="Header Image" />
 				<div class="header-gradient-overlay"></div>
 				<div class="header-text">
-					<div class="header-title">השמה לשוק העבודה</div>
-					<div class="header-subtitle">מחפשים את הצעד הבא בקריירה שלכם? אצלנו תמצאו מגוון רחב של הזדמנויות עבודה שמתאימות לכישורים ולשאיפות שלכם<br> אנחנו כאן כדי לעזור לכם למצוא את המשרה הבאה שלכם</div>
+					<div class="header-placement-title" style="margin-bottom: 20px;">השמה לשוק העבודה</div>
+					<div class="header-placement-subtitle">מחפשים את הצעד הבא בקריירה שלכם? אצלנו תמצאו מגוון רחב של
+						הזדמנויות עבודה שמתאימות לכישורים ולשאיפות שלכם<br> אנחנו כאן כדי לעזור לכם למצוא את המשרה הבאה
+						שלכם</div>
 				</div>
 			</div>
 		</div>
-		<div>
-			<div class="color-purple header-title ">השמה לשוק העבודה</div>
-			<div class="color-black header-subtitle ">כל מה שאתם צריכים בשביל לנהל את חיפוש העבודה שלכם איתנו</div>
+		<div class="header-placement-title" style="color:#6836FF; font-weight: 700; line-height: 100%;">השמה לשוק העבודה
 		</div>
-		
-		<!-- <?php print_r($current_user); ?> -->
+		<div class="header-placement-subtitle" style="color: #333; font-size: 18px; line-height: 115.375%;">כל מה שאתם
+			צריכים בשביל לנהל את חיפוש העבודה שלכם איתנו</div>
+
+		<div class="placement-container">
+			<div class="placement-sub-container">
+				<div class="status-sub-items">
+					<div class="status-container">
+						<div class="status-header">
+							<div class="chart-icon">
+								<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/chart-simple.svg"
+									alt="Chart Simple" class="chart-simple-img" />
+							</div>
+							<h3 id="resume-status">סטטוס השמה</h3>
+						</div>
+						<div class="status-label">
+							<h4 id="resume-label"><?php echo $job_status['label'];?></h4>
+						</div>
+					</div>
+					<div>
+						<?php 
+							if($job_status['value'] == 'hired') {
+								echo '<p class="status-heading">מאחלים המון בהצלחה בעבודה החדשה.</p>';
+							}
+						?>
+					</div>
+				</div>
+			</div>
+			<div class="placement-sub-container">
+				<?php 
+				if ($employment_info) {
+					displayEmploymentInfo($employment_info);
+				} else {
+					echo '<p class="header-placement-subtitle no-info">Employment details are not available at the moment.</p>';
+				}
+				?>
+			</div>
+		</div>
 		<!-- Resume Upload Form -->
 		<div class="resume-status-section">
 			<?php
@@ -184,7 +219,8 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 								<div class="bb-course-cover">
 									<a title="<?php the_title(); ?>" href="<?php the_permalink(); ?>" class="bb-cover-wrap">
 										<div class="ld-status ld-status-progress ld-primary-background">
-											<?php echo $button_text; ?></div>
+											<?php echo $button_text; ?>
+										</div>
 									</a>
 								</div>
 								<div class="bb-card-course-details bb-card-course-details--hasAccess">

@@ -206,7 +206,7 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
     width: 1080px;
     height: 100%;
     position: absolute;
-    top: 130px;
+    top: 100px;
     left: 70px;
     display: flex;
     flex-direction: column;
