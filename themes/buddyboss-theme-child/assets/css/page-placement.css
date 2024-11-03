@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400&display=swap');
-
+*{
+    margin: 0;
+    padding: 0;
+}
 /* Container */
 .container {
     width: 100%;
@@ -215,17 +218,17 @@
 /* INTERVIEW STYLES */
 .interview-detail {
     display: flex;
-    align-items: center;
-    margin-bottom: 12px;
+    align-items: end;
+
+    margin: 10px 0;
 }
 
 .label {
     font-weight: bold;
-    margin-right: 8px;
+    margin: 0 10px !important;
 }
 
 .icon {
-    margin-right: 4px;
     font-size: 18px;
 }
 
@@ -278,13 +281,15 @@
     flex-shrink: 0;
     align-self: stretch;
 }
-.status-header{
+
+.status-header {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 8px;
 }
-.status-label{
+
+.status-label {
     display: flex;
     padding: 4px;
     justify-content: center;
@@ -293,7 +298,8 @@
     border-radius: 5px;
     background: var(--GREEN, #1ED760);
 }
-.chart-icon{
+
+.chart-icon {
     width: 18px;
     height: 18px;
     color: var(--purple, #6836FF);
@@ -302,33 +308,39 @@
     font-size: 18px;
     font-style: normal;
     font-weight: 900;
-    line-height: 22px; /* 122.222% */
+    line-height: 22px;
+    /* 122.222% */
     display: flex;
     justify-content: space-evenly;
-    align-items: self-end;
+    align-items: baseline;
 }
-#resume-status{
+
+.resume-status {
     color: var(--purple, #6836FF);
     text-align: right;
     font-family: Heebo;
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
-    line-height: 22px; /* 91.667% */
+    line-height: 22px;
+    /* 91.667% */
     margin: unset;
 }
-#resume-label{
+
+#resume-label {
     color: var(--W, #FFF);
     text-align: right;
     font-family: Heebo;
     font-size: 18px;
     font-style: normal;
     font-weight: 400;
-    line-height: 18px; /* 100% */
+    line-height: 18px;
+    /* 100% */
     margin: unset;
 
 }
-.status-heading{
+
+.status-heading {
     color: var(--Gray-4, #BDBDBD);
     text-align: right;
     font-family: Heebo;
@@ -336,8 +348,59 @@
     font-style: normal;
     font-weight: 400;
     line-height: 18px;
-    margin:20px 0 0 0;
+    margin: 20px 0 0 0;
 }
+
+.notes-link {
+    color: var(--P2, #B49BFF);
+    text-align: right;
+    font-family: Heebo;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    /* 112.5% */
+}
+
+.hidden {
+    visibility: hidden;
+    /* Eleme nt is invisible but still occupies space */
+}
+
+.flex-items {
+    display: flex;
+    width: 410px;
+    height: 194px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+
+}
+
+.placement-notes-link {
+    color: var(--P2, #B49BFF);
+    text-align: right;
+    font-family: Heebo;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+   
+}
+.placement-notes-link:hover{
+    color: #6836FF;
+}
+.placement-notes-update {
+    color: var(--Gray-4, #BDBDBD);
+    text-align: right;
+    font-family: Heebo;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    margin: 0;
+}
+
 @media (max-width: 1080px) {
     .job-placement-header {
         flex-direction: column;

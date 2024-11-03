@@ -47,29 +47,80 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 								<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/chart-simple.svg"
 									alt="Chart Simple" class="chart-simple-img" />
 							</div>
-							<h3 id="resume-status">סטטוס השמה</h3>
+							<h3 class="resume-status">סטטוס השמה</h3>
 						</div>
 						<div class="status-label">
-							<h4 id="resume-label"><?php echo $job_status['label'];?></h4>
+							<h4 id="resume-label"><?php echo $job_status['label']; ?></h4>
 						</div>
 					</div>
 					<div>
-						<?php 
-							if($job_status['value'] == 'hired') {
-								echo '<p class="status-heading">מאחלים המון בהצלחה בעבודה החדשה.</p>';
-							}
+						<?php
+						if ($job_status['value'] == 'hired') {
+							echo '<p class="status-heading">מאחלים המון בהצלחה בעבודה החדשה.</p>';
+						} elseif ($job_status['value'] == 'interview') {
+							echo '<div class="interview-status">';
+							displayInterviewDetail($interview_details, 'interview_date', 'תאריך');
+							displayInterviewDetail($interview_details, 'interview_time', 'שעה');
+							displayInterviewDetail($interview_details, 'interview_location', 'מיקום');
+							echo '</div>';
+						} elseif ($job_status['value'] == 'published') {
+							echo '<p class="status-heading">קורות החיים שלך נשלחו למעסיקים מחכים לתשובה..</p>';
+							echo '<p class="status-heading">צפי לתשובות תוך 1-2 שבועות.</p>';
+							echo '<p class="status-heading">בזמן ההמתנה, כדאי להכין את עצמך לראיונות ולוודא שפרופיל ה-LinkedIn שלך מעודכן.</p>';
+
+
+						}
 						?>
 					</div>
 				</div>
 			</div>
 			<div class="placement-sub-container">
-				<?php 
-				if ($employment_info) {
-					displayEmploymentInfo($employment_info);
-				} else {
-					echo '<p class="header-placement-subtitle no-info">Employment details are not available at the moment.</p>';
-				}
-				?>
+				<div class="status-sub-items flex-items">
+					<div class="status-container">
+						<div class="status-header">
+							<?php	
+							if ($employment_info) {
+								?>
+								<div id="chart-img" class="chart-icon">
+									<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/chart-simple.svg"
+										alt="Chart Simple" class="chart-simple-img hidden" />
+								</div>
+								<h3 id="company-name" class="resume-status hidden">שם החברה:</h3>
+							</div>
+							<?php
+							displayEmploymentInfo($employment_info);
+							} else {
+								echo '<p class="status-heading no-info">פרטי תעסוקה יעודכנו בהמשך :)</p>';
+							}
+							?>
+					</div>
+					<div id="company-logo" class="hidden">company logo</div>
+
+					<div class="status-container">
+						<div class="status-header">
+							<div class="chart-icon">
+								<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/chart-simple.svg"
+									alt="Chart Simple" class="chart-simple-img" />
+							</div>
+							<h3 class="resume-status">הערות:</h3>
+						</div>
+						<div class="placement-notes">
+							<?php
+							if ($placement_notes_file) {
+								$file_name = basename($placement_notes_file);
+								echo '<a class="placement-notes-link" href="' . esc_url($placement_notes_file) . '" download>' . esc_html($file_name) . '</a>';
+
+								if ($placement_notes_updated_at) {
+									echo '<p class="placement-notes-update"> עלה בתאריך:  ' . esc_html($placement_notes_updated_at) . '</p>';
+								}
+							} else {
+								echo '<p class="placement-notes-update">אין הערות כרגע. </p>';
+							}
+							?>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 		<!-- Resume Upload Form -->
@@ -84,11 +135,9 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 				if ($job_status['value'] == 'interview') {
 					echo '<div class="interview-status">';
 					echo '<p class="status-heading">Interview Scheduled</p>';
-					echo '<ul>';
-					displayInterviewDetail($interview_details, 'interview_date', 'Date');
-					displayInterviewDetail($interview_details, 'interview_time', 'Time');
-					displayInterviewDetail($interview_details, 'interview_location', 'Location');
-					echo '</ul>';
+					displayInterviewDetail($interview_details, 'interview_date', label: 'תאריך');
+					displayInterviewDetail($interview_details, 'interview_time', 'שעה');
+					displayInterviewDetail($interview_details, 'interview_location', 'מיקום');
 					echo '</div>';
 				} elseif ($job_status['value'] == 'hired') {
 					echo '<div class="hired-status">';
@@ -117,8 +166,6 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 				{
 					if (!empty($interview_details[$key])) {
 						echo '<div class="interview-detail">';
-						echo '<span class="label">' . $label . ':</span>';
-
 						if ($key === 'interview_date') {
 							echo '<span class="icon calendar">&#128197;</span>';
 						}
@@ -128,8 +175,11 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 						if ($key === 'interview_location') {
 							echo '<span class="icon ">&#127970;</span>';
 						}
+						echo '<span class="label status-heading"> ' . $label . ' :</span>';
 
-						echo '<span class="value">' . esc_html($interview_details[$key]) . '</span>';
+
+
+						echo '<span class="value status-heading"> ' . esc_html($interview_details[$key]) . ' </span>';
 						echo '</div>';
 					}
 				}
@@ -137,7 +187,7 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 				function displayEmploymentInfo($employment_info)
 				{
 					if (!empty($employment_info['company_name'])) {
-						echo '<div><strong>Company Name:</strong> ' . esc_html($employment_info['company_name']) . '</div>';
+						echo '<p class="status-heading" style="margin: 0;"> ' . esc_html($employment_info['company_name']) . '</p>';
 					}
 					if (!empty($employment_info['company_logo'])) {
 						echo '<img src="' . esc_url($employment_info['company_logo']['url']) . '" alt="' . esc_attr($employment_info['company_name']) . ' Logo">';
@@ -250,7 +300,7 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 													<?php echo $progress_percentage; ?>% Complete
 												</div>
 
-											</div> <!--/.ld-progress-stats-->
+											</div> <!--/.ld-prog  ess-stats-->
 										</div> <!--/.ld-progress-->
 									</div>
 								</div>
@@ -271,7 +321,21 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 
 	</div>
 </div><!-- #primary -->
-
+<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function () {
+		const companyLogo = document.getElementById("company-logo");
+		const imageChart = document.getElementById("chart-img");
+		const companyName = document.getElementById("company-name");
+		<?php if ($employment_info && !empty($employment_info['company_name'])): ?>
+			// If employment info with a company logo is available, remove the hidden class
+			console.log("Entered the condtion");
+			
+			companyLogo.classList.remove("hidden");
+			imageChart.classList.remove("hidden");
+			companyName.classList.remove("hidden");
+		<?php endif; ?>
+	});
+</script>
 <?php
 get_footer();
 ?>
