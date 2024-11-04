@@ -363,7 +363,7 @@
 }
 
 .hidden {
-    visibility: hidden;
+    display: none;
     /* Eleme nt is invisible but still occupies space */
 }
 
@@ -400,7 +400,76 @@
     line-height: 18px;
     margin: 0;
 }
+/* Custom styles for RTL layout */
+.acf-form {
+    direction: rtl;
+    text-align: right;
+}
+.acf-form .acf-field label {
+    text-align: right;
+}
+.acf-form .button-primary {
+    float: right; 
+}
+html[dir=rtl] .acf-file-uploader .file-info {
+    margin-right: 58px !important;
+    padding: 0 12px !important;
+}
+.acf-file-uploader .file-wrap {
+    border: #ccd0d4 solid 1px !important;
+    height: 60px !important;
+    position: relative;
+    background: #fff !important;
+    min-height: unset !important;
+}
+.acf-fields > .acf-field{
+    padding: 0 !important;
+    width: 100%;
 
+}
+.acf-field .acf-label{
+    margin: 0 !important;
+}
+.acf-file-uploader .file-icon img{
+    height: 40px !important;
+    min-height: unset !important;
+}
+/* Apply styles to the ACF label to match status-header */
+.acf-label {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.acf-label label {
+    color: var(--purple, #6836FF);
+    font-family: Heebo;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+    text-align: right;
+    margin: 10px 0 !important;
+}
+
+.acf-input .chart-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--purple, #6836FF);
+    display: flex;
+    justify-content: space-evenly;
+    align-items: baseline;
+    font-family: "Font Awesome 6 Free";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 22px;
+}
+.acf-field, .acf-field .acf-label, .acf-field .acf-input {
+    width: 75%;
+
+}
 @media (max-width: 1080px) {
     .job-placement-header {
         flex-direction: column;

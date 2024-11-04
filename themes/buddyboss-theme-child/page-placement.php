@@ -67,7 +67,26 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 							echo '<p class="status-heading">קורות החיים שלך נשלחו למעסיקים מחכים לתשובה..</p>';
 							echo '<p class="status-heading">צפי לתשובות תוך 1-2 שבועות.</p>';
 							echo '<p class="status-heading">בזמן ההמתנה, כדאי להכין את עצמך לראיונות ולוודא שפרופיל ה-LinkedIn שלך מעודכן.</p>';
-
+						} elseif ($job_status['value'] !== 'hired') { // Allow re-upload of resume unless the user is employed
+							$custom_label = 'Resume File (PDF)';
+							// Display the ACF form to allow users to upload or update their resume
+							acf_form(array(
+								'post_id' => 'user_' . $current_user_id,
+								'post_title' => false,
+								'post_content' => false,
+								'fields' => array('resume_file'),
+								'submit_value' => $resume_file ? 'עדכון קורות חיים' : 'העלאת קורות חיים',
+								'updated_message' => __("קורות חיים עודכנו", 'acf'),
+								'html_updated_message' => '<div id="message" class="updated"><p>%s</p></div>',
+								'html_submit_button' => '<input type="submit" class="acf-button button button-primary button-large" value="%s" />',
+								'html_submit_spinner' => '<span class="acf-spinner"></span>',
+								'form_attributes' => array(
+									'dir' => 'rtl', // Enable right-to-left text direction
+									'lang' => 'he'  // Set the language to Hebrew
+								),
+								'label_placement' => 'top',  // Places labels above fields
+								'instruction_placement' => 'label'  // Places instructions below labels
+							));
 
 						}
 						?>
@@ -76,14 +95,14 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 			</div>
 			<div class="placement-sub-container">
 				<div class="status-sub-items flex-items">
-					<div class="status-container">
+					<div id="company-header" class="status-container hidden">
 						<div class="status-header">
-							<?php	
+							<?php
 							if ($employment_info) {
 								?>
-								<div id="chart-img" class="chart-icon">
+								<div class="chart-icon">
 									<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/chart-simple.svg"
-										alt="Chart Simple" class="chart-simple-img hidden" />
+										alt="Chart Simple" id="chart-img" class="chart-simple-img hidden" />
 								</div>
 								<h3 id="company-name" class="resume-status hidden">שם החברה:</h3>
 							</div>
@@ -158,8 +177,16 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 						'post_title' => false,
 						'post_content' => false,
 						'fields' => array('resume_file'),
-						'submit_value' => $resume_file ? 'Update Resume' : 'Upload Resume',
+						'submit_value' => $resume_file ? 'עדכון קורות חיים' : 'העלאת קורות חיים',
+						'updated_message' => __("קורות חיים עודכנו", 'acf'),
+						'form_attributes' => array(
+							'dir' => 'rtl', // Enable right-to-left text direction
+							'lang' => 'he'  // Set the language to Hebrew
+						),
+						'label_placement' => 'top',  // Places labels above fields
+						'instruction_placement' => 'label'  // Places instructions below labels
 					));
+
 				}
 				// Function to display interview details
 				function displayInterviewDetail($interview_details, $key, $label)
@@ -326,13 +353,15 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 		const companyLogo = document.getElementById("company-logo");
 		const imageChart = document.getElementById("chart-img");
 		const companyName = document.getElementById("company-name");
+		const companyHeader = document.getElementById("company-header");
 		<?php if ($employment_info && !empty($employment_info['company_name'])): ?>
 			// If employment info with a company logo is available, remove the hidden class
 			console.log("Entered the condtion");
-			
+
 			companyLogo.classList.remove("hidden");
 			imageChart.classList.remove("hidden");
 			companyName.classList.remove("hidden");
+			companyHeader.classList.remove("hidden");
 		<?php endif; ?>
 	});
 </script>
