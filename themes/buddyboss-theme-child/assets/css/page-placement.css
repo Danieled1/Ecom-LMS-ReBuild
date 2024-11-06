@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400&display=swap');
-*{
+
+* {
     margin: 0;
     padding: 0;
 }
+
 /* Container */
 .container {
     width: 100%;
@@ -12,9 +14,12 @@
     align-items: center;
 
 }
+#content{
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.00) 76.04%, #FFF 100%), radial-gradient(58.89% 35.32% at 2.24% 50%, rgba(105, 57, 255, 0.20) 0%, rgba(196, 196, 196, 0.00) 100%), radial-gradient(39% 26.79% at 13.62% 46.87%, rgba(104, 228, 255, 0.30) 0%, rgba(196, 196, 196, 0.00) 100%), radial-gradient(53.08% 30.01% at 83.1% 56.51%, rgba(17, 192, 233, 0.20) 0%, rgba(196, 196, 196, 0.00) 100%), radial-gradient(61.55% 40.72% at 87.42% 75.1%, rgba(252, 183, 43, 0.20) 0%, rgba(196, 196, 196, 0.00) 100%), radial-gradient(19.38% 23.86% at 9.43% 64.11%, rgba(252, 183, 43, 0.30) 0%, rgba(196, 196, 196, 0.00) 100%);
 
+}
 /* Main content area */
-.content {
+.placement-page-content {
     width: 100%;
     height: 100%;
     display: flex;
@@ -103,8 +108,7 @@
 }
 
 /* SECTIONS */
-.resume-status-section,
-.related-courses {
+.resume-status-section {
     position: relative;
     /* Required for the pseudo-element positioning */
     background: #fff;
@@ -114,22 +118,6 @@
     margin-bottom: 20px;
 }
 
-/* Create a pseudo-element for the gradient border */
-.resume-status-section::after,
-.related-courses::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    /* Start the gradient 10% from the top to cover 80% of the card's height */
-    right: 0;
-    width: 5px;
-    /* Width of the border */
-    height: 98%;
-    /* Only take 80% of the card's height */
-    background: linear-gradient(0deg, #FCB72B 0%, #6836FF 100%);
-    border-radius: 0 20px 20px 0;
-    /* Optional: rounds the right edge */
-}
 
 /* Header section with user info */
 .job-placement-header {
@@ -186,9 +174,13 @@
     margin-bottom: 20px;
 }
 
-.related-courses header {
-    color: #0056b3;
-    margin-bottom: 20px;
+div.related-courses h2#related-courses-header {
+    color: var(--DARK, #333);
+    font-family: Heebo;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%;
 }
 
 /* Course progress bar styling */
@@ -285,7 +277,7 @@
 .status-header {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: baseline;
     gap: 8px;
 }
 
@@ -300,8 +292,7 @@
 }
 
 .chart-icon {
-    width: 18px;
-    height: 18px;
+
     color: var(--purple, #6836FF);
     text-align: right;
     font-family: "Font Awesome 6 Free";
@@ -313,6 +304,11 @@
     display: flex;
     justify-content: space-evenly;
     align-items: baseline;
+}
+
+.chart-icon>img {
+    width: 18px;
+    height: 18px;
 }
 
 .resume-status {
@@ -367,6 +363,10 @@
     /* Eleme nt is invisible but still occupies space */
 }
 
+/* TO DO: Implement the logos system ... */
+/* #company-logo{
+    visibility: hidden;
+} */
 .flex-items {
     display: flex;
     width: 410px;
@@ -385,11 +385,13 @@
     font-style: normal;
     font-weight: 400;
     line-height: 18px;
-   
+
 }
-.placement-notes-link:hover{
+
+.placement-notes-link:hover {
     color: #6836FF;
 }
+
 .placement-notes-update {
     color: var(--Gray-4, #BDBDBD);
     text-align: right;
@@ -400,21 +402,26 @@
     line-height: 18px;
     margin: 0;
 }
+
 /* Custom styles for RTL layout */
 .acf-form {
     direction: rtl;
     text-align: right;
 }
+
 .acf-form .acf-field label {
     text-align: right;
 }
+
 .acf-form .button-primary {
-    float: right; 
+    float: right;
 }
+
 html[dir=rtl] .acf-file-uploader .file-info {
     margin-right: 58px !important;
     padding: 0 12px !important;
 }
+
 .acf-file-uploader .file-wrap {
     border: #ccd0d4 solid 1px !important;
     height: 60px !important;
@@ -422,18 +429,22 @@ html[dir=rtl] .acf-file-uploader .file-info {
     background: #fff !important;
     min-height: unset !important;
 }
-.acf-fields > .acf-field{
+
+.acf-fields>.acf-field {
     padding: 0 !important;
     width: 100%;
 
 }
-.acf-field .acf-label{
+
+.acf-field .acf-label {
     margin: 0 !important;
 }
-.acf-file-uploader .file-icon img{
+
+.acf-file-uploader .file-icon img {
     height: 40px !important;
     min-height: unset !important;
 }
+
 /* Apply styles to the ACF label to match status-header */
 .acf-label {
     display: flex;
@@ -466,10 +477,14 @@ html[dir=rtl] .acf-file-uploader .file-info {
     font-weight: 900;
     line-height: 22px;
 }
-.acf-field, .acf-field .acf-label, .acf-field .acf-input {
+
+.acf-field,
+.acf-field .acf-label,
+.acf-field .acf-input {
     width: 75%;
 
 }
+
 @media (max-width: 1080px) {
     .job-placement-header {
         flex-direction: column;

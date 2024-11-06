@@ -10,8 +10,8 @@ function add_resume_management_page()
 {
     add_menu_page(
         'Resume Management',          // Page title
-        'Resumes',          // Menu title
-        'manage_options',             // Capability
+        'מנהל השמה',          // Menu title
+        'manage_options',             // Capability - Placement team user and support team user and admin user
         'resume-management',          // Menu slug
         'resume_management_page_html', // Function to display the page
         'dashicons-welcome-learn-more', // Menu icon
@@ -25,7 +25,7 @@ function add_ticket_management_page()
 {
     add_menu_page(
         'Ticket Management',          // Page title
-        'Tickets',          // Menu title
+        'מנהל פניות',          // Menu title
         'manage_options',             // Capability
         'ticket-management',          // Menu slug
         'ticket_management_page_html', // Function to display the page
@@ -39,7 +39,7 @@ function add_grades_management_page()
 {
     add_menu_page(
         'Grades Management',          // Page title
-        'Grades',          // Menu title
+        'מנהל ציונים',          // Menu title
         'manage_options',             // Capability
         'grades-management',          // Menu slug
         'grades_management_page_html', // Function to display the page

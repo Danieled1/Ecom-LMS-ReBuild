@@ -15,11 +15,180 @@ $interview_details = get_field('interview_details', 'user_' . $current_user_id);
 $employment_info = get_field('employment_info', 'user_' . $current_user_id);
 $placement_notes_file = get_field('placement_notes', 'user_' . $current_user_id);
 $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($current_user_id, 'placement_notes_last_updated') : 'Never updated';
+$section_data = array(
+	'job_status' => $job_status,
+	'interview_details' => $interview_details,
+	'current_user_id' => $current_user_id,
+	'resume_file' => $resume_file
+);
+
+function displayInterviewDetail($interview_details, $key, $label)
+{
+	if (!empty($interview_details[$key])) {
+		echo '<div class="interview-detail">';
+		if ($key === 'interview_date') {
+			echo '<span class="icon calendar">&#128197;</span>';
+		}
+		if ($key === 'interview_time') {
+			echo '<span class="icon clock">&#128340;</span>';
+		}
+		if ($key === 'interview_location') {
+			echo '<span class="icon ">&#127970;</span>';
+		}
+		echo '<span class="label status-heading"> ' . $label . ' :</span>';
+
+
+
+		echo '<span class="value status-heading"> ' . esc_html($interview_details[$key]) . ' </span>';
+		echo '</div>';
+	}
+}
+function displayEmploymentInfo($employment_info)
+{
+	if (!empty($employment_info['company_name'])) {
+		echo '<p class="status-heading" style="margin: 0;"> ' . esc_html($employment_info['company_name']) . '</p>';
+	}
+	if (!empty($employment_info['company_logo'])) {
+		echo '<img src="' . esc_url($employment_info['company_logo']['url']) . '" alt="' . esc_attr($employment_info['company_name']) . ' Logo">';
+	}
+}
+function displayPlacementNotes($placement_notes_file, $placement_notes_updated_at)
+{
+	if ($placement_notes_file) {
+		$file_name = basename($placement_notes_file);
+		echo '<a class="placement-notes-link" href="' . esc_url($placement_notes_file) . '" download>' . esc_html($file_name) . '</a>';
+
+		if ($placement_notes_updated_at) {
+			echo '<p class="placement-notes-update"> עלה בתאריך:  ' . esc_html($placement_notes_updated_at) . '</p>';
+		}
+	} else {
+		echo '<p class="placement-notes-update">אין הערות כרגע. </p>';
+	}
+}
+function displayHeaderWithIcon($svg_name, $header_text)
+{
+	echo '<div class="status-header">';
+	echo '<div class="chart-icon">';
+	echo '<img src=' . get_stylesheet_directory_uri() . '/assets/vectors/' . $svg_name . '.svg"	alt="' . $svg_name . '" class="chart-simple-img"/>';
+	echo '</div>';
+	echo '<h3 class="resume-status">' . $header_text . '</h3>';
+	echo '</div>';
+}
+function displayJobStatusSection($section_data)
+{
+	$job_status = $section_data['job_status'];
+	$interview_details = $section_data['interview_details'];
+	$current_user_id = $section_data['current_user_id'];
+	$resume_file = $section_data['resume_file'];
+
+
+	if ($job_status['value'] == 'hired') {
+		echo '<p class="status-heading">מאחלים המון בהצלחה בעבודה החדשה.</p>';
+	} elseif ($job_status['value'] == 'interview') {
+		echo '<div class="interview-status">';
+		displayInterviewDetail($interview_details, 'interview_date', 'תאריך');
+		displayInterviewDetail($interview_details, 'interview_time', 'שעה');
+		displayInterviewDetail($interview_details, 'interview_location', 'מיקום');
+		echo '</div>';
+	} elseif ($job_status['value'] == 'published') {
+		echo '<p class="status-heading">קורות החיים שלך נשלחו למעסיקים מחכים לתשובה..</p>';
+		echo '<p class="status-heading">צפי לתשובות תוך 1-2 שבועות.</p>';
+		echo '<p class="status-heading">בזמן ההמתנה, כדאי להכין את עצמך לראיונות ולוודא שפרופיל ה-LinkedIn שלך מעודכן.</p>';
+	} elseif ($job_status['value'] !== 'hired') {
+		// Display the ACF form for resume upload
+		acf_form(array(
+			'post_id' => 'user_' . $current_user_id,
+			'post_title' => false,
+			'post_content' => false,
+			'fields' => array('resume_file'),
+			'submit_value' => $resume_file ? 'עדכון קורות חיים' : 'העלאת קורות חיים',
+			'updated_message' => __("קורות חיים עודכנו", 'acf'),
+			'html_updated_message' => '<div id="message" class="updated"><p>%s</p></div>',
+			'html_submit_button' => '<input type="submit" class="acf-button button button-primary button-large" value="%s" />',
+			'html_submit_spinner' => '<span class="acf-spinner"></span>',
+			'form_attributes' => array(
+				'dir' => 'rtl',
+				'lang' => 'he'
+			),
+			'label_placement' => 'top',
+			'instruction_placement' => 'label'
+		));
+	}
+
+}
+function displayCourseItem($course_id, $user_id)
+{
+	global $post;
+	$course_id = get_the_ID();
+	$is_enrolled = sfwd_lms_has_access($course_id, $user_id);
+	$class = $is_enrolled ? 'bb-card-course-details--hasAccess' : 'bb-card-course-details--noAccess';
+	$course_price = learndash_get_course_meta_setting($course_id, 'course_price');
+	$course_price_type = learndash_get_course_meta_setting($course_id, 'course_price_type');
+	$course_pricing = learndash_get_course_price($course_id);
+	$progress = learndash_course_progress(array('user_id' => $user_id, 'course_id' => $course_id, 'array' => true));
+	$progress_percentage = isset($progress['percentage']) ? intval($progress['percentage']) : 0;
+	$button_text = $progress_percentage > 0 ? "בתהליך" : "התחל קורס";
+	$steps_count = sizeof(learndash_get_course_steps($course_id));
+	$author_id = get_post_field('post_author', $course_id);
+	$author_name = get_userdata($author_id)->display_name;
+	$author_url = bp_core_get_user_domain($author_id);
+	$author_avatar = get_avatar($author_id, 80);
+	$user_course_has_access = sfwd_lms_has_access($course_id, $user_id);
+
+
+	if ($user_course_has_access) {
+		$is_enrolled = true;
+	} else {
+		$is_enrolled = false;
+	}
+	?>
+
+	<li class="bb-course-item-wrap">
+		<div class="card-course-image-container bb-cover-list-item <?php echo esc_attr($class); ?>">
+			<div class="bb-course-cover">
+				<a title="<?php the_title(); ?>" href="<?php the_permalink(); ?>" class="bb-cover-wrap">
+					<div class="ld-status ld-status-progress ld-primary-background">
+						<?php echo $button_text; ?>
+					</div>
+				</a>
+			</div>
+			<div class="bb-card-course-details <?php echo esc_attr($class); ?>">
+				<div class="card-course-lessons-steps course-lesson-count"><?php echo $steps_count . ' Lessons'; ?></div>
+				<h2 class="bb-course-title">
+					<a class="card-course-header truncate-title" title="<?php the_title(); ?>"
+						href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+				</h2>
+				<?php
+				if (is_user_logged_in() && isset($user_course_has_access) && $user_course_has_access) {
+					?>
+
+					<div class="course-progress-wrap">
+
+						<?php
+						learndash_get_template_part(
+							'modules/progress.php',
+							array(
+								'context' => 'course',
+								'user_id' => $user_id,
+								'course_id' => $course_id,
+							),
+							true
+						);
+						?>
+
+					</div>
+
+				<?php } ?>
+			</div>
+		</div>
+	</li>
+
+	<?php
+}
 
 ?>
-
 <div class="container">
-	<div class="content">
+	<div class="placement-page-content">
 		<div class="header-image-wrapper">
 			<div class="header-image">
 				<img src="https://dev.digitalschool.co.il/wp-content/uploads/2024/10/placement-bg.png"
@@ -42,55 +211,12 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 			<div class="placement-sub-container">
 				<div class="status-sub-items">
 					<div class="status-container">
-						<div class="status-header">
-							<div class="chart-icon">
-								<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/chart-simple.svg"
-									alt="Chart Simple" class="chart-simple-img" />
-							</div>
-							<h3 class="resume-status">סטטוס השמה</h3>
-						</div>
+						<?php displayHeaderWithIcon('chart-simple', 'סטטוס השמה'); ?>
 						<div class="status-label">
 							<h4 id="resume-label"><?php echo $job_status['label']; ?></h4>
 						</div>
 					</div>
-					<div>
-						<?php
-						if ($job_status['value'] == 'hired') {
-							echo '<p class="status-heading">מאחלים המון בהצלחה בעבודה החדשה.</p>';
-						} elseif ($job_status['value'] == 'interview') {
-							echo '<div class="interview-status">';
-							displayInterviewDetail($interview_details, 'interview_date', 'תאריך');
-							displayInterviewDetail($interview_details, 'interview_time', 'שעה');
-							displayInterviewDetail($interview_details, 'interview_location', 'מיקום');
-							echo '</div>';
-						} elseif ($job_status['value'] == 'published') {
-							echo '<p class="status-heading">קורות החיים שלך נשלחו למעסיקים מחכים לתשובה..</p>';
-							echo '<p class="status-heading">צפי לתשובות תוך 1-2 שבועות.</p>';
-							echo '<p class="status-heading">בזמן ההמתנה, כדאי להכין את עצמך לראיונות ולוודא שפרופיל ה-LinkedIn שלך מעודכן.</p>';
-						} elseif ($job_status['value'] !== 'hired') { // Allow re-upload of resume unless the user is employed
-							$custom_label = 'Resume File (PDF)';
-							// Display the ACF form to allow users to upload or update their resume
-							acf_form(array(
-								'post_id' => 'user_' . $current_user_id,
-								'post_title' => false,
-								'post_content' => false,
-								'fields' => array('resume_file'),
-								'submit_value' => $resume_file ? 'עדכון קורות חיים' : 'העלאת קורות חיים',
-								'updated_message' => __("קורות חיים עודכנו", 'acf'),
-								'html_updated_message' => '<div id="message" class="updated"><p>%s</p></div>',
-								'html_submit_button' => '<input type="submit" class="acf-button button button-primary button-large" value="%s" />',
-								'html_submit_spinner' => '<span class="acf-spinner"></span>',
-								'form_attributes' => array(
-									'dir' => 'rtl', // Enable right-to-left text direction
-									'lang' => 'he'  // Set the language to Hebrew
-								),
-								'label_placement' => 'top',  // Places labels above fields
-								'instruction_placement' => 'label'  // Places instructions below labels
-							));
-
-						}
-						?>
-					</div>
+					<div><?php displayJobStatusSection($section_data); ?></div>
 				</div>
 			</div>
 			<div class="placement-sub-container">
@@ -101,7 +227,7 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 							if ($employment_info) {
 								?>
 								<div class="chart-icon">
-									<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/chart-simple.svg"
+									<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/BUILDING.svg"
 										alt="Chart Simple" id="chart-img" class="chart-simple-img hidden" />
 								</div>
 								<h3 id="company-name" class="resume-status hidden">שם החברה:</h3>
@@ -118,135 +244,23 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 					<div class="status-container">
 						<div class="status-header">
 							<div class="chart-icon">
-								<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/chart-simple.svg"
+								<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/note-sticky.svg"
 									alt="Chart Simple" class="chart-simple-img" />
 							</div>
 							<h3 class="resume-status">הערות:</h3>
 						</div>
 						<div class="placement-notes">
-							<?php
-							if ($placement_notes_file) {
-								$file_name = basename($placement_notes_file);
-								echo '<a class="placement-notes-link" href="' . esc_url($placement_notes_file) . '" download>' . esc_html($file_name) . '</a>';
-
-								if ($placement_notes_updated_at) {
-									echo '<p class="placement-notes-update"> עלה בתאריך:  ' . esc_html($placement_notes_updated_at) . '</p>';
-								}
-							} else {
-								echo '<p class="placement-notes-update">אין הערות כרגע. </p>';
-							}
-							?>
+							<?php displayPlacementNotes($placement_notes_file, $placement_notes_updated_at); ?>
 						</div>
 					</div>
 				</div>
 
 			</div>
 		</div>
-		<!-- Resume Upload Form -->
-		<div class="resume-status-section">
-			<?php
-			echo '<h2>סטטוס השמה<br> <h4>' . $job_status['label'] . '</h4> </h2>';
-			?>
 
-			<div class="status-section">
-				<?php
-				// Display the current status of the job 
-				if ($job_status['value'] == 'interview') {
-					echo '<div class="interview-status">';
-					echo '<p class="status-heading">Interview Scheduled</p>';
-					displayInterviewDetail($interview_details, 'interview_date', label: 'תאריך');
-					displayInterviewDetail($interview_details, 'interview_time', 'שעה');
-					displayInterviewDetail($interview_details, 'interview_location', 'מיקום');
-					echo '</div>';
-				} elseif ($job_status['value'] == 'hired') {
-					echo '<div class="hired-status">';
-					echo '<p class="status-heading">Congratulations on Your Employment!</p>';
-					if ($employment_info) {
-						displayEmploymentInfo($employment_info);
-					} else {
-						echo '<p class="no-info">Employment details are not available at the moment.</p>';
-					}
-					echo '</div>';
-				}
-				// Allow re-upload of resume unless the user is employed
-				if ($job_status['value'] !== 'hired') {
-					$custom_label = 'Resume File (PDF)';
-					// Display the ACF form to allow users to upload or update their resume
-					acf_form(array(
-						'post_id' => 'user_' . $current_user_id,
-						'post_title' => false,
-						'post_content' => false,
-						'fields' => array('resume_file'),
-						'submit_value' => $resume_file ? 'עדכון קורות חיים' : 'העלאת קורות חיים',
-						'updated_message' => __("קורות חיים עודכנו", 'acf'),
-						'form_attributes' => array(
-							'dir' => 'rtl', // Enable right-to-left text direction
-							'lang' => 'he'  // Set the language to Hebrew
-						),
-						'label_placement' => 'top',  // Places labels above fields
-						'instruction_placement' => 'label'  // Places instructions below labels
-					));
-
-				}
-				// Function to display interview details
-				function displayInterviewDetail($interview_details, $key, $label)
-				{
-					if (!empty($interview_details[$key])) {
-						echo '<div class="interview-detail">';
-						if ($key === 'interview_date') {
-							echo '<span class="icon calendar">&#128197;</span>';
-						}
-						if ($key === 'interview_time') {
-							echo '<span class="icon clock">&#128340;</span>';
-						}
-						if ($key === 'interview_location') {
-							echo '<span class="icon ">&#127970;</span>';
-						}
-						echo '<span class="label status-heading"> ' . $label . ' :</span>';
-
-
-
-						echo '<span class="value status-heading"> ' . esc_html($interview_details[$key]) . ' </span>';
-						echo '</div>';
-					}
-				}
-				// Function to display employment information
-				function displayEmploymentInfo($employment_info)
-				{
-					if (!empty($employment_info['company_name'])) {
-						echo '<p class="status-heading" style="margin: 0;"> ' . esc_html($employment_info['company_name']) . '</p>';
-					}
-					if (!empty($employment_info['company_logo'])) {
-						echo '<img src="' . esc_url($employment_info['company_logo']['url']) . '" alt="' . esc_attr($employment_info['company_name']) . ' Logo">';
-					}
-				}
-				?>
-			</div>
-
-			<div class="placement-notes-section">
-				<h2>הערות</h2>
-				<?php
-				if ($placement_notes_file) {
-					// Extract the file name from the file path
-					$file_name = basename($placement_notes_file);
-
-					// Output the download link for the file with the file name
-					echo '<p><a href="' . esc_url($placement_notes_file) . '" download>' . esc_html($file_name) . '</a></p>';
-
-					// Display the last updated date if available
-					if ($placement_notes_updated_at) {
-						echo '<p> Uploaded on: ' . esc_html($placement_notes_updated_at) . '</p>';
-					}
-				} else {
-					// Display a message if no placement notes are available
-					echo '<p>No placement notes available.</p>';
-				}
-				?>
-			</div>
-		</div>
 		<!-- Display 4 Related Courses -->
 		<div class="related-courses">
-			<h2 id="header">Related Find-Job Courses</h2>
+			<h2 id="related-courses-header">קורסים לחיפוש עבודה</h2>
 			<div class="related-courses-content">
 
 				<?php
@@ -271,69 +285,8 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 					echo '<ul class="bb-course-list bb-course-items grid-view bb-grid" aria-live="assertive" aria-relevant="all">';
 					while ($the_query->have_posts()) {
 						$the_query->the_post();
-						$steps_count = sizeof(learndash_get_course_steps(get_the_ID()));
-						// $course_progress = learndash_user_get_course_progress(get_current_user_id(),get_the_ID());
-						$course_id = get_the_ID();
-						$user_id = get_current_user_id();
-						$course_progress = learndash_course_progress(array(
-							'user_id' => $user_id,
-							'course_id' => $course_id,
-							'array' => true
-						));
 
-						// Get progress percentage and last activity
-						$progress_percentage = isset($course_progress['percentage']) ? intval($course_progress['percentage']) : 0;
-						$button_text = $progress_percentage > 0 ? "In Progress" : "Start Course"; // Change button text based on progress
-				
-						$course_author_id = get_post_field('post_author', $course_id);
-						$course_author = get_userdata($course_author_id);
-						$author_display_name = $course_author->display_name;
-						$author_profile_url = bp_core_get_user_domain($course_author_id);
-						$author_avatar = get_avatar($course_author_id, 80);
-						?>
-						<li class="bb-course-item-wrap">
-							<div class="bb-cover-list-item">
-								<div class="bb-course-cover">
-									<a title="<?php the_title(); ?>" href="<?php the_permalink(); ?>" class="bb-cover-wrap">
-										<div class="ld-status ld-status-progress ld-primary-background">
-											<?php echo $button_text; ?>
-										</div>
-									</a>
-								</div>
-								<div class="bb-card-course-details bb-card-course-details--hasAccess">
-									<div class="course-lesson-count"><?php echo $steps_count . ' Lessons'; ?> Lessons</div>
-									<h2 class="bb-course-title">
-										<a class="truncate-title" title="<?php the_title(); ?>"
-											href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-									</h2>
-									<div class="bb-course-meta">
-										<a class="item-avatar" href="<?php echo esc_url($author_profile_url); ?>">
-											<?php echo $author_avatar; ?>
-										</a>
-										<strong>
-											<a href="<?php echo esc_url($author_profile_url); ?>">
-												<?php echo esc_html($author_display_name); ?>
-											</a>
-										</strong>
-									</div>
-									<div class="course-progress-wrap">
-										<div class="ld-progress ld-progress-inline">
-											<div class="ld-progress-bar">
-												<div class="ld-progress-bar-percentage ld-secondary-background"
-													style="width:<?php echo $progress_percentage; ?>%"></div>
-											</div>
-											<div class="ld-progress-stats">
-												<div class="ld-progress-percentage ld-secondary-color course-completion-rate">
-													<?php echo $progress_percentage; ?>% Complete
-												</div>
-
-											</div> <!--/.ld-prog  ess-stats-->
-										</div> <!--/.ld-progress-->
-									</div>
-								</div>
-							</div>
-						</li>
-						<?php
+						displayCourseItem(get_the_ID(), get_current_user_id());
 					}
 					echo '</ul>';
 				} else {
@@ -344,6 +297,11 @@ $placement_notes_updated_at = $placement_notes_file ? get_last_updated_at($curre
 				wp_reset_postdata();
 				?>
 			</div>
+			<p class="header-placement-subtitle" style="color: #333; font-size: 18px; line-height: 115.375%;">
+				כדי להצליח בתהליך חיפוש העבודה, חשוב להשלים את הקורסים האלו. הם יעזרו לכם לבנות את היכולות והידע
+				הנדרשים,
+				כך שתהיו יותר מוכנים להצלחה בראיונות העבודה ובקבלה למשרה שתתאים לכם.
+			</p>
 		</div>
 
 	</div>
