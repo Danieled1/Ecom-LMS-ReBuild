@@ -76,6 +76,13 @@ function enqueue_page_placement_assets()
 }
 add_action('wp_enqueue_scripts', 'enqueue_page_placement_assets');
 
+function enqueue_page_reviews_assets(){
+    if (is_page_template('page-reviews.php')) {
+        wp_enqueue_style('page-reviews-style', get_stylesheet_directory_uri() . '/assets/css/page-reviews.css', array(), '1.0.0');
+        wp_enqueue_script('page-reviews-script', get_stylesheet_directory_uri() . '/assets/js/page-reviews.js', array(), '1.0.0', true);
+    }
+}
+add_action('wp_enqueue_scripts', 'enqueue_page_reviews_assets');
 
 function enqueue_page_custom_login()
 {
