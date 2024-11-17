@@ -12,7 +12,6 @@ require get_stylesheet_directory() . '/inc/theme-setup.php';
 
 
 /****************************** CUSTOM FUNCTIONS ******************************/
-
 /****************************** BuddyPress and LearnDash Integration ******************************/
 require get_stylesheet_directory() . '/inc/buddypress-learndash-integration.php';
 
@@ -229,10 +228,29 @@ function create_learndash_courses_from_json()
     }
 }
 
+function redirect_user_after_login($user_login, $user) {
+    // Define the whitelist of usernames
+    $allowed_users = ['support@ecomschool.co.il', 'goxik48771','guy_user'];
+
+    // Check if the user is whitelisted
+    if (in_array($user->user_login, $allowed_users)) {
+        // Redirect whitelisted users to the homepage or dashboard
+        wp_redirect(home_url('/'));
+    } else {
+        // Redirect non-whitelisted users to the "Coming Soon" page
+        wp_redirect(home_url('/coming-soon'));
+    }
+
+    exit;
+}
+add_action('wp_login', 'redirect_user_after_login', 10, 2);
 function my_custom_login_url($login_url, $redirect)
 {
-    // Redirect to your custom login page and include the original requested page as a redirect parameter
-    return home_url('/custom-login/?redirect_to=' . urlencode($redirect));
+     // Only redirect to the custom login page if not already accessing wp-login.php
+     if (strpos($_SERVER['REQUEST_URI'], 'wp-login.php') === false) {
+        return home_url('/custom-login/?redirect_to=' . urlencode($redirect));
+    }
+    return $login_url; // Allow default login page access
 }
 add_filter('login_url', 'my_custom_login_url', 10, 2);
 

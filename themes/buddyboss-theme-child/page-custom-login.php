@@ -93,13 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="login-error" style="display: none;"></div>
 
             </form>
-            <div class="help-container">
-                <h1>צריכים עזרה ?</h1>
-                <p>שלחו הודעה ונענה בהקדם</p>
-                <div class="input-container">
-                    <button class="custom-button secondary icon-help"><span>לחצו לעזרה</span></button>
-                </div>
-            </div>
         </div>
 
     </div>
