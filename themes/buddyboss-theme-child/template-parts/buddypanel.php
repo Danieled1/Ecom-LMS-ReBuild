@@ -238,7 +238,8 @@ $settings_icon_mapping = [
 
 				<!-- Courses Menu (No separate dropdown class, reusing existing menu classes) -->
 				<ul id="buddypanel-menu" class="borders buddypanel-menu side-panel-menu">
-					<li id="menu-item-<?php echo esc_attr($user_id); ?>" class="user-not-active">
+					<!--Username part - uncomment to return it - 17/11/24  -->
+				<!-- <li id="menu-item-<?php echo esc_attr($user_id); ?>" class="user-not-active">
 						<a class="user-link">
 							<?php echo get_avatar(get_current_user_id(), 100); ?>
 							<span>
@@ -251,7 +252,7 @@ $settings_icon_mapping = [
 								<?php endif; ?>
 							</span>
 						</a>
-					</li>
+					</li> -->
 					<hr>
 					<?php foreach ($menu_items as $item): ?>
 						<?php if (in_array($item->title, ['הקורס שלי', 'תמיכה מקצועית'])): ?>

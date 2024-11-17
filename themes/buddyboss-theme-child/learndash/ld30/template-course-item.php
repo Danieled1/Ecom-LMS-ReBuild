@@ -76,7 +76,7 @@ $ribbon_text = get_post_meta( $course_id, '_learndash_course_grid_custom_ribbon_
 					$status = 'progress';
 				}
 				if ( defined( 'LEARNDASH_COURSE_GRID_FILE' ) && ! empty( $ribbon_text ) ) {
-					echo '<div class="ld-status ld-status-progress ld-primary-background ld-custom-ribbon-text">' . sprintf( format: esc_html_x( '%s', 'Start ribbon', 'buddyboss-theme' ), $ribbon_text ) . '</div>';
+					echo '<div class="ld-status ld-status-progress ld-primary-background ld-custom-ribbon-text">' . sprintf( esc_html_x( '%s', 'Start ribbon', 'buddyboss-theme' ), $ribbon_text ) . '</div>';
 				} elseif ( is_user_logged_in() && isset( $user_course_has_access ) && $user_course_has_access ) {
 
 					if ( ( 'open' === $course_pricing['type'] && 0 === (int) $progress['percentage'] ) || ( 'open' !== $course_pricing['type'] && $user_course_has_access && 0 === $progress['percentage'] ) ) {
