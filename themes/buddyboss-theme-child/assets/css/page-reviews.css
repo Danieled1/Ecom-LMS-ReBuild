@@ -116,7 +116,8 @@
 
 .form-container {
     display: flex;
-    width: 60%;
+    width: 70%;
+    height: 100%;
     padding: 20px;
     flex-direction: column;
     align-items: flex-end;
@@ -140,9 +141,8 @@
     border-radius: 20px;
     background: var(--W, #FFF);
     box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15);
-    margin-bottom: 34px;
+    margin-bottom: 18px;
 }
-
 
 .card-campaign {
     min-width: 220px;
@@ -248,16 +248,20 @@ form .student-info {
 form .form-input-container {
     display: flex;
     width: 70%;
-    padding: 8px 16px;
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
-    border-radius: 10px;
-    border: 1px solid var(--Gray-5, #E0E0E0);
+
     background: var(--W, #FFF);
 }
 
-form.form-input-container#student_name {
+#student_name {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--Gray-5, #E0E0E0);
+}
+
+.input-text-style {
     color: var(--Gray-3, #828282);
     text-align: right;
     font-family: Heebo;
@@ -265,5 +269,65 @@ form.form-input-container#student_name {
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    margin-bottom: unset;
+}
+
+.form-section-header {
+    color: var(--Gray-3, #828282);
+    text-align: right;
+    font-family: Heebo;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-top: 20px;
+    margin-bottom: unset;
+}
+
+#satisfaction_teaching {
     width: 100%;
+    display: flex;
+    padding: 8px 16px;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    border: 1px solid var(--Gray-5, #E0E0E0);
+    background: var(--W, #FFF);
+    margin-bottom: 20px;
+}
+
+#improvement_teaching {
+    display: flex;
+    height: 90px;
+    width: 100%;
+    padding: 8px 16px;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--Gray-5, #E0E0E0);
+    background: var(--W, #FFF);
+    max-height: 150px;
+    /* Limits the maximum height */
+    overflow-y: auto;
+    /* Adds a scrollbar if the content exceeds the height */
+    resize: none;
+    /* Disables manual resizing */
+}
+
+#form-submit-button {
+    display: flex;
+    padding: 15px 30px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    background: var(--purple, #6836FF);
+    color: #FFF;
+    text-align: right;
+    font-family: Rubik;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
 }

@@ -230,7 +230,7 @@ function create_learndash_courses_from_json()
 
 function redirect_user_after_login($user_login, $user) {
     // Define the whitelist of usernames
-    $allowed_users = ['support@ecomschool.co.il', 'goxik48771','guy_user'];
+    $allowed_users = ['support@ecomschool.co.il', 'goxik48771','guy_user','instructor_testing5'];
 
     // Check if the user is whitelisted
     if (in_array($user->user_login, $allowed_users)) {

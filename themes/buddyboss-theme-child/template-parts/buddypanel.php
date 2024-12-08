@@ -113,11 +113,6 @@ $settings_icon_mapping = [
 		padding-top: 0 !important;
 	}
 
-	/* div - wrapper */
-	body>aside>div>nav>div>div {
-		/* border-bottom: 1px solid #d6d9dd; */
-	}
-
 	/* div sub-menu-inner */
 	body>aside>div>nav>div>div>ul {
 		margin: 0;

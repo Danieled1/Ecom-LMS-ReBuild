@@ -1,6 +1,7 @@
 <?php
 /* Template Name: Custom Login */
 
+
 // Simple debug message to check accessibility
 if (!is_user_logged_in()) {
     error_log('Custom Login Page Accessed by Non-Logged-In User');
