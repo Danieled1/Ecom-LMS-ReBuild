@@ -2,50 +2,77 @@
 /*
 Template Name: Grades1
 */
+
+
 acf_form_head();
 
 get_header();
 $current_user = wp_get_current_user();
+$current_user_id = get_current_user_id();
+$job_status = get_field('job_status', 'user_' . $current_user_id);
 
 
 ?>
-<div id="primary" class="content-area bb-grid-cell">
-    <main id="main" class="site-main">
-        <!-- Header Section with User Info and General Instructions -->
-        <div class="section page-grades-header">
+<div class="grades-page-content">
+    <div class="header-image-wrapper">
+        <div class="header-image">
+            <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/grades-banner-1.png"
+                alt="Header Image" />
+            <div class="header-gradient-overlay"></div>
+            <div class="header-text">
+                <div class="header-placement-title">ציונים</div>
+                <div class="header-placement-subtitle">
+                    כאן תוכלו לעקוב אחר הציונים שלכם עבור מבחנים, פרויקטים ועבודות שהוגשו
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grades-table-container">
+        <div class="grades-info">
             <div class="user-info">
-                <?php echo get_avatar($current_user->ID); ?>
-                <h1 class="bb-profile-title"><?php echo $current_user->display_name; ?></h1>
+                <a class="user-link">
+                    <?php echo get_avatar(get_current_user_id(), 100); ?>
+                    <span>
+                        <?php if (function_exists('bp_is_active') && function_exists('bp_activity_get_user_mentionname')): ?>
+                            <span
+                                 class="user-name-grades"><?php echo esc_html(bp_activity_get_user_mentionname($current_user->ID)); ?></span>
+                        <?php else: ?>
+                            <span  class="user-name-grades"> <?php echo esc_html($current_user->user_login); ?></span>
+                        <?php endif; ?>
+                    </span>
+                </a>
             </div>
-            <div class="vertical-line"></div> <!-- separator -->
-            <div class="instructions" direction="rtl">
-                <h1 class="bb-section-title">דף ציונים</h1>
-                
-                <p class="bb-section-description">כאן תוכלו לעקוב אחר הציונים שלכם עבור מבחנים, פרויקטים ועבודות שהוגשו</p>
+            <div class="status-container">
+                <?php displayHeaderWithIcon('chart-simple', 'סטטוס השמה'); ?>
+                <div class="status-label">
+                    <h4 id="resume-label"><?php echo $job_status['label']; ?></h4>
+                </div>
             </div>
+            <div class="total-grades">
+                <p id="grades-text">מבחנים</p>
+                <p id="completed-text">1/2</p>
+            </div>
+
         </div>
-        <div class="section">
-        <div id="ticketHistory" class="ticket-history hidden">
-                <table id="gradesTable" class="grades-table">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="manage-column column-name">Name</th>
-                            <th scope="col" class="manage-column column-type">Type</th>
-                            <th scope="col" class="manage-column">Score</th>
-                            <th scope="col" class="manage-column">Status</th>
-                            <th scope="col" class="manage-column">Deadline</th>
-                            <th scope="col" class="manage-column">Feedback</th>
-                            <th scope="col" id="modified_time" class="manage-column">Last Modified</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <!-- Grades will be populated here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
+        <table id="gradesTable" class="grades-table">
+            <thead>
+                <tr>
+                    <th scope="col" class="manage-column column-name">שם</th>
+                    <th scope="col" class="manage-column column-type">סוג</th>
+                    <th scope="col" class="manage-column">ציון</th>
+                    <th scope="col" class="manage-column">סטטוס</th>
+                    <th scope="col" class="manage-column">מועד סיום</th>
+                    <th scope="col" class="manage-column">משוב</th>
+                    <th scope="col" id="modified_time" class="manage-column">עדכון אחרון</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
 </div>
+
 <?php
 get_footer();
 ?>

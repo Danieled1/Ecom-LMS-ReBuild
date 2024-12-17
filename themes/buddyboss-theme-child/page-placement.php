@@ -65,15 +65,15 @@ function displayPlacementNotes($placement_notes_file, $placement_notes_updated_a
 		echo '<p class="placement-notes-update">אין הערות כרגע. </p>';
 	}
 }
-function displayHeaderWithIcon($svg_name, $header_text)
-{
-	echo '<div class="status-header">';
-	echo '<div class="chart-icon">';
-	echo '<img src=' . get_stylesheet_directory_uri() . '/assets/vectors/' . $svg_name . '.svg"	alt="' . $svg_name . '" class="chart-simple-img"/>';
-	echo '</div>';
-	echo '<h3 class="resume-status">' . $header_text . '</h3>';
-	echo '</div>';
-}
+// function displayHeaderWithIcon($svg_name, $header_text)
+// {
+// 	echo '<div class="status-header">';
+// 	echo '<div class="chart-icon">';
+// 	echo '<img src=' . get_stylesheet_directory_uri() . '/assets/vectors/' . $svg_name . '.svg"	alt="' . $svg_name . '" class="chart-simple-img"/>';
+// 	echo '</div>';
+// 	echo '<h3 class="resume-status">' . $header_text . '</h3>';
+// 	echo '</div>';
+// }
 function displayJobStatusSection($section_data)
 {
 	$job_status = $section_data['job_status'];

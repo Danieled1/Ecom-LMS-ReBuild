@@ -24,6 +24,7 @@ function update_course_from_vimeo() {
 
         if (!empty($all_video_details )) {
             foreach ($all_video_details  as $video) {
+                error_log(print_r($video, true)); // Correct way to log an array
                 $lesson_added = process_video_for_lesson_creation($video, $course_id);
                 if ($lesson_added) {
                     $new_lessons_count ++;
@@ -85,7 +86,7 @@ function display_vimeo_folders_dropdown() {
 
 function process_video_for_lesson_creation($video, $course_id) {
     $video_embed_url = $video['player_embed_url'];
-    $video_name = $video['name'];
+    $video_name = $video['topic'];
     if (validate_video_fields($video_name,$video_embed_url)) return false;
 
     try {

@@ -167,23 +167,44 @@ function fetch_ld_course_lessons()
 add_action('wp_ajax_fetch_ld_course_lessons', 'fetch_ld_course_lessons');
 
 add_action('wp_ajax_delete_lessons', 'delete_lessons_handler');
-function delete_lessons_handler()
-{
+function delete_lessons_handler() {
     if (!current_user_can('manage_options')) {
         wp_send_json(['success' => false, 'message' => 'Unauthorized access']);
         wp_die();
     }
 
     $course_id = intval($_POST['course_id']);
-    // Assuming you have a function or method to get all lessons for a course
-    $lessons = learndash_get_course_lessons_list($course_id);
 
+    // We'll retrieve all lessons using pagination
+    $query_args = [
+        'num'   => 20,   // Number of lessons per page
+        'paged' => 1     // Start at the first page
+    ];
 
-    foreach ($lessons as $lesson) {
-        $lesson_id = $lesson['post']->ID;  // Correctly accessing the ID property of the WP_Post object
-        error_log($lesson_id);
-        wp_delete_post($lesson_id, true);  // true to force deletion
+    $all_lessons = [];
+
+    do {
+        $lessons = learndash_get_course_lessons_list($course_id, null, $query_args);
+
+        if (!empty($lessons)) {
+            $all_lessons = array_merge($all_lessons, $lessons);
+            $query_args['paged']++;
+        } else {
+            break; // No more lessons
+        }
+    } while (!empty($lessons));
+
+    // Now we have all lessons in $all_lessons
+    // Let's delete them
+    foreach ($all_lessons as $lesson) {
+        if (isset($lesson['post']) && isset($lesson['post']->ID)) {
+            $lesson_id = $lesson['post']->ID;
+            error_log('Deleting lesson ID: ' . $lesson_id);
+            wp_delete_post($lesson_id, true); // Force deletion (not sending to trash)
+        }
     }
+
     wp_send_json(['success' => true, 'message' => 'All lessons deleted successfully']);
     wp_die();
 }
+

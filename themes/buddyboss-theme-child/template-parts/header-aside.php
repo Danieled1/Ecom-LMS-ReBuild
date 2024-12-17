@@ -23,10 +23,11 @@ $is_lms_inner       = (
 	/* TODO BEFORE NOTICE - to apply it first add the missing menu items to our sidebar menu so we can not use it and still have everything */
 	/* Custom header-aside Styles */
 	.avatar-100{
-        width: 40px !important;      
-        height: 40px !important;        
+        width: 50px !important;      
+        height: 50px !important;        
         border-radius: 10px !important;
         max-width: none !important;
+		box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15);
     }
     .user-name{
         font-size: 16px;

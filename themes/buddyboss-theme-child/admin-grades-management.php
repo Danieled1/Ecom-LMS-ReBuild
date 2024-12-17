@@ -9,9 +9,11 @@ if (!defined('ABSPATH')) {
 if (!current_user_can('manage_options')) {
     wp_die('You do not have sufficient permissions to access this page.');
 }
-$users = get_users();
-$current_user = wp_get_current_user();
 
+// $users = get_users();
+$current_user = wp_get_current_user();
+error_log('Memory used: ' . memory_get_usage());
+error_log('Memory peak: ' . memory_get_peak_usage());
 
 function render_page_content()
 {

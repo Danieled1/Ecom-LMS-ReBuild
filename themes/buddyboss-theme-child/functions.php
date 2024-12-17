@@ -280,3 +280,12 @@ function get_last_updated_at($user_id, $meta_key)
 
     return date_i18n('Y-m-d H:i', strtotime($timestamp));
 }
+function displayHeaderWithIcon($svg_name, $header_text)
+{
+	echo '<div class="status-header">';
+	echo '<div class="chart-icon">';
+	echo '<img src=' . get_stylesheet_directory_uri() . '/assets/vectors/' . $svg_name . '.svg"	alt="' . $svg_name . '" class="chart-simple-img"/>';
+	echo '</div>';
+	echo '<h3 class="resume-status">' . $header_text . '</h3>';
+	echo '</div>';
+}

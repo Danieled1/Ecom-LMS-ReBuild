@@ -1,3 +1,4 @@
+
 <?php
 
 $user_id = get_current_user_id();
@@ -53,6 +54,7 @@ foreach ($menu_items as $item) {
     if ($item->title === 'הפרופיל שלי') {
         $item->url = esc_url(bp_core_get_user_domain($current_user->ID)); // Force correct profile URL
     }
+    // error_log("Test menu_items - " . print_r($item, true));
 }
 $available_icons = array(
 	'bb-icon-l buddyboss bb-icon-book-open',
@@ -460,12 +462,13 @@ $settings_icon_mapping = [
 			arrowIcon.classList.toggle('bs-submenu-open', isOpen); // Rotate the arrow on toggle
 		});
 		const profileTab = document.querySelector('#user-xprofile > div');
-		console.log("TEST TEST", profileTab);
     if (profileTab) {
         profileTab.innerHTML = 'פרופיל'; // Translated to Hebrew
     }
 
 	});
+
+
 
 
 </script>

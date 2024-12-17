@@ -22,7 +22,7 @@ function vimeo_lesson_sync_page()
 
     $directoryId = get_option('vimeo_directory_id', '');
     $syncHour = get_option('vimeo_sync_hour', 2);
-?>
+    ?>
     <div class="wrap">
         <h1>Vimeo Lesson Sync</h1>
         <form method="post" action="">
@@ -33,13 +33,14 @@ function vimeo_lesson_sync_page()
                 </tr>
                 <tr valign="top">
                     <th scope="row">Sync Hour (24-hour format)</th>
-                    <td><input type="number" name="vimeo_sync_hour" value="<?php echo esc_attr($syncHour); ?>" min="0" max="23" /></td>
+                    <td><input type="number" name="vimeo_sync_hour" value="<?php echo esc_attr($syncHour); ?>" min="0"
+                            max="23" /></td>
                 </tr>
             </table>
             <?php submit_button(); ?>
         </form>
     </div>
-<?php
+    <?php
 }
 
 function fetch_vimeo_folder_name($directoryId, $accessToken)
@@ -49,7 +50,7 @@ function fetch_vimeo_folder_name($directoryId, $accessToken)
         'timeout' => 20,
         'headers' => array(
             'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type'  => 'application/json'
+            'Content-Type' => 'application/json'
         )
     );
     $response = wp_remote_get($folderUrl, $httpFolderOptions);
@@ -70,7 +71,8 @@ function fetch_vimeo_folder_name($directoryId, $accessToken)
     error_log('Vimeo Folder Name: ' . $folderName);
     return $folderName;
 }
-function fetch_vimeo_videos($directoryId, $accessToken)
+// Old- semi working - added paseVideoTopic and updated the fetch vimeo videos
+function fetch_vimeo_videos_old($directoryId, $accessToken)
 {
     $videosUrlTemplate = "https://api.vimeo.com/me/projects/$directoryId/items?filter=video&page=";
     $allVideoDetails = [];
@@ -79,7 +81,7 @@ function fetch_vimeo_videos($directoryId, $accessToken)
         'timeout' => 20,
         'headers' => array(
             'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type'  => 'application/vnd.vimeo.*+json;version=3.4'
+            'Content-Type' => 'application/vnd.vimeo.*+json;version=3.4'
         )
     );
     do {
@@ -95,13 +97,13 @@ function fetch_vimeo_videos($directoryId, $accessToken)
         if (empty($videoData['data'])) {
             break; // Exit the loop if no more videos are found
         }
-
         $videoDetails = array_map(function ($video) {
             return [
                 'name' => $video['video']['name'],
                 'player_embed_url' => $video['video']['player_embed_url']
             ];
         }, $videoData['data']);
+        error_log("inside-fetch_vimeo_videos: " . print_r($videoDetails, true));
 
         $allVideoDetails = array_merge($allVideoDetails, $videoDetails);
         $current_page++;
@@ -109,6 +111,114 @@ function fetch_vimeo_videos($directoryId, $accessToken)
 
     return $allVideoDetails;
 }
+
+function parseVideoTopic($topic) {
+    // Remove dates in the format dd.mm.yyyy, dd.mm.yy, or yyyy-mm-dd
+    $topic_without_date = preg_replace('/\b\d{2}(\.|\/)\d{2}(\.|\/)\d{2,4}\b|\b\d{4}-\d{2}-\d{2}\b/u', '', $topic);
+
+    // Regex to match "שיעור X", optional part, or any lesson pattern
+    $pattern = '/(?:שיעור\s*)?(?<lesson_number>\d+)\s*(?:\((?<part_english>[A-Za-z])\)|חלק\s*(?<part_hebrew>[א-ת])|\s*\(?Part\s*(?<part_generic>[A-Za-z])\)?)?/u';
+
+    if (preg_match($pattern, $topic_without_date, $matches)) {
+        $part = '';
+        if (!empty($matches['part_hebrew'])) {
+            $part = $matches['part_hebrew'];
+        } elseif (!empty($matches['part_english'])) {
+            $part = $matches['part_english'];
+        } elseif (!empty($matches['part_generic'])) {
+            $part = $matches['part_generic'];
+        }
+
+        return [
+            'lesson_number' => $matches['lesson_number'] ?? '',
+            'part' => $part,
+        ];
+    }
+
+    // Log unparsed topics for debugging
+    error_log("Parsing failed for topic: $topic");
+    return null;
+}
+
+
+
+function fetch_vimeo_videos($directoryId, $accessToken)
+{
+    $videosUrlTemplate = "https://api.vimeo.com/me/projects/$directoryId/items?filter=video&page=";
+    $allVideoDetails = [];
+    $current_page = 1;
+
+    $httpVideoOptions = [
+        'timeout' => 20,
+        'headers' => [
+            'Authorization' => 'Bearer ' . $accessToken,
+            'Content-Type' => 'application/vnd.vimeo.*+json;version=3.4'
+        ]
+    ];
+
+    // Check for missing Access Token
+    if (empty($accessToken)) {
+        error_log("Error: Vimeo Access Token is missing.");
+        return [];
+    }
+
+    do {
+        // Fetching videos
+        $videosUrl = $videosUrlTemplate . $current_page;
+        $response = wp_remote_get($videosUrl, $httpVideoOptions);
+        $body = wp_remote_retrieve_body($response);
+        $videoData = json_decode($body, true);
+        $response_code = wp_remote_retrieve_response_code($response);
+
+        // Log errors and stop pagination
+        if ($response_code !== 200) {
+            error_log("API Error - Status Code: $response_code, Response: $body");
+            break;
+        }
+
+        if (empty($videoData['data'])) break;
+
+        foreach ($videoData['data'] as $video) {
+            $videoName = $video['video']['name'] ?? 'Unknown';
+            $parsedTopic = parseVideoTopic($videoName);
+
+            if ($parsedTopic) {
+                $parsedTopic['created_time'] = $video['video']['created_time'];
+                $parsedTopic['player_embed_url'] = $video['video']['player_embed_url'];
+                $parsedTopic['uri'] = $video['video']['uri'];
+                $parsedTopic['topic'] = $videoName;
+                $allVideoDetails[] = $parsedTopic;
+            }
+        }
+        $current_page++;
+    } while (!empty($videoData['data']));
+
+    // Sort videos
+    usort($allVideoDetails, function ($a, $b) {
+        $a['lesson_number'] ??= 0;
+        $b['lesson_number'] ??= 0;
+        $a['created_time'] ??= '';
+        $b['created_time'] ??= '';
+
+        return $a['lesson_number'] <=> $b['lesson_number']
+            ?: strcmp($a['created_time'], $b['created_time']);
+    });
+
+
+    // Log the final sorted video order for testing
+    error_log("Final Sorted Video Order:");
+    foreach ($allVideoDetails as $video) {
+        $lesson = $video['lesson_number'] ?? 'N/A';
+        $created_time = $video['created_time'] ?? 'N/A';
+        $name = $video['topic'];
+        error_log("Lesson: $lesson | Part: $created_time  | Name: $name");
+    }
+
+    return $allVideoDetails;
+}
+
+
+
 
 function check_vimeo_response($response, $vimeo_item)
 {
@@ -148,17 +258,18 @@ function create_lessons_from_vimeo_folder()
 function process_video_for_lesson_creation_old($video, $course_id)
 {
     // change - made the condition into a function 
-    if (validate_video_fields($video['name'],$video['player_embed_url'])) return;
-    
+    if (validate_video_fields($video['name'], $video['player_embed_url']))
+        return;
+
     try {
         $lesson_exist = check_for_duplicate_lesson($course_id, $video['name']);
         if (!$lesson_exist) {
             $lesson_post = array(
-                'post_title'    => sanitize_text_field($video['name']),
-                'post_content'  => '',
-                'post_status'   => 'publish',
-                'post_author'   => 1,  // Consider making this configurable
-                'post_type'     => 'sfwd-lessons'
+                'post_title' => sanitize_text_field($video['name']),
+                'post_content' => '',
+                'post_status' => 'publish',
+                'post_author' => 1,  // Consider making this configurable
+                'post_type' => 'sfwd-lessons'
             );
 
             $lesson_id = wp_insert_post($lesson_post);
@@ -177,7 +288,8 @@ function process_video_for_lesson_creation_old($video, $course_id)
     }
 }
 
-function validate_video_fields($videoName,$videoEmbedUrl){
+function validate_video_fields($videoName, $videoEmbedUrl)
+{
     if (empty($videoName) || empty($videoEmbedUrl)) {
         error_log("Invalid video data provided.\n" . $videoName . " + " . $videoEmbedUrl);
         return true;
@@ -245,7 +357,7 @@ function extract_and_format_course_info($folderName)
 {
     // Pattern for Live Users Courses (existing)
     $livePattern = '/(AI|FULL\s?STACK|CYBER|QA|DIGITAL MARKETING DATA).*?(\d{1,2}[\/\\.\\-]\d{1,2}[\/\\.\\-]\d{2,4})/i';
-    
+
     // Pattern for DIGITAL [PATH] YEAR or DIGITAL [PATH] מתעדכן (new)
     $digitalPattern = '/DIGITAL\s+(AI|FULL\s?STACK|CYBER|QA|DATA)\s+(\d{4})?|DIGITAL\s+(AI|FULL\s?STACK|CYBER|QA|DATA)\s+מתעדכן/i';
 
@@ -288,7 +400,7 @@ function extract_and_format_course_info($folderName)
         if (!empty($coursePath) && !empty($matches[2])) {
             $courseYear = $matches[2];
             $courseTitle = "קורס DIGITAL $coursePath $courseYear";
-        } 
+        }
         // If it's מתעדכן, format the title with the correct path
         elseif (!empty($coursePath)) {
             $courseTitle = "קורס DIGITAL $coursePath מתעדכן";
@@ -302,8 +414,7 @@ function extract_and_format_course_info($folderName)
             'courseYear' => $courseYear ?? null,
             'courseTitle' => $courseTitle
         );
-    }
-    else {
+    } else {
         error_log('Error: Course pattern not found in folder name.');
         return null;
     }

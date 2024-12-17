@@ -11,7 +11,11 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
+/* Pages Background */
+#content{
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.00) 76.04%, #FFF 100%), radial-gradient(58.89% 35.32% at 2.24% 50%, rgba(105, 57, 255, 0.20) 0%, rgba(196, 196, 196, 0.00) 100%), radial-gradient(39% 26.79% at 13.62% 46.87%, rgba(104, 228, 255, 0.30) 0%, rgba(196, 196, 196, 0.00) 100%), radial-gradient(53.08% 30.01% at 83.1% 56.51%, rgba(17, 192, 233, 0.20) 0%, rgba(196, 196, 196, 0.00) 100%), radial-gradient(61.55% 40.72% at 87.42% 75.1%, rgba(252, 183, 43, 0.20) 0%, rgba(196, 196, 196, 0.00) 100%), radial-gradient(19.38% 23.86% at 9.43% 64.11%, rgba(252, 183, 43, 0.30) 0%, rgba(196, 196, 196, 0.00) 100%);
 
+}
 :root {
     --spacing-small: 8px;
     --spacing-medium: 16px;
@@ -203,18 +207,18 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 }
 
 .header-text {
-    width: 1080px;
+    width: 100%;
     height: 100%;
     position: absolute;
-    top: 100px;
-    left: 70px;
+    top: 0;
+    left: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: end;
     align-items: flex-start;
     gap: 10px;
+    padding: 40px;
     font-family: Heebo sans-serif;
-
 }
 
 .header-title {

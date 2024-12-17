@@ -1,6 +1,5 @@
 // Initialization on document load
 document.addEventListener("DOMContentLoaded", initializeApp);
-
 function initializeApp() {
   attachEventListeners();
 }

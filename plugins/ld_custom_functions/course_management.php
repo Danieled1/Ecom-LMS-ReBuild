@@ -222,7 +222,7 @@ function list_recent_courses() {
             echo '<form method="post" class="inline">';
             echo '<input type="hidden" name="course_name_to_delete" value="' . get_the_title() . '">';
             echo '<button type="submit" name="delete_course" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline mr-2">Delete Course and Group</button>';
-            echo '<button onclick="cleanLessons(' . $course_id . ')" class="bg-red-900 hover:bg-red-800 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline mr-2">Delete Lessons</button>';
+            echo '<button onclick="cleanLessons(' . $course_id . ')" class="bg-red-900 hover:bg-red-800 text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline mr-2">Delete Lessons(20 at a time)</button>';
 
             echo '</form>';
             echo '</div>';
