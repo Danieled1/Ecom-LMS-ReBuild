@@ -1,88 +1,140 @@
-
 <?php
+/**
+ * BuddyPanel & Instructor Dashboard Integration
+ */
+if (!defined('CUSTOM_BUDDYPANEL_LOADED')) {
+    define('CUSTOM_BUDDYPANEL_LOADED', true);
+    get_template_part('template-parts/buddypanelCustom');
+}
 
-$user_id = get_current_user_id();
+ error_log("BuddyPanel loaded from: " . debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']);
+$user_id     = get_current_user_id();
 $current_user = wp_get_current_user();
-$user_link = function_exists('bp_core_get_user_domain') ? bp_core_get_user_domain($current_user->ID) : get_author_posts_url($current_user->ID);
-$user_link_url = esc_url($user_link);
-$display_name = function_exists('bp_core_get_user_displayname') ? bp_core_get_user_displayname($current_user->ID) : $current_user->display_name;
-$is_admin = user_can($user_id, 'manage_options');
+$user_link   = function_exists('bp_core_get_user_domain') 
+    ? bp_core_get_user_domain($current_user->ID) 
+    : get_author_posts_url($current_user->ID);
+$user_link_url  = esc_url($user_link);
+$display_name   = function_exists('bp_core_get_user_displayname') 
+    ? bp_core_get_user_displayname($current_user->ID) 
+    : $current_user->display_name;
+$is_admin       = user_can($user_id, 'manage_options');
 
-$courses_with_progress = array();
-
-if (!$is_admin) {
-	// Get enrolled courses for the user
-	$enrolled_courses = learndash_user_get_enrolled_courses($user_id);
-
-	// Loop through enrolled courses to find those with progress > 0%
-	if (!empty($enrolled_courses)) {
-		foreach ($enrolled_courses as $course_id) {
-			// Get total steps in the course
-			$total_steps = learndash_get_course_steps_count($course_id);
-
-			// Get completed steps for the user in this course
-			$completed_steps = learndash_course_get_completed_steps($user_id, $course_id);
-
-			// Calculate the percentage
-			if ($total_steps > 0) {
-				$percentage = floor(($completed_steps / $total_steps) * 100);
-			} else {
-				$percentage = 0;
-			}
-
-			// Only include courses with progress > 0%
-			if ($percentage > 0) {
-				$courses_with_progress[] = array(
-					'course_id' => $course_id,
-					'title' => get_the_title($course_id),
-					'percentage' => $percentage,
-				);
-			}
-		}
-	}
-}
-// Get the menu assigned to the 'buddypanel-loggedin' location
-$locations = get_nav_menu_locations();
-$menu_id = isset($locations['buddypanel-loggedin']) ? $locations['buddypanel-loggedin'] : 0;
-
-// Fetch the menu items from the specified menu ID
-$menu_items = $menu_id ? wp_get_nav_menu_items($menu_id) : [];
-if (!is_array($menu_items)) {
-	$menu_items = []; // Set to an empty array if not valid
-}
-foreach ($menu_items as $item) {
-    if ($item->title === 'הפרופיל שלי') {
-        $item->url = esc_url(bp_core_get_user_domain($current_user->ID)); // Force correct profile URL
+$instructor_dashboard_url = site_url('/wp-admin/admin.php?page=ir_instructor_overview');
+$allowed_roles = ['wdm_instructor', 'instructor', 'manage_options']; // Extend as needed
+$has_instructor_access = false;
+foreach ($allowed_roles as $role) {
+    if (user_can($user_id, $role)) {
+        $has_instructor_access = true;
+        error_log("User has access due to role: " . $role);
+        break;
     }
-    // error_log("Test menu_items - " . print_r($item, true));
 }
-$available_icons = array(
-	'bb-icon-l buddyboss bb-icon-book-open',
-	'bb-icon-l buddyboss bb-icon-users',
-	'bb-icon-l buddyboss bb-icon-tools',
-	'bb-icon-l buddyboss bb-icon-briefcase',
-	'bb-icon-l buddyboss bb-icon-article',
-	'bb-icon-l buddyboss bb-icon-file-attach',
-	'bb-icon-l buddyboss bb-icon-graduation-cap',
-	'bb-icon-l buddyboss bb-icon-airplay',
-);
+
+
+$custom_menu_item = $has_instructor_access ? (object) [
+    'ID'      => 'instructor-dashboard',
+    'title'   => 'ניהול מרצה',
+    'url'     => $instructor_dashboard_url,
+    'classes' => 'bb-menu-item instructor-dashboard'
+] : null;
+
+
+// 3. Gather "Courses With Progress" data (for non-admin users) = 
+$courses_with_progress = [];
+if (!$is_admin) {
+    $enrolled_courses = learndash_user_get_enrolled_courses($user_id);
+    if (!empty($enrolled_courses)) {
+        foreach ($enrolled_courses as $course_id) {
+            $total_steps     = learndash_get_course_steps_count($course_id);
+            $completed_steps = learndash_course_get_completed_steps($user_id, $course_id);
+            $percentage      = ($total_steps > 0) 
+                ? floor(($completed_steps / $total_steps) * 100) 
+                : 0;
+            if ($percentage > 0) {
+                $courses_with_progress[] = [
+                    'course_id'  => $course_id,
+                    'title'      => get_the_title($course_id),
+                    'percentage' => $percentage,
+                ];
+            }
+        }
+    }
+}
+
+// 4. Fetch BuddyPanel Menu Items
+$locations = get_nav_menu_locations();
+$menu_id   = isset($locations['buddypanel-loggedin']) ? $locations['buddypanel-loggedin'] : 0;
+$menu_items = $menu_id ? wp_get_nav_menu_items($menu_id) : [];
+
+if (!is_array($menu_items)) {
+    $menu_items = [];
+}
+if ($custom_menu_item) {
+    $menu_items[] = $custom_menu_item;
+}
+// 5. Filter & Adjust Menu Items in One Pass
+//    We'll group them into categories to reduce repeated loops later
+$menu_groups = [
+    'main'     => [], // "הקורס שלי", "תמיכה מקצועית", "ניהול מרצה" 
+    'settings' => [], // "הפרופיל שלי", "פניות ואישורים", "השמה", "קבוצות"
+    'footer'   => [], // "בלוג איקום", "משוב", "ציונים", "התנתק"
+];
+
+// Adjust the URL for "הפרופיל שלי" and categorize
+foreach ($menu_items as $item) {
+	if (empty($item) || !isset($item->title)) {
+        error_log("Skipping invalid menu item.");
+        continue; // Skip invalid items
+    }
+    if ($item->title === 'הפרופיל שלי') {
+        $item->url = esc_url(bp_core_get_user_domain($current_user->ID));
+    }
+    // Categorize by title
+    if (in_array($item->title, ['ניהול מרצה','הקורס שלי', 'תמיכה מקצועית'])) {
+        $menu_groups['main'][] = $item;
+    } elseif (in_array($item->title, ['הפרופיל שלי', 'פניות ואישורים', 'השמה', 'קבוצות'])) {
+        $menu_groups['settings'][] = $item;
+    } elseif (in_array($item->title, ['בלוג איקום', 'משוב', 'ציונים', 'התנתק'])) {
+        $menu_groups['footer'][] = $item;
+    }
+}
+
+error_log("Processing menu items. main=" . count($menu_groups['main']) . 
+          ", settings=" . count($menu_groups['settings']) . 
+          ", footer=" . count($menu_groups['footer']));
+
+/**
+ * $available_icons and $settings_icon_mapping from your existing code
+ */
+$available_icons = [
+    'bb-icon-l buddyboss bb-icon-book-open',
+    'bb-icon-l buddyboss bb-icon-users',
+    'bb-icon-l buddyboss bb-icon-tools',
+    'bb-icon-l buddyboss bb-icon-briefcase',
+    'bb-icon-l buddyboss bb-icon-article',
+    'bb-icon-l buddyboss bb-icon-file-attach',
+    'bb-icon-l buddyboss bb-icon-graduation-cap',
+    'bb-icon-l buddyboss bb-icon-airplay',
+    'bb-icon-l buddyboss bb-icon-l',
+];
 
 $settings_icon_mapping = [
-	'הפרופיל שלי' => 'bb-icon-user',
-	'פניות ואישורים' => 'bb-icon-file-attach',
-	'השמה' => 'bb-icon-briefcase',
-	'קבוצות' => 'bb-icon-users',
-	'בלוג איקום' => 'bb-icon-article',
-	'משוב' => 'bb-icon-airplay',
-	'ציונים' => 'bb-icon-book-open',
-	'התנתק' => 'bb-icon-sign-out',
-	'הקורס שלי' => 'bb-icon-graduation-cap',
-	'תמיכה מקצועית' => 'bb-icon-tools',
+    'הפרופיל שלי'  => 'bb-icon-user',
+    'פניות ואישורים' => 'bb-icon-file-attach',
+    'השמה'       => 'bb-icon-briefcase',
+    'קבוצות'      => 'bb-icon-users',
+    'בלוג איקום'   => 'bb-icon-article',
+    'משוב'        => 'bb-icon-airplay',
+    'ציונים'      => 'bb-icon-book-open',
+    'התנתק'       => 'bb-icon-sign-out',
+    'הקורס שלי'    => 'bb-icon-graduation-cap',
+    'תמיכה מקצועית' => 'bb-icon-tools',
+	'ניהול מרצה'    => 'bb-icon-briefcase',
 
 ];
 
-
 ?>
+
 <style>
 	.testtest {
 		display: flex;
@@ -226,117 +278,94 @@ $settings_icon_mapping = [
 </style>
 
 
-<button id="toggle-sidebar" class="buddypanel" >&lt;</button>
+
+<button id="toggle-sidebar" class="buddypanel">&lt;</button>
 <aside class="buddypanel buddypanel--toggle-off">
+    <div class="side-panel-inner">
+        <nav class="side-panel-menu-container">
+            <div class="sub-menu">
+                <ul id="buddypanel-menu" class="borders buddypanel-menu side-panel-menu">
+                    
+                    <!-- MAIN MENU ITEMS -->
+                    <hr>
+                    <?php foreach ($menu_groups['main'] as $item): ?>
+                        <li id="menu-item-<?php echo esc_attr($item->ID); ?>"
+                            class="menu-item menu-item-type-post_type menu-item-object-page">
+                            <a href="<?php echo esc_url($item->url); ?>" class="bb-menu-item" data-balloon-pos="right"
+                               data-balloon="<?php echo esc_attr($item->title); ?>">
+                                <i class="_mi _before <?php echo esc_attr($settings_icon_mapping[$item->title] ?? ''); ?>"
+                                   aria-hidden="true"></i>
+                                <span><?php echo esc_html($item->title); ?></span>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
 
-	<div class="side-panel-inner">
-		<nav class="side-panel-menu-container">
-			<div class="sub-menu">
+                    <!-- LAST COURSES for Non-Admins with progress -->
+                    <?php if (!$is_admin && !empty($courses_with_progress)): ?>
+                        <hr>
+                        <li id="menu-item-last-courses" class="menu-item menu-item-has-children">
+                            <a href="#" class="bb-menu-item dropdown-toggle" data-balloon-pos="right"
+                               data-balloon="קורסים אחרונים">
+                                <span>קורסים אחרונים</span>
+                            </a>
+                            <ul class="sub-menu bb-open">
+                                <?php foreach ($courses_with_progress as $course):
+                                    $random_icon = $available_icons[array_rand($available_icons)];
+                                ?>
+                                    <li id="menu-item-<?php echo esc_attr($course['course_id']); ?>"
+                                        class="menu-item menu-item-type-post_type menu-item-object-page">
+                                        <a href="<?php echo get_permalink($course['course_id']); ?>" class="bb-menu-item"
+                                           data-balloon-pos="right" data-balloon="<?php echo esc_attr($course['title']); ?>">
+                                            <i class="_mi _before <?php echo esc_attr($random_icon); ?>" aria-hidden="true"></i>
+                                            <span><?php echo esc_html($course['title']); ?></span>
+                                            <span class="course-progress"><?php echo esc_html($course['percentage']); ?>%</span>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
 
-				<!-- Courses Menu (No separate dropdown class, reusing existing menu classes) -->
-				<ul id="buddypanel-menu" class="borders buddypanel-menu side-panel-menu">
-					<!--Username part - uncomment to return it - 17/11/24  -->
-				<!-- <li id="menu-item-<?php echo esc_attr($user_id); ?>" class="user-not-active">
-						<a class="user-link">
-							<?php echo get_avatar(get_current_user_id(), 100); ?>
-							<span>
-								<?php if (function_exists('bp_is_active') && function_exists('bp_activity_get_user_mentionname')): ?>
-									<span
-										class="user-mention"><?php echo esc_html(bp_activity_get_user_mentionname($current_user->ID)) . "@"; ?></span>
-								<?php else: ?>
-									<span
-										class="user-mention"><?php echo esc_html($current_user->user_login) . "@"; ?></span>
-								<?php endif; ?>
-							</span>
-						</a>
-					</li> -->
-					<hr>
-					<?php foreach ($menu_items as $item): ?>
-						<?php if (in_array($item->title, ['הקורס שלי', 'תמיכה מקצועית'])): ?>
-							<li id="menu-item-<?php echo esc_attr($item->ID); ?>"
-								class="menu-item menu-item-type-post_type menu-item-object-page">
-								<a href="<?php echo esc_url($item->url); ?>" class="bb-menu-item" data-balloon-pos="right"
-									data-balloon="<?php echo esc_attr($item->title); ?>">
-									<i class="_mi _before <?php echo esc_attr($settings_icon_mapping[$item->title]); ?>"
-										aria-hidden="true"></i>
-									<span><?php echo esc_html($item->title); ?></span>
-								</a>
-							</li>
-						<?php endif; ?>
-					<?php endforeach; ?>
-					<!-- Parent Menu Item for Last Courses -->
-					<?php if (!$is_admin && !empty($courses_with_progress)): ?>
-						<hr>
-						<li id="menu-item-last-courses" class="menu-item menu-item-has-children">
-							<a href="#" class="bb-menu-item dropdown-toggle " data-balloon-pos="right"
-								data-balloon="קורסים אחרונים">
-								<span>קורסים אחרונים</span>
-							</a>
-							<!-- Submenu with Courses -->
-							<ul class="sub-menu bb-open">
-								<?php foreach ($courses_with_progress as $course):
-									// Randomly pick an icon class from the available icons
-									$random_icon = $available_icons[array_rand($available_icons)];
-									?>
-									<li id="menu-item-<?php echo esc_attr($course['course_id']); ?>"
-										class="menu-item menu-item-type-post_type menu-item-object-page">
-										<a href="<?php echo get_permalink($course['course_id']); ?>" class="bb-menu-item"
-											data-balloon-pos="right" data-balloon="<?php echo esc_attr($course['title']); ?>">
-											<!-- Random Course Icon -->
-											<i class="_mi _before <?php echo esc_attr($random_icon); ?>" aria-hidden="true"></i>
-											<!-- Course Title -->
-											<span><?php echo esc_html($course['title']); ?></span>
-											<!-- Course Progress -->
-											<span class="course-progress"><?php echo esc_html($course['percentage']); ?>%</span>
-										</a>
-									</li>
-								<?php endforeach; ?>
-							</ul>
-						</li>
-					<?php endif; ?>
-					<hr>
-					<li id="menu-item-last-courses" class="menu-item menu-item-has-children">
-						<a href="#" class="bb-menu-item dropdown-toggle " data-balloon-pos="right"
-							data-balloon="הגדרות">
-							<span>הגדרות</span>
-						</a>
-						<ul class="sub-menu bb-open">
-							<?php foreach ($menu_items as $item): ?>
-								<?php if (in_array($item->title, ['הפרופיל שלי', 'פניות ואישורים', 'השמה', 'קבוצות'])): ?>			
-									<li id="menu-item-<?php echo esc_attr($item->ID); ?>"
-										class="menu-item menu-item-type-post_type menu-item-object-page">
-										<a href="<?php echo esc_url($item->url); ?>" class="bb-menu-item"
-											data-balloon-pos="right" data-balloon="<?php echo esc_attr($item->title); ?>">
-											<i class="_mi _before <?php echo esc_attr($settings_icon_mapping[$item->title]); ?>"
-												aria-hidden="true"></i>
-											<span><?php echo esc_html($item->title); ?></span>
-										</a>
-									</li>
-								<?php endif; ?>
-							<?php endforeach; ?>
-						</ul>
-					</li>
-					<hr>
-					<?php foreach ($menu_items as $item): ?>
-						<?php if (in_array($item->title, ['בלוג איקום', 'משוב', 'ציונים', 'התנתק'])): ?>
-							<li id="menu-item-<?php echo esc_attr($item->ID); ?>"
-								class="menu-item menu-item-type-post_type menu-item-object-page">
-								<a href="<?php echo esc_url($item->url); ?>" class="bb-menu-item" data-balloon-pos="right"
-									data-balloon="<?php echo esc_attr($item->title); ?>">
-									<i class="_mi _before <?php echo esc_attr($settings_icon_mapping[$item->title]); ?>"
-										aria-hidden="true"></i>
-									<span><?php echo esc_html($item->title); ?></span>
-								</a>
-							</li>
-						<?php endif; ?>
-					<?php endforeach; ?>
+                    <!-- SETTINGS MENU ITEMS -->
+                    <hr>
+                    <li id="menu-item-last-courses" class="menu-item menu-item-has-children">
+                        <a href="#" class="bb-menu-item dropdown-toggle" data-balloon-pos="right"
+                           data-balloon="הגדרות">
+                            <span>הגדרות</span>
+                        </a>
+                        <ul class="sub-menu bb-open">
+                            <?php foreach ($menu_groups['settings'] as $item): ?>
+                                <li id="menu-item-<?php echo esc_attr($item->ID); ?>"
+                                    class="menu-item menu-item-type-post_type menu-item-object-page">
+                                    <a href="<?php echo esc_url($item->url); ?>" class="bb-menu-item"
+                                       data-balloon-pos="right" data-balloon="<?php echo esc_attr($item->title); ?>">
+                                        <i class="_mi _before <?php echo esc_attr($settings_icon_mapping[$item->title] ?? ''); ?>"
+                                           aria-hidden="true"></i>
+                                        <span><?php echo esc_html($item->title); ?></span>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </li>
 
+                    <!-- FOOTER MENU ITEMS -->
+                    <hr>
+                    <?php foreach ($menu_groups['footer'] as $item): ?>
+                        <li id="menu-item-<?php echo esc_attr($item->ID); ?>"
+                            class="menu-item menu-item-type-post_type menu-item-object-page">
+                            <a href="<?php echo esc_url($item->url); ?>" class="bb-menu-item" 
+                               data-balloon-pos="right" data-balloon="<?php echo esc_attr($item->title); ?>">
+                                <i class="_mi _before <?php echo esc_attr($settings_icon_mapping[$item->title] ?? ''); ?>" 
+                                   aria-hidden="true"></i>
+                                <span><?php echo esc_html($item->title); ?></span>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
 
-				</ul>
-			</div>
-
-		</nav>
-	</div>
+                </ul>
+            </div>
+        </nav>
+    </div>
 </aside>
 
 <script defer>

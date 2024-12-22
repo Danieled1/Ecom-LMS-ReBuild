@@ -228,39 +228,39 @@ function create_learndash_courses_from_json()
     }
 }
 
-function redirect_user_after_login($user_login, $user) {
-    // Define the whitelist of usernames
-    $allowed_users = ['support@ecomschool.co.il', 'goxik48771','guy_user','instructor_testing5'];
+// function redirect_user_after_login($user_login, $user) {
+//     // Define the whitelist of usernames
+//     $allowed_users = ['support@ecomschool.co.il', 'goxik48771','guy_user','instructor_testing5'];
 
-    // Check if the user is whitelisted
-    if (in_array($user->user_login, $allowed_users)) {
-        // Redirect whitelisted users to the homepage or dashboard
-        wp_redirect(home_url('/'));
-    } else {
-        // Redirect non-whitelisted users to the "Coming Soon" page
-        wp_redirect(home_url('/coming-soon'));
-    }
+//     // Check if the user is whitelisted
+//     if (in_array($user->user_login, $allowed_users)) {
+//         // Redirect whitelisted users to the homepage or dashboard
+//         wp_redirect(home_url('/'));
+//     } else {
+//         // Redirect non-whitelisted users to the "Coming Soon" page
+//         wp_redirect(home_url('/coming-soon'));
+//     }
 
-    exit;
-}
-add_action('wp_login', 'redirect_user_after_login', 10, 2);
-function my_custom_login_url($login_url, $redirect)
-{
-     // Only redirect to the custom login page if not already accessing wp-login.php
-     if (strpos($_SERVER['REQUEST_URI'], 'wp-login.php') === false) {
-        return home_url('/custom-login/?redirect_to=' . urlencode($redirect));
-    }
-    return $login_url; // Allow default login page access
-}
-add_filter('login_url', 'my_custom_login_url', 10, 2);
+//     exit;
+// }
+// add_action('wp_login', 'redirect_user_after_login', 10, 2);
+// function my_custom_login_url($login_url, $redirect)
+// {
+//      // Only redirect to the custom login page if not already accessing wp-login.php
+//      if (strpos($_SERVER['REQUEST_URI'], 'wp-login.php') === false) {
+//         return home_url('/custom-login/?redirect_to=' . urlencode($redirect));
+//     }
+//     return $login_url; // Allow default login page access
+// }
+// add_filter('login_url', 'my_custom_login_url', 10, 2);
 
 
-function custom_logout_redirect()
-{
-    wp_redirect(home_url('/custom-login/')); // Redirect to custom login page
-    exit();
-}
-add_action('wp_logout', 'custom_logout_redirect');
+// function custom_logout_redirect()
+// {
+//     wp_redirect(home_url('/custom-login/')); // Redirect to custom login page
+//     exit();
+// }
+// add_action('wp_logout', 'custom_logout_redirect');
 
 
 /**
@@ -289,3 +289,23 @@ function displayHeaderWithIcon($svg_name, $header_text)
 	echo '<h3 class="resume-status">' . $header_text . '</h3>';
 	echo '</div>';
 }
+
+// add_action('wp_footer', function() {
+//     global $wp_roles;
+
+//     if (!isset($wp_roles)) {
+//         $wp_roles = new WP_Roles();
+//     }
+
+//     echo '<pre>';
+//     foreach ($wp_roles->roles as $role_name => $role_info) {
+//         echo "Role: " . $role_name . "\n";
+//         echo "Capabilities:\n";
+//         print_r($role_info['capabilities']);
+//         echo "\n\n";
+//     }
+//     echo '</pre>';
+// });
+add_action('after_setup_theme', function () {
+    remove_action('wp_footer', 'buddyboss_theme_buddypanel');
+});

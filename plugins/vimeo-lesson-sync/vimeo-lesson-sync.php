@@ -116,8 +116,8 @@ function parseVideoTopic($topic) {
     // Remove dates in the format dd.mm.yyyy, dd.mm.yy, or yyyy-mm-dd
     $topic_without_date = preg_replace('/\b\d{2}(\.|\/)\d{2}(\.|\/)\d{2,4}\b|\b\d{4}-\d{2}-\d{2}\b/u', '', $topic);
 
-    // Regex to match "שיעור X", optional part, or any lesson pattern
-    $pattern = '/(?:שיעור\s*)?(?<lesson_number>\d+)\s*(?:\((?<part_english>[A-Za-z])\)|חלק\s*(?<part_hebrew>[א-ת])|\s*\(?Part\s*(?<part_generic>[A-Za-z])\)?)?/u';
+    // Regex to match "שיעור X", optional part, or any lesson pattern, including "last lesson" or "שיעור אחרון"
+    $pattern = '/(?:שיעור\s*)?(?<lesson_number>\d+|אחרון|last)\s*(?:\((?<part_english>[A-Za-z])\)|חלק\s*(?<part_hebrew>[א-ת])|\s*\(?Part\s*(?<part_generic>[A-Za-z])\)?)?/u';
 
     if (preg_match($pattern, $topic_without_date, $matches)) {
         $part = '';
@@ -129,8 +129,13 @@ function parseVideoTopic($topic) {
             $part = $matches['part_generic'];
         }
 
+        // Assign a high lesson number for "last lesson"
+        $lesson_number = $matches['lesson_number'] === 'אחרון' || strtolower($matches['lesson_number']) === 'last'
+            ? PHP_INT_MAX
+            : (int) $matches['lesson_number'];
+
         return [
-            'lesson_number' => $matches['lesson_number'] ?? '',
+            'lesson_number' => $lesson_number,
             'part' => $part,
         ];
     }
@@ -139,8 +144,6 @@ function parseVideoTopic($topic) {
     error_log("Parsing failed for topic: $topic");
     return null;
 }
-
-
 
 function fetch_vimeo_videos($directoryId, $accessToken)
 {
@@ -200,18 +203,34 @@ function fetch_vimeo_videos($directoryId, $accessToken)
         $a['created_time'] ??= '';
         $b['created_time'] ??= '';
 
+        // Order by lesson number, then by created time
         return $a['lesson_number'] <=> $b['lesson_number']
             ?: strcmp($a['created_time'], $b['created_time']);
     });
 
+    // Update parts if they are incorrectly placed
+    foreach ($allVideoDetails as $index => &$video) {
+        if ($video['lesson_number'] !== PHP_INT_MAX) { // Skip "last lesson"
+            $lessonGroup = array_filter($allVideoDetails, fn($v) => $v['lesson_number'] === $video['lesson_number']);
+            $lessonGroup = array_values($lessonGroup); // Re-index
+
+            foreach ($lessonGroup as $i => $groupVideo) {
+                $correctPart = chr(1488 + $i); // Generate Hebrew letters: א, ב, ג, ...
+                if ($groupVideo['part'] !== $correctPart) {
+                    error_log("Updating part for lesson {$groupVideo['lesson_number']} from '{$groupVideo['part']}' to '$correctPart'");
+                    $groupVideo['part'] = $correctPart;
+                }
+            }
+        }
+    }
 
     // Log the final sorted video order for testing
     error_log("Final Sorted Video Order:");
     foreach ($allVideoDetails as $video) {
-        $lesson = $video['lesson_number'] ?? 'N/A';
-        $created_time = $video['created_time'] ?? 'N/A';
+        $lesson = $video['lesson_number'] === PHP_INT_MAX ? 'Last Lesson' : $video['lesson_number'];
+        $part = $video['part'] ?? 'N/A';
         $name = $video['topic'];
-        error_log("Lesson: $lesson | Part: $created_time  | Name: $name");
+        error_log("Lesson: $lesson | Part: $part | Name: $name");
     }
 
     return $allVideoDetails;

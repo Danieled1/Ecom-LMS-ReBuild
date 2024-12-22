@@ -18,7 +18,7 @@ $lession_list            = array_column( $lession_list, 'post' );
 $lesson_count            = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
 $lesson_count            = array_column( $lesson_count, 'post' );
 $paypal_settings        = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Section_PayPal' );
-$course_price           = trim( learndash_get_course_meta_setting( $course_id, 'course_price' ) );
+$course_price 			= trim( (string) learndash_get_course_meta_setting( $course_id, 'course_price' ) );
 $course_price_type      = learndash_get_course_meta_setting( $course_id, 'course_price_type' );
 $course_button_url      = learndash_get_course_meta_setting( $course_id, 'custom_button_url' );
 $courses_progress       = buddyboss_theme()->learndash_helper()->get_courses_progress( $current_user_id );
