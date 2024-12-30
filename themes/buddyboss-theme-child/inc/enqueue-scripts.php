@@ -40,7 +40,8 @@ function enqueue_page_grades_assets()
         wp_get_current_user();
         wp_localize_script('page-grades-script', 'userInfo', array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
-            'userId' => $current_user->ID
+            'userId' => $current_user->ID,
+            'stylesheetDirUri' => get_stylesheet_directory_uri()
         ));
     }
 }

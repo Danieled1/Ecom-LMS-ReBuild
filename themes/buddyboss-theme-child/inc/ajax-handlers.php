@@ -192,7 +192,7 @@ add_action('wp_ajax_update_ticket_status', 'ticketStatusChangedMailTrigger');
 
 // Admin-Grades ajax actions
 
-function fetch_user_grades()
+function fetch_admin_user_grades()
 {
     if (!current_user_can('manage_options')) {
         wp_send_json_error('Insufficient permissions');
@@ -250,7 +250,7 @@ function fetch_user_grades()
 
     wp_send_json_success($results);
 }
-add_action('wp_ajax_fetch_user_grades', 'fetch_user_grades');
+add_action('wp_ajax_fetch_admin_user_grades', 'fetch_admin_user_grades');
 
 
 function save_user_grades()
@@ -338,28 +338,76 @@ function get_active_courses()
     return $active_courses;
 }
 
-function fetchGrades()
+// function fetch_client_grades()
+// {
+//     if (!isset($_POST['user_id'])) {
+//         wp_send_json_error('User ID not provided');
+//         return;
+//     }
+//     $user_id = intval($_POST['user_id']);
+
+//     $grade_post_id = get_user_meta($user_id, 'associated_grade_post_id', true);
+//     if (!$grade_post_id) {
+//         wp_send_json_error('No associated grade post ID found for user ID: ' . $user_id);
+//         return;
+//     }
+
+//     $grade_items = get_post_meta($grade_post_id, 'grade_items', true);  // Direct retrieval
+//     if (!$grade_items) {
+//         wp_send_json_error('No grade items found for post ID: ' . $grade_post_id);
+//         return;
+//     }
+//     wp_send_json_success($grade_items);
+// }
+function fetch_client_grades()
 {
     if (!isset($_POST['user_id'])) {
         wp_send_json_error('User ID not provided');
         return;
     }
-    $user_id = intval($_POST['user_id']);
 
+    $user_id = intval($_POST['user_id']);
+    global $wpdb;
+
+    // Start timing for performance logging
+    $start_time = microtime(true);
+
+    // Fetch the associated grade post ID
     $grade_post_id = get_user_meta($user_id, 'associated_grade_post_id', true);
     if (!$grade_post_id) {
         wp_send_json_error('No associated grade post ID found for user ID: ' . $user_id);
         return;
     }
 
-    $grade_items = get_post_meta($grade_post_id, 'grade_items', true);  // Direct retrieval
-    if (!$grade_items) {
+    // Optimize the retrieval of grade items
+    $query = $wpdb->prepare(
+        "SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = 'grade_items'",
+        $grade_post_id
+    );
+    $grade_items_serialized = $wpdb->get_var($query);
+
+    if (!$grade_items_serialized) {
         wp_send_json_error('No grade items found for post ID: ' . $grade_post_id);
         return;
     }
+
+    // Unserialize grade items
+    $grade_items = maybe_unserialize($grade_items_serialized);
+
+    if (!is_array($grade_items)) {
+        wp_send_json_error('Invalid grade items data for post ID: ' . $grade_post_id);
+        return;
+    }
+
+    // End timing and log performance
+    $end_time = microtime(true);
+    $elapsed_time = round(($end_time - $start_time) * 1000, 2); // Time in milliseconds
+    error_log("fetch_client_grades execution time: {$elapsed_time}ms");
+
+    // Send the grade items as the response
     wp_send_json_success($grade_items);
 }
-add_action('wp_ajax_fetch_grades', 'fetchGrades');
+add_action('wp_ajax_fetch_client_grades', 'fetch_client_grades');
 
 function handleSaveGrades()
 {

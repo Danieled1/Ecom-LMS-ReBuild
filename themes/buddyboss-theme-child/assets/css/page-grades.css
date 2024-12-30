@@ -61,6 +61,7 @@
 
 /* END OF OLD CSS  */
 
+
 /* Main content area */
 .grades-page-content {
     width: 100%;
@@ -183,7 +184,6 @@
     font-style: normal;
     font-weight: 900;
     line-height: 22px;
-    /* 122.222% */
     display: flex;
     justify-content: space-evenly;
     align-items: baseline;
@@ -213,7 +213,6 @@
     font-style: normal;
     font-weight: 400;
     line-height: 18px;
-    /* 100% */
     margin: unset;
 
 }
@@ -233,7 +232,6 @@
     font-style: normal;
     font-weight: 400;
     line-height: 14px;
-    /* 100% */
     margin: unset;
 }
 
@@ -260,6 +258,106 @@
     margin: 0 8px;
 }
 
-.grades-table {
+#gradesTable {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 10px;
     padding: 20px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 1px solid var(--Gray-5, #E0E0E0);
+}
+
+#gradesTable>thead {
+    width: 100%;
+}
+
+#gradesTable>thead>tr {
+    display: flex;
+    padding: 8px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-radius: 8px;
+    border: 1px solid var(--Gray-5, #E0E0E0);
+    background: var(--W, #FFF);
+}
+
+#gradesTable>thead>tr>th:nth-child(1),
+#gradesTable>thead>tr>th:nth-child(7) {
+    width: 170px;
+}
+
+#gradesTable>thead>tr>th:not(:nth-child(1)):not(:nth-child(7)) {
+    width: 100px;
+}
+
+#gradesTable>thead>tr>th {
+    color: var(--DARK, #333);
+    text-align: right;
+    font-family: Heebo;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 18px;
+}
+
+#gradesTable>tbody {
+    width: 100%;
+}
+
+#gradesTable>tbody>tr {
+    display: flex;
+    height: 50px;
+    padding: 16px 8px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: flex-start;
+    align-self: stretch;
+    border-bottom: 1px solid var(--Gray-5, #E0E0E0);
+}
+
+#gradesTable>tbody>tr>td:nth-child(7) {
+    color: var(--Gray-4, #BDBDBD);
+}
+
+#gradesTable>tbody>tr>td:nth-child(1),
+#gradesTable>tbody>tr>td:nth-child(7) {
+    width: 170px;
+}
+
+#gradesTable>tbody>tr>td:not(:nth-child(1)):not(:nth-child(7)) {
+    width: 100px;
+}
+
+#gradesTable>tbody>tr>td {
+    color: var(--Gray-3, #828282);
+    text-align: right;
+    font-family: Heebo;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+}
+
+.icon-test {
+    display: flex;
+    width: 200px;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+}
+
+.link-icon {
+    color: var(--P2, #B49BFF);
+    text-align: right;
+    font-family: "Font Awesome 6 Free";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 22px;
+    /* 183.333% */
 }

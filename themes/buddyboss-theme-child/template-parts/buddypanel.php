@@ -7,7 +7,7 @@ if (!defined('CUSTOM_BUDDYPANEL_LOADED')) {
     get_template_part('template-parts/buddypanelCustom');
 }
 
- error_log("BuddyPanel loaded from: " . debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']);
+//  error_log("BuddyPanel loaded from: " . debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']);
 $user_id     = get_current_user_id();
 $current_user = wp_get_current_user();
 $user_link   = function_exists('bp_core_get_user_domain') 
@@ -25,7 +25,7 @@ $has_instructor_access = false;
 foreach ($allowed_roles as $role) {
     if (user_can($user_id, $role)) {
         $has_instructor_access = true;
-        error_log("User has access due to role: " . $role);
+        // error_log("User has access due to role: " . $role);
         break;
     }
 }
@@ -99,9 +99,9 @@ foreach ($menu_items as $item) {
     }
 }
 
-error_log("Processing menu items. main=" . count($menu_groups['main']) . 
-          ", settings=" . count($menu_groups['settings']) . 
-          ", footer=" . count($menu_groups['footer']));
+// error_log("Processing menu items. main=" . count($menu_groups['main']) . 
+//           ", settings=" . count($menu_groups['settings']) . 
+//           ", footer=" . count($menu_groups['footer']));
 
 /**
  * $available_icons and $settings_icon_mapping from your existing code

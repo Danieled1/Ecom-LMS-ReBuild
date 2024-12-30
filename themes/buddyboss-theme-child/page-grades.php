@@ -3,13 +3,43 @@
 Template Name: Grades1
 */
 
-
+?>
+<style>
+    #gradesTable,
+    #gradesTable thead,
+    #gradesTable tbody,
+    #gradesTable tr,
+    #gradesTable th,
+    #gradesTable td {
+        all: unset;
+    }
+</style>
+<?php
 acf_form_head();
 
 get_header();
 $current_user = wp_get_current_user();
 $current_user_id = get_current_user_id();
-$job_status = get_field('job_status', 'user_' . $current_user_id);
+
+// Logging timing for job_status
+$start_time = microtime(true);
+$job_status = wp_cache_get('job_status_' . $current_user_id, 'user_meta');
+if ($job_status === false) {
+    $job_status = get_field('job_status', 'user_' . $current_user_id);
+    wp_cache_set('job_status_' . $current_user_id, $job_status, 'user_meta');
+}
+$end_time = microtime(true);
+error_log('Time to fetch job_status: ' . ($end_time - $start_time) . ' seconds');
+
+// Logging timing for avatar
+$start_time = microtime(true);
+$avatar = wp_cache_get('avatar_' . $current_user_id, 'user_meta');
+if ($avatar === false) {
+    $avatar = get_avatar($current_user_id, 100);
+    wp_cache_set('avatar_' . $current_user_id, $avatar, 'user_meta');
+}
+$end_time = microtime(true);
+error_log('Time to fetch avatar: ' . ($end_time - $start_time) . ' seconds');
 
 
 ?>
@@ -31,13 +61,13 @@ $job_status = get_field('job_status', 'user_' . $current_user_id);
         <div class="grades-info">
             <div class="user-info">
                 <a class="user-link">
-                    <?php echo get_avatar(get_current_user_id(), 100); ?>
+                    <?php echo $avatar; ?>
                     <span>
                         <?php if (function_exists('bp_is_active') && function_exists('bp_activity_get_user_mentionname')): ?>
                             <span
-                                 class="user-name-grades"><?php echo esc_html(bp_activity_get_user_mentionname($current_user->ID)); ?></span>
+                                class="user-name-grades"><?php echo esc_html(bp_activity_get_user_mentionname($current_user->ID)); ?></span>
                         <?php else: ?>
-                            <span  class="user-name-grades"> <?php echo esc_html($current_user->user_login); ?></span>
+                            <span class="user-name-grades"> <?php echo esc_html($current_user->user_login); ?></span>
                         <?php endif; ?>
                     </span>
                 </a>
@@ -54,21 +84,8 @@ $job_status = get_field('job_status', 'user_' . $current_user_id);
             </div>
 
         </div>
-        <table id="gradesTable" class="grades-table">
-            <thead>
-                <tr>
-                    <th scope="col" class="manage-column column-name">שם</th>
-                    <th scope="col" class="manage-column column-type">סוג</th>
-                    <th scope="col" class="manage-column">ציון</th>
-                    <th scope="col" class="manage-column">סטטוס</th>
-                    <th scope="col" class="manage-column">מועד סיום</th>
-                    <th scope="col" class="manage-column">משוב</th>
-                    <th scope="col" id="modified_time" class="manage-column">עדכון אחרון</th>
-                </tr>
-            </thead>
-            <tbody>
+        <table id="gradesTable">
 
-            </tbody>
         </table>
     </div>
 </div>

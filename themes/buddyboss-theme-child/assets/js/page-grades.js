@@ -7,13 +7,15 @@ function init() {
 
 function getStudentGrades() {
   console.log("Fetching grades for user ID:", userInfo.userId);
+  const startTime = performance.now(); // Start timing
+
   fetch(userInfo.ajaxUrl, {
     method: "POST",
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: `action=fetch_grades&user_id=${userInfo.userId}`,
+    body: `action=fetch_client_grades&user_id=${userInfo.userId}`,
   })
     .then((response) => {
       if (!response.ok) {
@@ -22,9 +24,13 @@ function getStudentGrades() {
       return response.json();
     })
     .then((data) => {
+      const endTime = performance.now(); // End timing
+      console.log(`AJAX request took ${endTime - startTime}ms`);
+
       if (data.success) {
         console.log("Data fetched successfully");
-        populateGradesTable(data.data);
+        requestAnimationFrame(() => populateGradesTableNew(data.data));
+        
       } else {
         console.error("Error fetching grades:", data.data);
       }
@@ -42,12 +48,79 @@ function populateGradesTable(grades) {
 
   grades.forEach((grade) => {
     let row = tableBody.insertRow();
+    const nameWithoutLastWord = grade.grade_name.split(" ").slice(0, -1).join(" ");
+
     row.insertCell(0).innerText = grade.grade_name;
     row.insertCell(1).innerText = grade.grade_type;
     row.insertCell(2).innerText = grade.grade_score || "N/A";
     row.insertCell(3).innerText = grade.grade_status;
     row.insertCell(4).innerText = grade.grade_deadline || "N/A";
     row.insertCell(5).innerText = grade.grade_feedback || "None";
-    row.insertCell(6).innerText = grade.last_modified || "Unknown";  
+    row.insertCell(6).innerText = grade.last_modified || "Unknown";
   });
+}
+const populateGradesTableNew = (grades) => {
+  const table = document.getElementById("gradesTable");
+  table.innerHTML = ''; // Clear the table content
+
+  // Create thead and header row
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement("tr");
+
+  const headers = [
+    "שם",
+    "סוג",
+    "ציון",
+    "סטטוס",
+    "מועד הגשה",
+    "משוב",
+    "עדכון אחרון"
+  ];
+  headers.forEach((header) => {
+    const th = document.createElement("th");
+    th.innerText = header;
+    headerRow.appendChild(th);
+  });
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  // Create and populate the tbody
+  const tbody = document.createElement("tbody");
+
+  grades.forEach((grade) => {
+    const row = document.createElement("tr");
+    const nameWithoutLastWord = grade.grade_name.split(" ").slice(0, -1).join(" ");
+
+    // Define the row data
+    const rowData = [
+      // {
+      //   icon: "link-solid", // Replace with dynamic icon if needed
+      //   text: grade.grade_name,
+      // },
+      nameWithoutLastWord,
+      grade.grade_type,
+      grade.grade_score || "N/A",
+      grade.grade_status,
+      grade.grade_deadline || "א",
+      grade.grade_feedback || "אין",
+      grade.last_modified || "לא ידוע"
+    ];
+
+    rowData.forEach((data) => {
+      const cell = document.createElement("td");
+      cell.innerText = data;
+
+      row.appendChild(cell);
+    });
+
+
+    tbody.appendChild(row);
+  });
+
+  table.appendChild(tbody);
+};
+
+// Helper function for getting stylesheet directory URI
+function getStylesheetDirectoryUri() {
+  return userInfo.stylesheetDirectoryUri; // Use the localized PHP variable
 }

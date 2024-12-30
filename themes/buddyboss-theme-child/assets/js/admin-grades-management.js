@@ -130,7 +130,7 @@ function populateSheetNames(sheetNames) {
 
 async function fetchUserDetails(emails, testName) {
   const data = new FormData();
-  data.append("action", "fetch_user_grades"); // The WordPress action hook
+  data.append("action", "fetch_admin_user_grades"); // The WordPress action hook
   data.append("emails", JSON.stringify(emails)); // Encode array as JSON string
   data.append("test_name", testName);
 

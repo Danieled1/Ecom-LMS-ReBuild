@@ -33,6 +33,9 @@ require get_stylesheet_directory() . '/inc/user-profile-functions.php';
 /****************************** Email Notifications and Handlers ******************************/
 require get_stylesheet_directory() . '/inc/email-functions.php';
 
+/****************************** Weird Bugs from Plugins | Themes ******************************/
+require get_stylesheet_directory() . '/fix-deprecations.php';
+
 
 add_filter(
     'learndash_status_bubble',
