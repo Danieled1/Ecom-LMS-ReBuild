@@ -80,3 +80,74 @@ function custom_handle_dashboard_launch_modal($content)
     return $content;
 }
 
+
+// Override the BuddyBoss bb_disabled_notification_actions_by_user function
+add_filter('bb_register_notification_preferences', 'override_bb_notification_preferences', 10, 1);
+
+function override_bb_notification_preferences($preferences) {
+    if (!is_array($preferences)) {
+        return []; // Ensure it always returns an array
+    }
+
+    // Return the original preferences or modify them as needed.
+    return $preferences;
+}
+
+// Custom implementation for bb_disabled_notification_actions_by_user
+if (!function_exists('bb_disabled_notification_actions_by_user')) {
+    function bb_disabled_notification_actions_by_user($user_id = 0, $type = 'web') {
+        if (empty($user_id) || bb_enabled_legacy_email_preference()) {
+            return [];
+        }
+
+        // Fetch notification preferences
+        $preferences = bb_register_notification_preferences();
+
+        // Ensure $preferences is an array
+        if (empty($preferences)) {
+            return [];
+        }
+
+        $preferences = array_column($preferences, 'fields', null);
+        $all_notifications = [];
+
+        foreach ($preferences as $key => $val) {
+            $all_notifications = array_merge($all_notifications, $val ?: []);
+        }
+
+        $all_notifications = array_map(
+            function ($n) use ($type) {
+                if (!empty($n['notifications']) && in_array($type, ['web', 'app'], true)) {
+                    $n['key'] = $n['key'] . '_' . $type;
+                    return $n;
+                } elseif (!empty($n['email_types']) && 'email' === $type) {
+                    $n['key'] = $n['key'] . '_' . $type;
+                    return $n;
+                }
+                return null;
+            },
+            $all_notifications
+        );
+
+        // Filter null values
+        $all_notifications = array_filter($all_notifications);
+        $all_actions = array_column($all_notifications, 'notifications', 'key');
+
+        if (empty($all_actions)) {
+            return [];
+        }
+
+        foreach ($all_actions as $key => $val) {
+            $all_actions[$key] = array_column(array_filter($val), 'component_action');
+        }
+
+        $excluded_actions = [];
+        $admin_excluded_actions = [];
+        $notifications_type_key = 'enable_notification';
+
+        // Ensure excluded actions are unique and returned
+        $excluded_actions = array_unique($excluded_actions);
+
+        return $excluded_actions;
+    }
+}

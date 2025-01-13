@@ -62,13 +62,12 @@ add_action('wp_ajax_update_user_job_status', 'jobStatusChangedMailTrigger');
 // Admin-Ticket ajax actions
 function handleTicketFormSubmission($post_id)
 {
-    error_log("TEST TEST NEW FORM OF STICKET");
+  
     // Check if the form was submitted and if the post type is 'ticket'
     if (isset($_POST['_acf_post_id']) && get_post_type($_POST['_acf_post_id']) === 'ticket') {
         // Get the post ID of the newly created 'ticket' post
         $ticket_post_id = intval($_POST['_acf_post_id']);
-
-        // Update the post status to 'publish'
+        error_log("New Ticket Submitted" . $ticket_post_id);
         wp_update_post(array(
             'ID' => $ticket_post_id,
             'post_status' => 'publish'
@@ -79,43 +78,29 @@ add_action('acf/save_post', 'handleTicketFormSubmission', 20);
 
 function fetchSectorEmails()
 {
-    global $wpdb; // This gives us access to the database via WordPress's wpdb class
-
-    // Prepare the SQL query to select all options that start with 'sector_email_'
+    global $wpdb; 
     $query = "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE 'sector_email_%'";
-
-    // Execute the query
     $results = $wpdb->get_results($query);
-
-    // Initialize an array to hold the sector data
     $sectors = [];
-
-    // Loop through the query results and add each sector to the $sectors array
     foreach ($results as $row) {
-        // Extract the sector name from the option name
         $sector_name = str_replace('sector_email_', '', $row->option_name);
         $sector_name = str_replace('_', ' ', $sector_name);
-        $sector_name = ucwords($sector_name); // Optionally capitalize the sector name for display
-
+        $sector_name = ucwords($sector_name); 
         $sectors[] = [
             'name' => $sector_name,
             'email' => $row->option_value
         ];
     }
-
-    // Use wp_send_json_success to return the sectors in a JSON response
     wp_send_json_success(['sectors' => $sectors]);
 }
 add_action('wp_ajax_fetch_sector_emails', 'fetchSectorEmails');
 
 function handleUpdateSectorEmails()
 {
-    // Ensure user has the capability to manage options
     if (!current_user_can('manage_options')) {
         wp_send_json_error(['message' => 'Unauthorized']);
         return;
     }
-    // Get all current sector options
     global $wpdb;
     $current_sectors = $wpdb->get_col("SELECT option_name FROM $wpdb->options WHERE option_name LIKE 'sector_email_%'");
 
@@ -359,6 +344,7 @@ function get_active_courses()
 //     }
 //     wp_send_json_success($grade_items);
 // }
+
 function fetch_client_grades()
 {
     if (!isset($_POST['user_id'])) {

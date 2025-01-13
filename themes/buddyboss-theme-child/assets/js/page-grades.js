@@ -8,7 +8,8 @@ function init() {
 function getStudentGrades() {
   console.log("Fetching grades for user ID:", userInfo.userId);
   const startTime = performance.now(); // Start timing
-
+  console.log(userInfo.ajaxUrl);
+  
   fetch(userInfo.ajaxUrl, {
     method: "POST",
     credentials: "same-origin",
@@ -29,6 +30,8 @@ function getStudentGrades() {
 
       if (data.success) {
         console.log("Data fetched successfully");
+        console.log(data.data);
+        
         requestAnimationFrame(() => populateGradesTableNew(data.data));
         
       } else {
@@ -62,8 +65,6 @@ function populateGradesTable(grades) {
 const populateGradesTableNew = (grades) => {
   const table = document.getElementById("gradesTable");
   table.innerHTML = ''; // Clear the table content
-
-  // Create thead and header row
   const thead = document.createElement('thead');
   const headerRow = document.createElement("tr");
 
@@ -84,10 +85,13 @@ const populateGradesTableNew = (grades) => {
   thead.appendChild(headerRow);
   table.appendChild(thead);
 
-  // Create and populate the tbody
   const tbody = document.createElement("tbody");
-
+  const total = grades.length;
+  let counter = 0;
+  const gradesInfo = document.getElementById("completed-text");
+   
   grades.forEach((grade) => {
+    if(grade.grade_score) counter++;
     const row = document.createElement("tr");
     const nameWithoutLastWord = grade.grade_name.split(" ").slice(0, -1).join(" ");
 
@@ -100,12 +104,12 @@ const populateGradesTableNew = (grades) => {
       nameWithoutLastWord,
       grade.grade_type,
       grade.grade_score || "N/A",
-      grade.grade_status,
+      grade.grade_status === "Not Submitted" ? "מחכה להגשה" : grade.grade_status,
       grade.grade_deadline || "א",
       grade.grade_feedback || "אין",
       grade.last_modified || "לא ידוע"
     ];
-
+    
     rowData.forEach((data) => {
       const cell = document.createElement("td");
       cell.innerText = data;
@@ -116,7 +120,8 @@ const populateGradesTableNew = (grades) => {
 
     tbody.appendChild(row);
   });
-
+  
+  gradesInfo.innerHTML = `${counter}/${total}`;
   table.appendChild(tbody);
 };
 

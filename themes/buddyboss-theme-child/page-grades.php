@@ -80,7 +80,7 @@ error_log('Time to fetch avatar: ' . ($end_time - $start_time) . ' seconds');
             </div>
             <div class="total-grades">
                 <p id="grades-text">מבחנים</p>
-                <p id="completed-text">1/2</p>
+                <p id="completed-text"></p>
             </div>
 
         </div>

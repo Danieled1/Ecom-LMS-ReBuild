@@ -2,12 +2,8 @@
 /**
  * BuddyPanel & Instructor Dashboard Integration
  */
-if (!defined('CUSTOM_BUDDYPANEL_LOADED')) {
-    define('CUSTOM_BUDDYPANEL_LOADED', true);
-    get_template_part('template-parts/buddypanelCustom');
-}
 
-//  error_log("BuddyPanel loaded from: " . debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function']);
+
 $user_id     = get_current_user_id();
 $current_user = wp_get_current_user();
 $user_link   = function_exists('bp_core_get_user_domain') 
@@ -380,27 +376,6 @@ $settings_icon_mapping = [
 		const sidebarNotOpen = document.querySelector('bb-buddypanel:not(.activate) .site, .bb-buddypanel:not(.register) .site');
 		const originalMarginLeft = document.body.style.marginLeft;
 		const originalMarginRight = document.body.style.marginRight;
-		// const buddypanelMenu = document.querySelector('#buddypanel-menu');
-		// buddypanelMenu.addEventListener('click', function (e) {
-		// 	// Check if the clicked element is an anchor (<a>) or a menu item (<li>)
-		// 	let clickedItem = e.target.closest('li');
-
-		// 	// If no <li> was clicked, exit
-		// 	if (!clickedItem) return;
-
-		// 	// Handle parent and submenu items
-		// 	if (clickedItem.classList.contains('menu-item')) {
-		// 	// Remove 'current-menu-item' class from all items
-		// 	buddypanelMenu.querySelectorAll('.menu-item').forEach(function (item) {
-		// 		item.classList.remove('current-menu-item');
-		// 	});
-
-		// 	// Add 'current-menu-item' class to the clicked item or its parent
-		// 	clickedItem.classList.add('current-menu-item');
-		// 	}
-			
-		// });
-
 		const buddypanelMenu = document.querySelector('#buddypanel-menu');
   
 		// Function to mark the current menu item based on URL

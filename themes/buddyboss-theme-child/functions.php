@@ -9,6 +9,55 @@
 
 /****************************** THEME SETUP ******************************/
 require get_stylesheet_directory() . '/inc/theme-setup.php';
+// Block LearnDash API requests to `checkout.learndash.com`
+add_filter('http_request_args', function ($args, $url) {
+    if (strpos($url, 'https://checkout.learndash.com') !== false) {
+        // Block the request by reducing the timeout
+        $args['timeout'] = 0.01; 
+        error_log('Blocked LearnDash API call to: ' . $url);
+    }
+    return $args;
+}, 10, 2);
+
+// Prevent redundant triggers of LearnDash API calls by unhooking the action early
+add_action('init', function () {
+    if (class_exists('LearnDash\Hub\Framework\Base')) {
+        remove_filter('site_transient_update_plugins', ['LearnDash\Hub\Controller\Projects_Controller', 'push_update'], 10);
+    }
+});
+
+// Replace the LearnDash API call response to prevent warnings
+add_action('plugins_loaded', function () {
+    if (class_exists('LearnDash\Hub\Framework\Base')) {
+        class Custom_LearnDash_Base extends \LearnDash\Hub\Framework\Base {
+            public function do_api_request($url, $args = []) {
+                if (strpos($url, 'https://checkout.learndash.com') !== false) {
+                    // Mock the API response
+                    error_log('Intercepted and blocked LearnDash API request to: ' . $url);
+                    return ['success' => false, 'data' => []];
+                }
+                return parent::do_api_request($url, $args);
+            }
+        }
+        // Override LearnDash Base class functionality
+        $GLOBALS['learndash_hub_base'] = new Custom_LearnDash_Base();
+    }
+});
+
+add_action('template_redirect', function () {
+    // Check if we are on the homepage
+    if (is_front_page()) {
+        // Check if the user is logged in
+        if (is_user_logged_in()) {
+            // Redirect to the LearnDash "My Profile" template
+            bp_core_redirect(bp_loggedin_user_domain());
+        } else {
+            // Redirect non-logged-in users to the default homepage or login page
+            wp_redirect(wp_login_url(home_url()));
+            exit;
+        }
+    }
+});
 
 
 /****************************** CUSTOM FUNCTIONS ******************************/
@@ -309,6 +358,9 @@ function displayHeaderWithIcon($svg_name, $header_text)
 //     }
 //     echo '</pre>';
 // });
+
+
 add_action('after_setup_theme', function () {
     remove_action('wp_footer', 'buddyboss_theme_buddypanel');
 });
+

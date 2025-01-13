@@ -1,0 +1,139 @@
+.testtest {
+    display: flex;
+    width: 200px;
+    padding: 20px 0px;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+/* user-link */
+#menu-item-4747>a {
+    margin-bottom: 0 !important;
+    align-items: center !important;
+    padding: 0 !important;
+    height: 72px !important;
+    border-bottom: none !important;
+    cursor: default;
+}
+#menu-item-4747>a:hover{
+    color:none;
+    background: none;
+}
+.bb-template-v2 ul.buddypanel-menu>li>a>img:first-child {
+    margin: 0 10px !important;
+}
+
+.side-panel-inner {
+    padding-top: 0 !important;
+}
+
+/* div sub-menu-inner */
+body>aside>div>nav>div>div>ul {
+    margin: 0;
+}
+
+/* Default state: Set text color to gray */
+.buddypanel-menu .bb-menu-item {
+    color: #717171 !important;
+    font-weight: 400 !important;
+    font-style: normal;
+    line-height: normal;
+    height: 35px !important;
+    /* gap: 8px; */
+}
+
+/* Default state: Ensure icons inherit the gray color */
+.buddypanel-menu .bb-menu-item i {
+    color: inherit !important;
+
+}
+
+/* Active state: Set text color to purple and background to #F2F2F2 */
+.buddypanel-menu .current-menu-item .bb-menu-item {
+    color: var(--purple, #6836FF) !important;
+    background-color: #F2F2F2 !important;
+}
+
+/* Active state: Ensure icons inherit the purple color */
+.buddypanel-menu .current-menu-item .bb-menu-item i {
+    color: inherit !important;
+}
+
+#menu-item-last-courses {
+    margin: 0 !important;
+    cursor: pointer;
+}
+
+/* Open state: Set text color to purple */
+#menu-item-last-courses>a.bb-menu-item {
+    color: var(--purple, #6836FF) !important;
+
+}
+
+.bb-template-v2 .buddypanel .side-panel-menu .sub-menu a {
+    padding-right: 10px !important;
+    height: 35px !important;
+
+}
+
+hr {
+    margin: 4px 0;
+    opacity: 0.6;
+}
+
+/* Active state for entire menu structure */
+.buddypanel-menu .current-menu-item,
+.buddypanel-menu .current-menu-ancestor {
+    background-color: #F2F2F2 !important;
+    color: var(--purple, #6836FF) !important;
+}
+
+/* Adjust submenu item text alignment */
+.buddypanel .side-panel-menu .sub-menu li a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* Ensures the icon and text are aligned well */
+    width: 91% !important;
+    padding: 0 10px !important;
+    height: 35px;
+}
+
+.buddypanel-open .buddypanel-menu .sub-menu.bb-open {
+    padding-top: 38px;
+}
+
+.buddypanel .site-header-container {
+    display: none;
+}
+
+#toggle-sidebar {
+    position: fixed;
+    z-index: 1234;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px #FFF solid;
+    border-radius: 10px;
+    top: 116px;
+    right: 220px;
+    transition: right 0.3s ease-in-out;
+    color: var(--Gray-3, #828282) ;
+    background: var(--WHITE, #FFF) !important;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 900;
+    
+}
+
+body {
+    transition: margin 0.1s ease-in-out;
+}
+
+.buddypanel {
+    transition: display 0.3s ease-in;
+}

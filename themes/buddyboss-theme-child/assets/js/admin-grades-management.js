@@ -418,7 +418,7 @@ function fetchGrades(userId) {
     method: "POST",
     credentials: "same-origin",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `action=fetch_grades&user_id=${userId}`,
+    body: `action=fetch_client_grades&user_id=${userId}`,
   };
 
   fetch(adminAjax.ajaxUrl, request)
@@ -429,15 +429,15 @@ function fetchGrades(userId) {
 }
 
 function showGrades(grades, userId) {
+  console.log("GRADES",grades);
+  
   const tableBody = getElement("#gradesTable tbody", "Grades table body not found");
   tableBody.innerHTML = generateGradesRows(grades, userId);
   document.getElementById("gradesModal").style.display = "block";
 }
 
 function generateGradesRows(grades, userId) {
-  return grades
-    .map(
-      (grade, index) => `
+  return grades.map((grade, index) => `
     <tr data-user-id=${userId} data-index=${index}>
       <td data-label="grade-name">${grade.grade_name}</td>
       <td data-label="grade-type">${grade.grade_type}</td>
