@@ -1,0 +1,121 @@
+.card-slider {
+    display: flex;
+    width: auto; 
+    overflow-x: auto; 
+    padding-bottom: 15px; 
+    scroll-behavior: smooth; 
+    position: relative; 
+   
+}
+
+.card-slider::-webkit-scrollbar {
+    height: 6px; 
+    opacity: 0; 
+    transition: opacity 0.3s; 
+}
+.campigans-container:hover .card-slider::-webkit-scrollbar {
+    opacity: 1; 
+}
+
+.card-slider::-webkit-scrollbar-thumb {
+    background-color: darkgray; 
+    border-radius: 10px; 
+}
+
+.card-slider::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.card-campaign {
+    flex: 0 0 30%; 
+    margin-right: 15px; 
+    min-width: 220px; 
+    height: auto; 
+    border-radius: 20px;
+    background: linear-gradient(17deg, #FCB72B 0.61%, #F2F2F2 37.17%, #6836FF 99.44%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-header-box {
+    width: 100%;
+    height: 40%;
+    background: #6836FF;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-side-color {
+    width: 15%;
+    height: 100%;
+    background: #3DD88C;
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.card-headers {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 30px;
+}
+
+.card-title {
+    color: #FFF;
+    text-align: right;
+    font-family: Rubik;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 90%;
+    margin: 4px 0 !important;
+}
+
+.card-sub-text {
+    color: #3DD88C;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 130%;
+}
+
+.card-logo {
+    width: 70px;
+    height: 70px;
+    margin-top: -35px;
+    margin-bottom: 20px;
+    align-self: center;
+}
+
+.card-button {
+    display: inline-flex;
+    padding: 15px 30px;
+    margin-bottom: 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #FCB72B 0%, #6836FF 100%);
+    color: #FFF;
+    text-align: right;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.card-footer {
+    color: #6836FF;
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 130%;
+}
+

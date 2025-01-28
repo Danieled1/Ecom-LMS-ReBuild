@@ -20,7 +20,8 @@ acf_form_head();
 get_header();
 $current_user = wp_get_current_user();
 $current_user_id = get_current_user_id();
-
+$grades_banner_webp = get_stylesheet_directory_uri() . '/assets/images/grades-banner-1.webp';
+$grades_banner_png = get_stylesheet_directory_uri() . '/assets/images/grades-banner-1.png';
 // Logging timing for job_status
 $start_time = microtime(true);
 $job_status = wp_cache_get('job_status_' . $current_user_id, 'user_meta');
@@ -46,8 +47,10 @@ error_log('Time to fetch avatar: ' . ($end_time - $start_time) . ' seconds');
 <div class="grades-page-content">
     <div class="header-image-wrapper">
         <div class="header-image">
-            <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/grades-banner-1.png"
-                alt="Header Image" />
+            <picture>
+                <source srcset="<?php echo esc_url($grades_banner_webp); ?>" type="image/webp">
+                <img src="<?php echo esc_url($grades_banner_png); ?>" alt="Header Image">
+            </picture>
             <div class="header-gradient-overlay"></div>
             <div class="header-text">
                 <div class="header-placement-title">ציונים</div>

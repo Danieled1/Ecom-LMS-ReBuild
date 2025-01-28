@@ -44,20 +44,20 @@ add_action('plugins_loaded', function () {
     }
 });
 
-add_action('template_redirect', function () {
-    // Check if we are on the homepage
-    if (is_front_page()) {
-        // Check if the user is logged in
-        if (is_user_logged_in()) {
-            // Redirect to the LearnDash "My Profile" template
-            bp_core_redirect(bp_loggedin_user_domain());
-        } else {
-            // Redirect non-logged-in users to the default homepage or login page
-            wp_redirect(wp_login_url(home_url()));
-            exit;
-        }
-    }
-});
+// add_action('template_redirect', function () {
+//     // Check if we are on the homepage
+//     if (is_front_page()) {
+//         // Check if the user is logged in
+//         if (is_user_logged_in()) {
+//             // Redirect to the LearnDash "My Profile" template
+//             bp_core_redirect(bp_loggedin_user_domain());
+//         } else {
+//             // Redirect non-logged-in users to the default homepage or login page
+//             wp_redirect(wp_login_url(home_url()));
+//             exit;
+//         }
+//     }
+// });
 
 
 /****************************** CUSTOM FUNCTIONS ******************************/

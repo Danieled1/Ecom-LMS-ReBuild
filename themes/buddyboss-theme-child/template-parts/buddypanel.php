@@ -16,6 +16,7 @@ $display_name   = function_exists('bp_core_get_user_displayname')
 $is_admin       = user_can($user_id, 'manage_options');
 
 $instructor_dashboard_url = site_url('/wp-admin/admin.php?page=ir_instructor_overview');
+// $extra_courses_tab_url = 
 $allowed_roles = ['wdm_instructor', 'instructor', 'manage_options']; // Extend as needed
 $has_instructor_access = false;
 foreach ($allowed_roles as $role) {
@@ -27,13 +28,12 @@ foreach ($allowed_roles as $role) {
 }
 
 
-$custom_menu_item = $has_instructor_access ? (object) [
+$instructor_menu_item = $has_instructor_access ? (object) [
     'ID'      => 'instructor-dashboard',
     'title'   => 'ניהול מרצה',
     'url'     => $instructor_dashboard_url,
     'classes' => 'bb-menu-item instructor-dashboard'
 ] : null;
-
 
 // 3. Gather "Courses With Progress" data (for non-admin users) = 
 $courses_with_progress = [];
@@ -65,8 +65,8 @@ $menu_items = $menu_id ? wp_get_nav_menu_items($menu_id) : [];
 if (!is_array($menu_items)) {
     $menu_items = [];
 }
-if ($custom_menu_item) {
-    $menu_items[] = $custom_menu_item;
+if ($instructor_menu_item) {
+    $menu_items[] = $instructor_menu_item;
 }
 // 5. Filter & Adjust Menu Items in One Pass
 //    We'll group them into categories to reduce repeated loops later
@@ -85,12 +85,12 @@ foreach ($menu_items as $item) {
     if ($item->title === 'הפרופיל שלי') {
         $item->url = esc_url(bp_core_get_user_domain($current_user->ID));
     }
-    // Categorize by title
+    // Categorize by title - Removed 'בלוג איקום' and , 'קבוצות' - temp
     if (in_array($item->title, ['ניהול מרצה','הקורס שלי', 'תמיכה מקצועית'])) {
         $menu_groups['main'][] = $item;
-    } elseif (in_array($item->title, ['הפרופיל שלי', 'פניות ואישורים', 'השמה', 'קבוצות'])) {
+    } elseif (in_array($item->title, ['הפרופיל שלי', 'פניות ואישורים', 'השמה'])) {
         $menu_groups['settings'][] = $item;
-    } elseif (in_array($item->title, ['בלוג איקום', 'משוב', 'ציונים', 'התנתק'])) {
+    } elseif (in_array($item->title, ['משוב', 'ציונים', 'התנתק'])) {
         $menu_groups['footer'][] = $item;
     }
 }

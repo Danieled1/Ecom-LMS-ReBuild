@@ -29,6 +29,19 @@ function my_acf_enqueue_scripts()
 }
 add_action('wp_enqueue_scripts', 'my_acf_enqueue_scripts');
 
+function child_enqueue_profile_loop_css() {
+    // Check if we are on a BuddyPress user profile page
+    if ( function_exists('bp_is_user_profile') && bp_is_user_profile() ) {
+        wp_enqueue_style(
+            'child-profile-loop-css',
+            get_stylesheet_directory_uri() . '/assets/css/profile-loop.css',
+            array(), // Dependencies, if any
+            '1.0.0', // Version
+            'all'    // Media
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'child_enqueue_profile_loop_css');
 
 
 function enqueue_page_grades_assets()
@@ -75,7 +88,9 @@ add_action('wp_enqueue_scripts', 'enqueue_page_technical_support_assets');
 
 function enqueue_page_placement_assets()
 {
+    
     if (is_page_template('page-placement.php')) {
+        acf_enqueue_scripts();
         wp_enqueue_style('page-placement-style', get_stylesheet_directory_uri() . '/assets/css/page-placement.css', array(), '1.0.0');
         wp_enqueue_script('page-placement-script', get_stylesheet_directory_uri() . '/assets/js/page-placement.js', array(), '1.0.0', true);
     }
@@ -105,14 +120,14 @@ function enqueue_page_custom_login()
 }
 add_action('wp_enqueue_scripts', 'enqueue_page_custom_login');
 
-function enqueue_tailwind_for_profiles() {
-    if ( function_exists('bp_is_user') && bp_is_user() ) {
-        wp_enqueue_style('tailwindcss', 'https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css');
-        wp_enqueue_style('transition-style', 'https://unpkg.com/transition-style'); // Enqueue the transition-style CSS
+// function enqueue_tailwind_for_profiles() {
+//     if ( function_exists('bp_is_user') && bp_is_user() ) {
+//         wp_enqueue_style('tailwindcss', 'https://cdn.jsdelivr.net/npm/tailwindcss@^2.0/dist/tailwind.min.css');
+//         wp_enqueue_style('transition-style', 'https://unpkg.com/transition-style'); // Enqueue the transition-style CSS
 
-    }
-}
-add_action('wp_enqueue_scripts', 'enqueue_tailwind_for_profiles');
+//     }
+// }
+// add_action('wp_enqueue_scripts', 'enqueue_tailwind_for_profiles');
 function enqueue_admin_resume_management_scripts($hook_suffix)
 {
     // Check if we're on the Resume Management admin page

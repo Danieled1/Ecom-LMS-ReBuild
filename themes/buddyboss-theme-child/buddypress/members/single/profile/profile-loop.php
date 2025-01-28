@@ -7,132 +7,8 @@
  */
 
 $edit_profile_link = trailingslashit(bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/');
-
 bp_nouveau_xprofile_hook('before', 'loop_content');
-?>                             <style>
-.card-slider {
-    display: flex;
-    width: auto; /* Allow the width to adjust based on content */
-    overflow-x: auto; /* Allow horizontal scrolling */
-    padding-bottom: 15px; /* Space for smooth scroll */
-    scroll-behavior: smooth; /* Smooth scrolling */
-    position: relative; /* Ensure hover areas are placed correctly */
-   
-}
-/* For WebKit browsers (Chrome, Safari) */
-.card-slider::-webkit-scrollbar {
-    height: 6px; /* Height of the scrollbar */
-    opacity: 0; /* Hide scrollbar by default */
-    transition: opacity 0.3s; /* Smooth transition for visibility */
-}
-.campigans-container:hover .card-slider::-webkit-scrollbar {
-    opacity: 1; /* Show scrollbar on hover */
-}
-
-.card-slider::-webkit-scrollbar-thumb {
-    background-color: darkgray; /* Color of the scrollbar thumb */
-    border-radius: 10px; /* Rounded corners */
-}
-
-.card-slider::-webkit-scrollbar-track {
-    background: transparent; /* Background of the scrollbar track */
-}
-
-.card-campaign {
-    flex: 0 0 30%; /* Allow the cards to take 30% of the container’s width */
-    margin-right: 15px; /* Add some space between the cards */
-    min-width: 220px; /* Set minimum width to avoid shrinking too much */
-    height: auto; /* Allow height to adjust based on content */
-    border-radius: 20px;
-    background: linear-gradient(17deg, #FCB72B 0.61%, #F2F2F2 37.17%, #6836FF 99.44%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.card-header-box {
-    width: 100%;
-    height: 40%;
-    background: #6836FF;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-    border-bottom-left-radius: 100px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.card-side-color {
-    width: 15%;
-    height: 100%;
-    background: #3DD88C;
-    border-bottom-right-radius: 20px;
-    border-top-right-radius: 20px;
-}
-
-.card-headers {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: 30px;
-}
-
-.card-title {
-    color: #FFF;
-    text-align: right;
-    font-family: Rubik;
-    font-size: 26px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 90%;
-    margin: 4px 0 !important;
-}
-
-.card-sub-text {
-    color: #3DD88C;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 130%;
-}
-
-.card-logo {
-    width: 70px;
-    height: 70px;
-    margin-top: -35px;
-    margin-bottom: 20px;
-    align-self: center;
-}
-
-.card-button {
-    display: inline-flex;
-    padding: 15px 30px;
-    margin-bottom: 20px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border-radius: 10px;
-    background: linear-gradient(90deg, #FCB72B 0%, #6836FF 100%);
-    color: #FFF;
-    text-align: right;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-}
-
-.card-footer {
-    color: #6836FF;
-    text-align: center;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 130%;
-}
-
-</style>
-
+?>                            
 
 <?php
 if (bp_has_profile()) {
@@ -200,12 +76,12 @@ if (bp_has_profile()) {
                                     <div class="card-header-box">
                                         <div class="card-side-color"></div>
                                         <div class="card-headers">
-                                            <h3 class="card-title">1Join full stack Challange</h3>
-                                            <p class="card-sub-text">במיוחד למסלול שלך!</p>
+                                            <h3 class="card-title">פרויקט 1</h3>
+                                            <p class="card-sub-text">פרויקט במיוחד למסלול שלך!</p>
                                         </div>
                                     </div>
                                     <div class="card-logo">
-                                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/mini-logo.svg" alt="Logo">
+                                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/mini-logo.svg" alt="Logo" loading="lazy">
                                     </div>
                                     <a href="#" class="card-button">התחל ללמוד</a>
                                     <div class="card-footer">
@@ -216,12 +92,28 @@ if (bp_has_profile()) {
                                     <div class="card-header-box">
                                         <div class="card-side-color"></div>
                                         <div class="card-headers">
-                                            <h3 class="card-title">2Join Mobile Challange</h3>
-                                            <p class="card-sub-text">במיוחד למסלול שלך!</p>
+                                            <h3 class="card-title">פרויקט 2</h3>
+                                            <p class="card-sub-text">פרויקט במיוחד למסלול שלך!</p>
                                         </div>
                                     </div>
                                     <div class="card-logo">
-                                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/mini-logo.svg" alt="Logo">
+                                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/mini-logo.svg" alt="Logo" loading="lazy">
+                                    </div>
+                                    <a href="#" class="card-button">התחל לפתח</a>
+                                    <div class="card-footer">
+                                        <p>7 ימי ניסיון חינם</p>
+                                    </div>
+                                </div>
+                                <div class="card-campaign">
+                                    <div class="card-header-box">
+                                        <div class="card-side-color"></div>
+                                        <div class="card-headers">
+                                            <h3 class="card-title">פרויקט 3</h3>
+                                            <p class="card-sub-text">פרויקט במיוחד למסלול שלך!</p>
+                                        </div>
+                                    </div>
+                                    <div class="card-logo">
+                                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/mini-logo.svg" alt="Logo" loading="lazy">
                                     </div>
                                     <a href="#" class="card-button">התחל ללמוד</a>
                                     <div class="card-footer">
@@ -232,44 +124,12 @@ if (bp_has_profile()) {
                                     <div class="card-header-box">
                                         <div class="card-side-color"></div>
                                         <div class="card-headers">
-                                            <h3 class="card-title">3Join Mobile Challange</h3>
-                                            <p class="card-sub-text">במיוחד למסלול שלך!</p>
+                                            <h3 class="card-title">פרויקט 4</h3>
+                                            <p class="card-sub-text">פרויקט במיוחד למסלול שלך!</p>
                                         </div>
                                     </div>
                                     <div class="card-logo">
-                                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/mini-logo.svg" alt="Logo">
-                                    </div>
-                                    <a href="#" class="card-button">התחל ללמוד</a>
-                                    <div class="card-footer">
-                                        <p>7 ימי ניסיון חינם</p>
-                                    </div>
-                                </div>
-                                <div class="card-campaign">
-                                    <div class="card-header-box">
-                                        <div class="card-side-color"></div>
-                                        <div class="card-headers">
-                                            <h3 class="card-title">4Join Mobile Challange</h3>
-                                            <p class="card-sub-text">במיוחד למסלול שלך!</p>
-                                        </div>
-                                    </div>
-                                    <div class="card-logo">
-                                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/mini-logo.svg" alt="Logo">
-                                    </div>
-                                    <a href="#" class="card-button">התחל ללמוד</a>
-                                    <div class="card-footer">
-                                        <p>7 ימי ניסיון חינם</p>
-                                    </div>
-                                </div>
-                                <div class="card-campaign">
-                                    <div class="card-header-box">
-                                        <div class="card-side-color"></div>
-                                        <div class="card-headers">
-                                            <h3 class="card-title">Join Mobile Challange</h3>
-                                            <p class="card-sub-text">במיוחד למסלול שלך!</p>
-                                        </div>
-                                    </div>
-                                    <div class="card-logo">
-                                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/mini-logo.svg" alt="Logo">
+                                        <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/mini-logo.svg" alt="Logo" loading="lazy">
                                     </div>
                                     <a href="#" class="card-button">התחל ללמוד</a>
                                     <div class="card-footer">
