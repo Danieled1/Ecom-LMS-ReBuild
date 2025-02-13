@@ -31,10 +31,17 @@ add_action('wp_enqueue_scripts', 'my_acf_enqueue_scripts');
 
 function child_enqueue_profile_loop_css() {
     // Check if we are on a BuddyPress user profile page
-    if ( function_exists('bp_is_user_profile') && bp_is_user_profile() ) {
+    if ( function_exists('bp_is_user_profile') && (bp_is_user_profile() || bp_is_current_component('courses') || bp_is_current_component('friends') || bp_is_current_component('certificates')) ) {
         wp_enqueue_style(
             'child-profile-loop-css',
             get_stylesheet_directory_uri() . '/assets/css/profile-loop.css',
+            array(), // Dependencies, if any
+            '1.0.0', // Version
+            'all'    // Media
+        );
+        wp_enqueue_style(
+            'child-profile-home-css',
+            get_stylesheet_directory_uri() . '/assets/css/profile-home.css',
             array(), // Dependencies, if any
             '1.0.0', // Version
             'all'    // Media
@@ -43,7 +50,6 @@ function child_enqueue_profile_loop_css() {
 }
 add_action('wp_enqueue_scripts', 'child_enqueue_profile_loop_css');
 
-
 function enqueue_page_grades_assets()
 {
     // MAKE SURE IN THE PAGE WORDPRESS EDITOR, THAT THE TEMPLATE NAME IS PICKED(LISTED AT THE START OF A PAGE WE CREATE)
@@ -51,9 +57,6 @@ function enqueue_page_grades_assets()
         wp_enqueue_style('page-grades-style', get_stylesheet_directory_uri() . '/assets/css/page-grades.css', array(), '1.0.0');
         wp_enqueue_script('page-grades-script', get_stylesheet_directory_uri() . '/assets/js/page-grades.js', array(), '1.0.0', true);
         wp_dequeue_script('jquery-migrate'); // Optional: Remove migrate as well
-        wp_dequeue_script('acf-input');
-        wp_dequeue_script('acf-timepicker');
-        wp_dequeue_style('select2');
         global $current_user;
         wp_get_current_user();
         wp_localize_script('page-grades-script', 'userInfo', array(

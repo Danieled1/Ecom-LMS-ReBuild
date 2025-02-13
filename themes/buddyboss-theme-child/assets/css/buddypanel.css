@@ -1,13 +1,3 @@
-.testtest {
-    display: flex;
-    width: 200px;
-    padding: 20px 0px;
-    flex-direction: column;
-
-    gap: 8px;
-}
-
-
 /* user-link */
 #menu-item-4747>a {
     margin-bottom: 0 !important;
@@ -17,10 +7,12 @@
     border-bottom: none !important;
     cursor: default;
 }
-#menu-item-4747>a:hover{
-    color:none;
+
+#menu-item-4747>a:hover {
+    color: none;
     background: none;
 }
+
 .bb-template-v2 ul.buddypanel-menu>li>a>img:first-child {
     margin: 0 10px !important;
 }
@@ -79,7 +71,7 @@ body>aside>div>nav>div>div>ul {
 }
 
 hr {
-    margin: 4px 0;
+    margin: 4px 0 !important;
     opacity: 0.6;
 }
 
@@ -122,12 +114,12 @@ hr {
     top: 116px;
     right: 220px;
     transition: right 0.3s ease-in-out;
-    color: var(--Gray-3, #828282) ;
+    color: var(--Gray-3, #828282);
     background: var(--WHITE, #FFF) !important;
     text-align: center;
     font-size: 14px;
     font-weight: 900;
-    
+
 }
 
 body {
@@ -136,4 +128,8 @@ body {
 
 .buddypanel {
     transition: display 0.3s ease-in;
+}
+
+.buddypanel-open .buddypanel-menu .sub-menu.bb-open{
+    padding-top: 39px !important;
 }

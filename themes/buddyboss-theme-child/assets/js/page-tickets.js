@@ -98,6 +98,7 @@ function initialize() {
     setupButtonEventHandlers('ticketHistoryBtn', handleTicketHistoryBtnClick);
     setupButtonEventHandlers('createTicketBtn', handleTicketCreateBtnClick);
     renderSubSectors();
+    toggleVisibility('ticketHistory');
 }
 
 // Wait for the DOM to be fully loaded before running the initialize function

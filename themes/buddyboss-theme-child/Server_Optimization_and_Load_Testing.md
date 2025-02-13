@@ -39,7 +39,7 @@
 ## Monitoring and Validation Commands
 
 ### Memory and Swap Usage:
-```bash
+```bashecom
 free -h
 swapon --show
 ```

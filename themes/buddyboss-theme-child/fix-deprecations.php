@@ -151,3 +151,23 @@ if (!function_exists('bb_disabled_notification_actions_by_user')) {
         return $excluded_actions;
     }
 }
+
+
+if ( ! empty( $enabled_all_notification ) ) {
+    foreach ( $enabled_all_notification as $key => $types ) {
+        if ( !is_array($types) ) {
+            error_log("WARNING: Unexpected non-array value in enabled_all_notification[$key]");
+            continue;
+        }
+        if ( isset( $types['main'] ) && 'no' === $types['main'] ) {
+            if (isset($all_actions[$key . '_' . $type]) && is_array($all_actions[$key . '_' . $type])) {
+                $admin_excluded_actions = array_merge($admin_excluded_actions, $all_actions[$key . '_' . $type]);
+            } else {
+                error_log("WARNING: Skipping missing notification key: " . $key . '_' . $type);
+            }
+        }
+        if ( isset( $types[ $type ] ) ) {
+            $settings_by_admin[ $key . '_' . $type ] = $types[ $type ];
+        }
+    }
+}

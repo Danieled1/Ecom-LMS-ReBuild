@@ -9,40 +9,60 @@
 
 /****************************** THEME SETUP ******************************/
 require get_stylesheet_directory() . '/inc/theme-setup.php';
-// Block LearnDash API requests to `checkout.learndash.com`
-add_filter('http_request_args', function ($args, $url) {
-    if (strpos($url, 'https://checkout.learndash.com') !== false) {
-        // Block the request by reducing the timeout
-        $args['timeout'] = 0.01; 
-        error_log('Blocked LearnDash API call to: ' . $url);
-    }
-    return $args;
-}, 10, 2);
+// // Block LearnDash API requests to `checkout.learndash.com`
+// add_filter('http_request_args', function ($args, $url) {
+//     if (strpos($url, 'https://checkout.learndash.com') !== false) {
+//         // Block the request by reducing the timeout
+//         $args['timeout'] = 0.01; 
+//         error_log('Blocked LearnDash API call to: ' . $url);
+//     }
+//     return $args;
+// }, 10, 2);
 
-// Prevent redundant triggers of LearnDash API calls by unhooking the action early
+// // Prevent redundant triggers of LearnDash API calls by unhooking the action early
+// add_action('init', function () {
+//     if (class_exists('LearnDash\Hub\Framework\Base')) {
+//         remove_filter('site_transient_update_plugins', ['LearnDash\Hub\Controller\Projects_Controller', 'push_update'], 10);
+//     }
+// });
+
+// // Replace the LearnDash API call response to prevent warnings
+// add_action('plugins_loaded', function () {
+//     if (class_exists('LearnDash\Hub\Framework\Base')) {
+//         class Custom_LearnDash_Base extends \LearnDash\Hub\Framework\Base {
+//             public function do_api_request($url, $args = []) {
+//                 if (strpos($url, 'https://checkout.learndash.com') !== false) {
+//                     // Mock the API response
+//                     error_log('Intercepted and blocked LearnDash API request to: ' . $url);
+//                     return ['success' => false, 'data' => []];
+//                 }
+//                 return parent::do_api_request($url, $args);
+//             }
+//         }
+//         // Override LearnDash Base class functionality
+//         $GLOBALS['learndash_hub_base'] = new Custom_LearnDash_Base();
+//     }
+// });
+// Disable LearnDash Hub API Calls
+add_filter('pre_http_request', function ($response, $args, $url) {
+    if (strpos($url, 'checkout.learndash.com') !== false) {
+        error_log('⚠️ Blocked LearnDash API call: ' . $url);
+        return new WP_Error('blocked_learndash_request', __('Blocked LearnDash API Call -ecom'), ['status' => 403]);
+    }
+    return $response;
+}, 10, 3);
 add_action('init', function () {
-    if (class_exists('LearnDash\Hub\Framework\Base')) {
+    remove_action('wp_ajax_ld_hub_plugin_action', ['LearnDash\Hub\Controller\Projects_Controller', 'plugin_action']);
+    remove_action('wp_ajax_ld_hub_refresh_repo', ['LearnDash\Hub\Controller\Projects_Controller', 'refresh_repo_data']);
+    remove_action('wp_ajax_ld_hub_bulk_action', ['LearnDash\Hub\Controller\Projects_Controller', 'bulk_action']);
+    if (class_exists('LearnDash\Hub\Controller\Projects_Controller')) {
+        remove_filter('http_request_args', ['LearnDash\Hub\Controller\Projects_Controller', 'maybe_append_auth_headers'], 10);
         remove_filter('site_transient_update_plugins', ['LearnDash\Hub\Controller\Projects_Controller', 'push_update'], 10);
+        
     }
+    remove_filter('bp_ajax_queryst', 'bb_disabled_notification_actions_by_user', 10, 2);
 });
 
-// Replace the LearnDash API call response to prevent warnings
-add_action('plugins_loaded', function () {
-    if (class_exists('LearnDash\Hub\Framework\Base')) {
-        class Custom_LearnDash_Base extends \LearnDash\Hub\Framework\Base {
-            public function do_api_request($url, $args = []) {
-                if (strpos($url, 'https://checkout.learndash.com') !== false) {
-                    // Mock the API response
-                    error_log('Intercepted and blocked LearnDash API request to: ' . $url);
-                    return ['success' => false, 'data' => []];
-                }
-                return parent::do_api_request($url, $args);
-            }
-        }
-        // Override LearnDash Base class functionality
-        $GLOBALS['learndash_hub_base'] = new Custom_LearnDash_Base();
-    }
-});
 
 // add_action('template_redirect', function () {
 //     // Check if we are on the homepage
@@ -135,98 +155,6 @@ function customize_learndash_content_tabs($tabs, $context, $course_id, $user_id)
     return $tabs;
 }
 
-function add_loading_spinner()
-{
-    ?>
-    <div id="loading-spinner" style="display: none; opacity: 0; transition: opacity 0.5s ease;">
-        <div class="spinner"></div>
-    </div>
-    <style>
-        #loading-spinner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, #f4fffe, rgba(244, 255, 254, 0));
-            z-index: 9999;
-            /* Ensure it is on top of other elements */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            /* Start with hidden opacity */
-            transition: opacity 0.5s ease;
-            /* Smooth transition for opacity */
-        }
-
-        .spinner {
-            border: 8px solid #6836FF;
-            border-top: 8px solid #fcb72b;
-            border-radius: 50%;
-            width: 60px;
-            /* Size of the spinner */
-            height: 60px;
-            /* Size of the spinner */
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
-    <script>
-        // document.addEventListener("DOMContentLoaded", function () {
-        //     let currentURL = window.location.href;
-
-        //     // Function to detect AJAX requests
-        //     function isAjaxRequest(event) {
-        //         return event.target instanceof XMLHttpRequest;
-        //     }
-
-        //     // Show the loading spinner only if it's a full page reload
-        //     document.querySelectorAll('a').forEach(function (link) {
-        //         link.addEventListener('click', function (event) {
-        //             // Check if the clicked link is triggering a full page load and not an AJAX request
-        //             let targetURL = link.href;
-        //             if (targetURL !== currentURL && !isAjaxRequest(event)) {
-        //                 const spinner = document.getElementById("loading-spinner");
-        //                 spinner.style.display = "flex"; // Show the spinner
-        //                 setTimeout(() => {
-        //                     spinner.style.opacity = 1; // Fade in
-        //                 }, 10);
-        //             }
-        //         });
-        //     });
-
-        //     // Hide the spinner after content is loaded
-        //     window.addEventListener("load", function () {
-        //         const spinner = document.getElementById("loading-spinner");
-        //         spinner.style.opacity = 0; // Fade out
-        //         setTimeout(() => {
-        //             spinner.style.display = "none"; // Hide after fade out
-        //         }, 500);
-        //     });
-
-        //     // Optionally listen for AJAX completion to hide the spinner if needed
-        //     document.addEventListener('ajaxComplete', function () {
-        //         const spinner = document.getElementById("loading-spinner");
-        //         spinner.style.opacity = 0; // Fade out
-        //         setTimeout(() => {
-        //             spinner.style.display = "none"; // Hide after fade out
-        //         }, 500);
-        //     });
-        // });
-    </script>
-    <?php
-}
-add_action('wp_footer', 'add_loading_spinner');
 
 add_action('bp_setup_nav', 'customize_bp_nav_items', 99);
 function customize_bp_nav_items()
@@ -280,41 +208,6 @@ function create_learndash_courses_from_json()
     }
 }
 
-// function redirect_user_after_login($user_login, $user) {
-//     // Define the whitelist of usernames
-//     $allowed_users = ['support@ecomschool.co.il', 'goxik48771','guy_user','instructor_testing5'];
-
-//     // Check if the user is whitelisted
-//     if (in_array($user->user_login, $allowed_users)) {
-//         // Redirect whitelisted users to the homepage or dashboard
-//         wp_redirect(home_url('/'));
-//     } else {
-//         // Redirect non-whitelisted users to the "Coming Soon" page
-//         wp_redirect(home_url('/coming-soon'));
-//     }
-
-//     exit;
-// }
-// add_action('wp_login', 'redirect_user_after_login', 10, 2);
-// function my_custom_login_url($login_url, $redirect)
-// {
-//      // Only redirect to the custom login page if not already accessing wp-login.php
-//      if (strpos($_SERVER['REQUEST_URI'], 'wp-login.php') === false) {
-//         return home_url('/custom-login/?redirect_to=' . urlencode($redirect));
-//     }
-//     return $login_url; // Allow default login page access
-// }
-// add_filter('login_url', 'my_custom_login_url', 10, 2);
-
-
-// function custom_logout_redirect()
-// {
-//     wp_redirect(home_url('/custom-login/')); // Redirect to custom login page
-//     exit();
-// }
-// add_action('wp_logout', 'custom_logout_redirect');
-
-
 /**
  * Fetches and formats the last updated timestamp for a given user meta field.
  * 
@@ -364,3 +257,251 @@ add_action('after_setup_theme', function () {
     remove_action('wp_footer', 'buddyboss_theme_buddypanel');
 });
 
+
+
+function my_bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' ) {
+    if ( empty( $user_id ) || bb_enabled_legacy_email_preference() ) {
+        return array();
+    }
+
+    $preferences = bb_register_notification_preferences();
+    $enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+    $all_notifications = array();
+    $settings_by_admin = array();
+
+    if ( empty( $preferences ) ) {
+        return [];
+    }
+
+    $preferences = array_column( $preferences, 'fields', null );
+    foreach ( $preferences as $key => $val ) {
+        $all_notifications = array_merge( $all_notifications, (array) $val ); // Ensure it's always an array
+    }
+
+    $all_notifications = array_map(
+        function ( $n ) use ( $type ) {
+            if (
+                ! empty( $n['notifications'] ) &&
+                in_array( $type, array( 'web', 'app' ), true )
+            ) {
+                $n['key'] = $n['key'] . '_' . $type;
+                return $n;
+            } elseif (
+                ! empty( $n['email_types'] ) &&
+                'email' === $type
+            ) {
+                $n['key'] = $n['key'] . '_' . $type;
+                return $n;
+            }
+        },
+        $all_notifications
+    );
+
+    $all_actions = array_column( array_filter( $all_notifications ), 'notifications', 'key' );
+
+    if ( empty( $all_actions ) ) {
+        return [];
+    }
+
+    foreach ( $all_actions as $key => $val ) {
+        $all_actions[ $key ] = array_column( array_filter( (array) $val ), 'component_action' ); // Ensure it's an array
+    }
+
+    $admin_excluded_actions = [];
+    $all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
+
+    if ( ! empty( $enabled_all_notification ) ) {
+        foreach ( $enabled_all_notification as $key => $types ) {
+            if ( isset( $types['main'] ) && 'no' === $types['main'] ) {
+                $admin_excluded_actions = array_merge( $admin_excluded_actions, (array) $all_actions[ $key . '_' . $type ] );
+            }
+            if ( isset( $types[ $type ] ) ) {
+                $settings_by_admin[ $key . '_' . $type ] = $types[ $type ];
+            }
+        }
+    }
+
+    $notifications = bp_parse_args( $settings_by_admin, $all_notifications );
+    $excluded_actions = [];
+    $notifications_type_key = 'enable_notification';
+    if ( in_array( $type, array( 'web', 'app' ), true ) ) {
+        $notifications_type_key .= '_' . $type;
+    }
+
+    foreach ( $notifications as $key => $val ) {
+        $user_val = get_user_meta( $user_id, $key, true );
+        if ( $user_val ) {
+            $notifications[ $key ] = $user_val;
+        }
+
+        if (
+            isset( $all_actions[ $key ] ) &&
+            is_array( $all_actions[ $key ] ) &&
+            (
+                'no' === $notifications[ $key ] ||
+                'no' === bp_get_user_meta( $user_id, $notifications_type_key, true )
+            )
+        ) {
+            $excluded_actions = array_merge( $excluded_actions, (array) $all_actions[ $key ] );
+        }
+    }
+
+    if ( ! empty( $admin_excluded_actions ) ) {
+        $excluded_actions = array_merge( $excluded_actions, (array) $admin_excluded_actions );
+    }
+    return array_unique( (array) $excluded_actions ); // Ensure return is always an array
+}
+
+// Hook the function back
+add_filter('bp_ajax_queryst', 'my_bb_disabled_notification_actions_by_user', 10, 2);
+
+
+// function compress_large_images() {
+//     $images = [
+//         "/home/devdigitalschool/public_html/wp-content/uploads/2019/08/IMG_3349.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/youzer/file_5e29a45838144.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/2019/08/IMG_20190702_171627.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/2019/08/IMG_20190702_165130.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/backup/2021/07/obi-onyeador-oL3-V8xhqlI-unsplash.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/2021/07/obi-onyeador-oL3-V8xhqlI-unsplash.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/2019/08/IMG_20190702_164720.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/youzer/BA308AC5-472B-4E58-B571-A8F41388FC59.jpeg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/youzer/file_5e29a45838144_thumb.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/backup/2021/07/neel-aSPbuSG4rpo-unsplash.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/2021/07/neel-aSPbuSG4rpo-unsplash.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/2020/02/lukas-blazek-mcSDtbWXUZU-unsplash.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/backup/2021/07/pexels-rodnae-productions-7310246.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/backup/2021/07/launchpresso-wz6SAUFIHk0-unsplash.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/2021/07/pexels-rodnae-productions-7310246.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/2021/07/launchpresso-wz6SAUFIHk0-unsplash.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/2019/10/tv_PNG39242.png",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/backup/2021/07/ivan-shilov-ucUB9wxkPgY-unsplash.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/2021/07/ivan-shilov-ucUB9wxkPgY-unsplash.jpg",
+//         "/home/devdigitalschool/public_html/wp-content/uploads/youzer/BA308AC5-472B-4E58-B571-A8F41388FC59_thumb.jpg"
+//     ];
+
+//     foreach ($images as $image_path) {
+//         if (!file_exists($image_path)) {
+//             error_log("⚠️ Image not found: " . $image_path);
+//             continue;
+//         }
+
+//         $info = getimagesize($image_path);
+//         if (!$info) {
+//             error_log("⚠️ Unable to read image info: " . $image_path);
+//             continue;
+//         }
+
+//         $mime = $info['mime'];
+//         switch ($mime) {
+//             case 'image/jpeg':
+//                 $image = imagecreatefromjpeg($image_path);
+//                 imagejpeg($image, $image_path, 75); // Compress to 75% quality
+//                 break;
+//             case 'image/png':
+//                 $image = imagecreatefrompng($image_path);
+//                 imagepng($image, $image_path, 7); // PNG compression (0-9)
+//                 break;
+//             case 'image/gif':
+//                 $image = imagecreatefromgif($image_path);
+//                 imagegif($image, $image_path);
+//                 break;
+//             default:
+//                 error_log("⚠️ Unsupported image format: " . $mime);
+//                 continue;
+//         }
+
+//         imagedestroy($image);
+//         error_log("✅ Optimized image: " . $image_path);
+//     }
+
+//     error_log("🚀 Finished compressing all large images!");
+// }
+function optimize_uploaded_images($file) {
+    // Validate the file type
+    $file_type = wp_check_filetype($file['file']);
+    $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+
+    if (!in_array($file_type['type'], $allowed_types)) {
+        return $file; // Skip non-image files
+    }
+
+    $image_path = $file['file'];
+    $info = getimagesize($image_path);
+
+    if (!$info) {
+        error_log("⚠️ Unable to read image info: " . $image_path);
+        return $file;
+    }
+
+    $mime = $info['mime'];
+    $optimized = false;
+
+    switch ($mime) {
+        case 'image/jpeg':
+            $image = imagecreatefromjpeg($image_path);
+            imagejpeg($image, $image_path, 70); // 70% quality for JPEG
+            $optimized = true;
+            break;
+        case 'image/png':
+            $image = imagecreatefrompng($image_path);
+            imagepng($image, $image_path, 7); // Strong PNG compression
+            $optimized = true;
+            break;
+        case 'image/gif':
+            $image = imagecreatefromgif($image_path);
+            imagegif($image, $image_path);
+            $optimized = true;
+            break;
+    }
+
+    if ($optimized) {
+        imagedestroy($image);
+        error_log("✅ Optimized new upload: " . $image_path);
+    }
+
+    // Convert to WebP for faster loading
+    $webp_path = str_replace(['.jpg', '.jpeg', '.png'], '.webp', $image_path);
+    $image_webp = imagecreatefromstring(file_get_contents($image_path));
+    
+    if ($image_webp) {
+        imagewebp($image_webp, $webp_path, 75);
+        imagedestroy($image_webp);
+        error_log("✅ WebP created: " . $webp_path);
+    }
+
+    return $file;
+}
+
+add_filter('wp_handle_upload', 'optimize_uploaded_images');
+
+
+function add_lazy_loading_to_images($content) {
+    return str_replace('<img', '<img loading="lazy"', $content);
+}
+add_filter('the_content', 'add_lazy_loading_to_images');
+
+function serve_webp_images($content) {
+    return str_replace(['.jpg', '.png'], '.webp', $content);
+}
+add_filter('the_content', 'serve_webp_images');
+
+function preload_pages() {
+    echo '<script src="https://instant.page/5.1.0" type="module" defer></script>';
+}
+add_action('wp_head', 'preload_pages');
+
+
+// IMPORTENT - disabled defualy buddypanel for our custom one 
+function disable_default_buddypanel() {
+    remove_action('wp_footer', 'buddyboss_buddypanel'); // Remove the default BuddyPanel
+    wp_dequeue_style('buddyboss-buddypanel-style'); // Remove default BuddyPanel CSS
+    wp_dequeue_script('buddyboss-buddypanel-script'); // Remove default BuddyPanel JS
+}
+add_action('wp_enqueue_scripts', 'disable_default_buddypanel', 5);
+
+function load_custom_buddypanel() {
+    wp_enqueue_style('buddypanel-style', get_stylesheet_directory_uri() . '/assets/css/buddypanel.css', [], '1.0', 'all');
+    wp_enqueue_script('buddypanel-script', get_stylesheet_directory_uri() . '/assets/js/buddypanel.js', ['jquery'], '1.0', true);
+}
+add_action('wp_enqueue_scripts', 'load_custom_buddypanel', 1); // Priority 1 ensures it loads first

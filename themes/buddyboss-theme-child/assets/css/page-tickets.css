@@ -55,20 +55,7 @@
     border-radius: 20px;
 }
 
-.header-text {
-    width: 1080px;
-    height: 100%;
-    position: absolute;
-    top: 85.09px;
-    left: 50.46px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 10px;
-    font-family: Heebo sans-serif;
 
-}
 
 .header-title {
     color: white;
@@ -137,19 +124,23 @@
 
 
 .support-button {
-    padding: 15px 30px;
-    border-radius: 10px;
+    padding: 16px 32px;
+    margin: 0 8px;
+    border-radius: 16px;
     border: 1px solid #6836FF;
     display: inline-flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
+    background-color:#fff;
+    color: #6836FF ;
+
 }
+
 .support-button:hover {
     background-color: #6836FF;
     color: #fff;
 }
-
 .support-button .arrow-icon img {
     width: 16px;
     height: 16px;
@@ -157,12 +148,22 @@
 .arrow-icon-svg, .arrow-icon-img {
     width: 1.5em;
     height: 1.5em;
-    fill: #6836FF;
+    fill: #4b25be;
     margin-right: 5px;
     transform: rotateY(180deg); /* Flip the SVG horizontally */
 
 }
 
+.content-button{
+    background-color: #6836FF;
+    border-radius: 10px;
+    border: 1px solid #FFF;
+    color: #fff !important;
+}
+.content-button:hover{
+    background-color: #4b25be;
+
+}
 .button-text {
     color: #6836FF;
     font-size: 16px;
@@ -202,8 +203,17 @@
 .ticket-history table {
     width: 100%;
     border-collapse: collapse;
-}
+    margin: 24px 0;
 
+}
+.ticket-history caption{
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 8px;
+    display: flex;
+    justify-content: center;
+}
 .ticket-history table th, .ticket-history table td {
     padding: 12px;
     border-bottom: 1px solid #eaeaea;
@@ -219,7 +229,6 @@
 .ticket-history table td {
     color: #333;
 }
-
 
 .modal {
     display: flex;
@@ -337,4 +346,144 @@
     }
 
     /* Add more styles as needed for responsiveness */
+}
+
+/* Default styles (for desktop, already working fine) */
+
+/* Small Mobile - 320px */
+@media screen and (max-width: 320px),
+       screen and (max-width: 375px),
+       screen and (max-width: 500px) {
+    body {
+        font-size: 12px;
+    }
+    .site-content{
+        padding-top: 0 !important;
+    }
+    .container {
+        width: 100%;
+        padding: 0 !important;
+        flex-direction: column;
+        justify-content: unset;
+        align-items: unset;
+    }
+    .header-image-wrapper{
+        margin:0 !important;
+    }
+    .header-text{
+        padding: 16px !important;
+    }
+    .content-text{
+        font-size: 24px;
+        padding: 0 16px;
+        width: 100%;
+        font-weight: 500;
+    }
+    .sub-content-text{
+        display: block;
+        width: 100%;
+    }
+    .content-text ul {
+        list-style-type: disclosure-closed;
+        margin: 0;
+        padding: 20px;
+    }
+    .content-text ul > li {
+        margin: 0 0 16px 0;
+    }
+    .ticket-buttons-container{
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .wp-list-table {
+        display: block;
+        width: 100%;
+        border: unset;
+    }
+
+    .wp-list-table thead {
+        display: none; /* מסתיר את כותרות העמודות */
+    }
+
+    .wp-list-table tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 16px; /* ריווח בין כרטיסים */
+    }
+
+    .wp-list-table tbody tr {
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 8px;
+        margin: 8px;
+        position: relative;
+    }
+
+    .wp-list-table tbody tr td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: none;
+        padding: 8px !important;
+    }
+
+    .wp-list-table tbody tr td::before {
+        content: attr(data-colname); /* יציג את שם העמודה */
+        font-weight: bold;
+        color: #6836FF;
+    }
+
+    .wp-list-table tbody tr .content-button {
+        border-radius: 5px;
+    }
+
+    .wp-list-table tbody tr .modified_time {
+        font-size: 12px;
+        color: #666;
+    }
+    .wp-list-table tbody tr .content.column-content {
+        order: 7; 
+        flex-direction: row;
+    }
+    .ticket-history {
+        background-color: unset;
+        border: unset;
+        border-radius: unset;
+        box-shadow: unset;
+    }
+}
+
+/* Medium Mobile - 375px */
+@media screen and (max-width: 375px) {
+
+}
+
+/* Large Mobile - 425px */
+@media screen and (max-width: 425px) {
+   
+}
+
+/* Tablet - 768px */
+@media screen and (max-width: 768px) {
+  
+}
+
+/* Laptop - 1024px */
+@media screen and (max-width: 1024px) {
+    
+}
+
+/* Large Laptop - 1440px */
+@media screen and (max-width: 1440px) {
+   
+}
+
+/* 4K - 2560px */
+@media screen and (min-width: 2560px) {
+ 
 }
