@@ -159,6 +159,7 @@
     border-radius: 10px;
     border: 1px solid #FFF;
     color: #fff !important;
+    padding: 8px;
 }
 .content-button:hover{
     background-color: #4b25be;
@@ -211,7 +212,7 @@
     font-size: 24px;
     font-weight: 600;
     margin: 0 8px;
-    display: flex;
+    display: none;
     justify-content: center;
 }
 .ticket-history table th, .ticket-history table td {
@@ -353,10 +354,7 @@
 /* Small Mobile - 320px */
 @media screen and (max-width: 320px),
        screen and (max-width: 375px),
-       screen and (max-width: 500px) {
-    body {
-        font-size: 12px;
-    }
+       screen and (max-width: 550px) {
     .site-content{
         padding-top: 0 !important;
     }
@@ -455,6 +453,9 @@
         border: unset;
         border-radius: unset;
         box-shadow: unset;
+    }
+    .ticket-history caption{
+        display: flex;
     }
 }
 

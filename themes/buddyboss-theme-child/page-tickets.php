@@ -115,13 +115,22 @@ $user_tickets_query = new WP_Query($args);
                                     $created_on = get_the_date('Y-m-d H:i:s', get_the_ID());
                                     $modified_on = get_the_modified_date('Y-m-d H:i:s', get_the_ID());
 
-                                    // Create a new DOMDocument and load the HTML content
-                                    $dom = new DOMDocument();
-                                    @$dom->loadHTML(mb_convert_encoding($ticket_content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-                                    $xpath = new DOMXPath($dom);
-                                    $paragraphs = $xpath->query('//p'); // Selects <p> but not those directly containing <img> or <a>
-                                    $images = $xpath->query('//img');
-                                    $links = $xpath->query('//a[@href]'); // Selects <a> tags with an href attribute
+                                   // Ensure it's not empty before parsing
+                                    if (!empty($ticket_content)) {
+                                        $dom = new DOMDocument();
+                                        @$dom->loadHTML(mb_convert_encoding($ticket_content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+                                        
+                                        $xpath = new DOMXPath($dom);
+                                        $paragraphs = $xpath->query('//p'); // Selects <p> but not those directly containing <img> or <a>
+                                        $images = $xpath->query('//img');
+                                        $links = $xpath->query('//a[@href]'); // Selects <a> tags with an href attribute
+                                    } else {
+                                        // Handle empty content gracefully
+                                        error_log("⚠️ Warning: Empty ticket content for post ID " . get_the_ID());
+                                        $paragraphs = null;
+                                        $images = null;
+                                        $links = null;
+                                    }
                                     ?>
                                     <tr>
                                         <td data-colname="נוצר בתאריך" style="border-radius: 5px 5px 0 0;"><?php the_time('F j, Y'); ?></td>
