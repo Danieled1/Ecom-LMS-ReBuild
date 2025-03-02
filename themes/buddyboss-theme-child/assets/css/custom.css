@@ -11,6 +11,11 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 
 html {
     scroll-behavior: smooth;
@@ -67,8 +72,14 @@ html {
 }
 
 #buddypress #header-cover-image.has-position .header-cover-img {
+    width: 100%;
+    display: block;
 }
-
+@media screen and (max-width: 1420px) {
+    #buddypress #item-header .header-cover-img {
+        width: unset !important;
+    }
+}
 #buddypress #header-cover-image .header-cover-reposition-wrap{
     margin: 44px -30px 0 0;
 }
@@ -270,10 +281,10 @@ div#cover-image-container{
 
 .header-title {
     color: white;
-    font-size: 48px;
+    font-size: clamp(36px, 3vw, 54px);
     font-family: Heebo, sans-serif;
     font-weight: 400;
-    line-height: 34.20px;
+    line-height: clamp(40px, 3.5vw, 60px);
     text-align: right;
 }
 
@@ -802,14 +813,48 @@ div.bb-lms-header .bb-position {
     opacity: 1 !important;
 
 }
-@media (min-width: 1024px) {
+/* Modifing course card size on larger screens */
+@media screen and (min-width: 1400px) {
+    .bb-course-items.grid-view .bb-course-item-wrap {
+        flex: 0 0 20%;
+    }
+}
+@media (min-width: 800px) {
     .learndash-wrapper .learndash_content_wrap {
         max-width: unset;
     }
+
+    .buddypanel-open .buddypanel-menu .sub-menu.bb-open{
+        padding-top: 5px !important;
+    }
+    .buddypanel-menu .bb-menu-item {
+        height: 35px;
+    }
 }
+    
+
 @media (max-width: 768px) {
     #learndash-page-content {
         padding: 0;
     }
     
 }
+@media screen and (max-width: 450px) {
+    .single-headers .item-meta {
+        margin: 0;
+    }
+    .bp_members.type-bp_members #item-header-content>.flex .bb-user-content-wrap .member-title-wrap {
+        margin-bottom: 0;
+    }
+}
+@media screen and (max-width: 800px) {
+    .single-headers .member-status {
+        left: -5px;
+        top: 90px;
+    }
+    body #buddypress #item-header-cover-image{
+        height: 228px;
+        padding: 24px;
+    }  
+}
+

@@ -14,10 +14,7 @@
     align-items: center;
 
 }
-#content{
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.00) 76.04%, #FFF 100%), radial-gradient(58.89% 35.32% at 2.24% 50%, rgba(105, 57, 255, 0.20) 0%, rgba(196, 196, 196, 0.00) 100%), radial-gradient(39% 26.79% at 13.62% 46.87%, rgba(104, 228, 255, 0.30) 0%, rgba(196, 196, 196, 0.00) 100%), radial-gradient(53.08% 30.01% at 83.1% 56.51%, rgba(17, 192, 233, 0.20) 0%, rgba(196, 196, 196, 0.00) 100%), radial-gradient(61.55% 40.72% at 87.42% 75.1%, rgba(252, 183, 43, 0.20) 0%, rgba(196, 196, 196, 0.00) 100%), radial-gradient(19.38% 23.86% at 9.43% 64.11%, rgba(252, 183, 43, 0.30) 0%, rgba(196, 196, 196, 0.00) 100%);
 
-}
 /* Main content area */
 .placement-page-content {
     width: 100%;
@@ -52,15 +49,6 @@
     border-radius: 20px;
 }
 
-.header-gradient-overlay {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: linear-gradient(180deg, rgba(104, 54, 255, 0) 0%, rgba(104, 54, 255, 0.80) 100%);
-    border-radius: 20px;
-}
 
 .header-placement-title {
     color: var(--W, #FFF);
@@ -212,7 +200,7 @@ div.related-courses h2#related-courses-header {
     display: flex;
     align-items: end;
 
-    margin: 10px 0;
+    margin: 0 0 16px;
 }
 
 .label {
@@ -251,7 +239,7 @@ div.related-courses h2#related-courses-header {
 
 .placement-sub-container {
     width: 459.078px;
-    height: 294px;
+    height: 100%;
     flex-shrink: 0;
     border-radius: 20px;
     background: #FFF;
@@ -269,7 +257,7 @@ div.related-courses h2#related-courses-header {
     height: 58px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 8px;
     flex-shrink: 0;
     align-self: stretch;
 }
@@ -484,6 +472,171 @@ html[dir=rtl] .acf-file-uploader .file-info {
     width: 75%;
 
 }
+.acf-form{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.acf-input{
+    width: 100% !important;
+    padding: 0 0 0 50px;
+}
+.acf-file-uploader .file-info p{
+    margin: 0 0 8px !important;
+    line-height: 1.5em !important;
+    direction: ltr;
+}
+.acf-file-uploader .file-wrap{
+    height: 100px !important;
+    direction: rtl;
+}
+#acf-form > div.acf-fields.acf-form-fields.-top > div.acf-field.acf-field-file.acf-field-65a928f1c7fe5 > div.acf-input > div > div.show-if-value.file-wrap > div.file-info{
+    padding: 0 !important;
+}
+html[dir=rtl] .acf-file-uploader .file-info{
+    padding: 0;
+    margin-left: 0;
+}
+.acf-file-uploader .file-icon img {
+    margin: 10px 0px !important;
+}
+@media screen and (max-width: 649px) {
+    .site-content{
+        padding-top: 0 !important;
+    }
+    .container {
+        width: 100%;
+        padding: 0 !important;
+        flex-direction: column;
+        justify-content: unset;
+        align-items: unset;
+    }
+    .header-image-wrapper{
+        margin:0 !important;
+    }
+    .header-text{
+        padding: 16px !important;
+    }
+    .header-placement-subtitle{
+        display: block;
+        position: relative;
+        max-height: 3.5em;
+        overflow: hidden;
+        line-height: 1.2em;
+        text-align: center;
+    }
+    #content > div > div > div > div > div.header-placement-subtitle{
+        padding: 0 8px;
+    }
+    .placement-container{
+        flex-direction: column;
+        padding: 0 8px;
+        width: 100%;
+    }
+    .placement-sub-container{
+        width: 100%;
+        height: 100%;
+    }
+    .status-sub-items{
+        height: 100%;
+        width: 100%;
+        padding: 24px 24px 24px 0;
+        display: flex;
+        gap: 32px;
+        flex-direction: column;
+        margin: 0;
+    }
+    .acf-input{
+        padding: 0 0 0 24px;
+    }
+    #content > div > div > div > div > div.related-courses{
+        padding: 0 8px;
+    }
+  
+    #content > div > div > div > div > div.placement-container > div:nth-child(2) > div{
+        margin-bottom: 18px;
+    }
+    #content > div > div > div > div > div.placement-container > div:nth-child(1) > div > div > div{
+        height: 100%;
+    }
+    div.related-courses h2#related-courses-header{
+        text-align: center;
+    }
+    
+}
+
+@media screen and (min-width: 650px) and (max-width: 1440px) {
+    .site-content{
+        padding-top: 0 !important;
+    }
+    .container {
+        width: 100%;
+        padding: 0 !important;
+        flex-direction: column;
+        justify-content: unset;
+        align-items: unset;
+    }
+    .header-image-wrapper{
+        margin:0 !important;
+    }
+    .header-text{
+        padding: 16px !important;
+        gap: 16px !important;
+    }
+    .header-title{
+        font-size: 54px !important;
+    }
+    .header-subtitle{
+        font-size: 22px !important;
+    }
+    .header-placement-title{
+        font-size: 48px;
+    }
+    #content > div > div > div > div > div.header-placement-subtitle{
+        font-size: 18px;
+        width:  100%;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        padding: 0 16px;
+    }
+    #content > div > div > div > div > div.header-image-wrapper > div > div.header-text > div.header-placement-title{
+        margin-bottom: 0 !important;
+    }
+    .placement-container{
+        flex-direction: row;
+        padding: 0 16px;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        gap: 24px;
+    }
+    .placement-sub-container{
+        width: 48%;
+        height: 240px;
+    }
+    #content > div > div > div > div > div.placement-container > div:nth-child(2) > div{
+        gap: 48px;
+    }
+    .status-sub-items{
+        height: 100%;
+        width: 100%;
+        padding: 24px 24px 24px 0;
+        display: flex;
+        gap: 16px;
+        flex-direction: column;
+        margin: 0;
+    }
+    #content > div > div > div > div > div.related-courses{
+        padding: 0 16px;
+    }
+    .acf-input{
+        padding: 0 0 0 24px;
+    }
+    .acf-form{
+        gap: 16px;
+    }
+}
 
 @media (max-width: 1080px) {
     .job-placement-header {
@@ -502,4 +655,9 @@ html[dir=rtl] .acf-file-uploader .file-info {
     }
 
     /* Add more styles as needed for responsiveness */
+}
+@media screen and (min-width: 1400px) {
+    #courses-placement .bb-course-item-wrap {
+        flex: 0 0 25%;
+    }
 }

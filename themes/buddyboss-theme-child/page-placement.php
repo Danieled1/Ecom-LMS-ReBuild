@@ -22,9 +22,31 @@ $section_data = array(
 	'resume_file' => $resume_file
 );
 
+// TO DO: User interface to update interview details - there is also ajax and js commented \/ \/
+
+// function displayInterviewDetail($interview_details, $key, $label) {
+// 	$current_user_id = get_current_user_id();
+//     $detail = isset($interview_details[$key]) ? $interview_details[$key] : '';
+//     echo '<div class="interview-detail" id="detail-' . $key . '">';
+//     echo '<span class="label status-heading">' . $label . ':</span>';
+
+//     if ($detail) {
+//         echo '<span class="value status-heading">' . esc_html($detail) . '</span>';
+//     } else {
+//         echo '<span class="value status-heading missing-details" id="value-' . $key . '">חסרים פרטים על ראיון זה</span>';
+//     }
+
+//     echo '<button id="edit-button-' . $key . '" class="edit-button" onclick="editDetail(\'' . $key . '\')">Edit</button>';
+//     echo '<input data-user="' . $current_user_id . '"type="text" class="edit-input hidden" id="input-' . $key . '" value="' . esc_attr($detail) . '">';
+//     echo '<button class="save-button hidden" onclick="saveDetails()">Save</button>';
+//     echo '</div>';
+// }
+
+
 function displayInterviewDetail($interview_details, $key, $label)
 {
 	if (!empty($interview_details[$key])) {
+		error_log("INSIDE displayInterviewDetails" . $interview_details[$key]);
 		echo '<div class="interview-detail">';
 		if ($key === 'interview_date') {
 			echo '<span class="icon calendar">&#128197;</span>';
@@ -41,6 +63,11 @@ function displayInterviewDetail($interview_details, $key, $label)
 
 		echo '<span class="value status-heading"> ' . esc_html($interview_details[$key]) . ' </span>';
 		echo '</div>';
+	} else {
+		echo '<div class="interview-detail">';
+        echo '<span class="label status-heading">' . $label . ':</span>';
+        echo '<span class="value status-heading">חסרים פרטים על ראיון זה</span>'; // Hebrew text for "Missing details about this interview"
+        echo '</div>';
 	}
 }
 function displayEmploymentInfo($employment_info)
@@ -80,20 +107,26 @@ function displayJobStatusSection($section_data)
 	$interview_details = $section_data['interview_details'];
 	$current_user_id = $section_data['current_user_id'];
 	$resume_file = $section_data['resume_file'];
-
+	error_log("CURRENT_JOB_STATUS = " . print_r($job_status,true));
 
 	if ($job_status['value'] == 'hired') {
 		echo '<p class="status-heading">מאחלים המון בהצלחה בעבודה החדשה.</p>';
 	} elseif ($job_status['value'] == 'interview') {
+		echo '<div class="status-container">';
+		displayHeaderWithIcon('note-sticky','פרטי ראיון');
 		echo '<div class="interview-status">';
 		displayInterviewDetail($interview_details, 'interview_date', 'תאריך');
 		displayInterviewDetail($interview_details, 'interview_time', 'שעה');
 		displayInterviewDetail($interview_details, 'interview_location', 'מיקום');
 		echo '</div>';
+		echo '</div>';
 	} elseif ($job_status['value'] == 'published') {
-		echo '<p class="status-heading">קורות החיים שלך נשלחו למעסיקים מחכים לתשובה..</p>';
+		echo '<div class="status-container">';
+		displayHeaderWithIcon('note-sticky','עדכון');
+		echo '<p class="status-heading" style="margin-top:0;">קורות החיים שלך נשלחו למעסיקים מחכים לתשובה..</p>';
 		echo '<p class="status-heading">צפי לתשובות תוך 1-2 שבועות.</p>';
 		echo '<p class="status-heading">בזמן ההמתנה, כדאי להכין את עצמך לראיונות ולוודא שפרופיל ה-LinkedIn שלך מעודכן.</p>';
+		echo '</div>';
 	} elseif ($job_status['value'] !== 'hired') {
 		// Display the ACF form for resume upload
 		acf_form(array(
@@ -116,6 +149,7 @@ function displayJobStatusSection($section_data)
 	}
 
 }
+
 function displayCourseItem($course_id, $user_id)
 {
 	global $post;
@@ -202,26 +236,13 @@ function displayCourseItem($course_id, $user_id)
 				</div>
 			</div>
 		</div>
-		<div class="header-placement-title" style="color:#6836FF; font-weight: 700; line-height: 100%;">השמה לשוק העבודה
-		</div>
 		<div class="header-placement-subtitle" style="color: #333; font-size: 18px; line-height: 115.375%;">כל מה שאתם
 			צריכים בשביל לנהל את חיפוש העבודה שלכם איתנו</div>
 
 		<div class="placement-container">
 			<div class="placement-sub-container">
 				<div class="status-sub-items">
-					<div class="status-container">
-						<?php displayHeaderWithIcon('chart-simple', 'סטטוס השמה'); ?>
-						<div class="status-label">
-							<h4 id="resume-label"><?php echo $job_status['label']; ?></h4>
-						</div>
-					</div>
-					<div><?php displayJobStatusSection($section_data); ?></div>
-				</div>
-			</div>
-			<div class="placement-sub-container">
-				<div class="status-sub-items flex-items">
-					<div id="company-header" class="status-container hidden">
+				<div id="company-header" class="status-container hidden">
 						<div class="status-header">
 							<?php
 							if ($employment_info) {
@@ -240,15 +261,20 @@ function displayCourseItem($course_id, $user_id)
 							?>
 					</div>
 					<div id="company-logo" class="hidden">company logo</div>
-
+					<div><?php displayJobStatusSection($section_data); ?></div>
+				</div>
+			</div>
+			<div class="placement-sub-container">
+				<div class="status-sub-items flex-items">
 					<div class="status-container">
-						<div class="status-header">
-							<div class="chart-icon">
-								<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/vectors/note-sticky.svg"
-									alt="Chart Simple" class="chart-simple-img" />
-							</div>
-							<h3 class="resume-status">הערות:</h3>
+						<?php displayHeaderWithIcon('chart-simple', 'סטטוס השמה'); ?>
+						<div class="status-label">
+							<h4 id="resume-label"><?php echo $job_status['label']; ?></h4>
 						</div>
+					</div>
+					<div class="status-container">
+						<?php displayHeaderWithIcon('note-sticky','הערות'); ?>
+	
 						<div class="placement-notes">
 							<?php displayPlacementNotes($placement_notes_file, $placement_notes_updated_at); ?>
 						</div>
@@ -261,6 +287,11 @@ function displayCourseItem($course_id, $user_id)
 		<!-- Display 4 Related Courses -->
 		<div class="related-courses">
 			<h2 id="related-courses-header">קורסים לחיפוש עבודה</h2>
+			<p class="header-placement-subtitle" style="color: #333; font-size: 18px; line-height: 115.375%;">
+				כדי להצליח בתהליך חיפוש העבודה, חשוב להשלים את הקורסים האלו. הם יעזרו לכם לבנות את היכולות והידע
+				הנדרשים,
+				כך שתהיו יותר מוכנים להצלחה בראיונות העבודה ובקבלה למשרה שתתאים לכם.
+			</p>
 			<div class="related-courses-content">
 
 				<?php
@@ -282,7 +313,7 @@ function displayCourseItem($course_id, $user_id)
 
 				// The Loop
 				if ($the_query->have_posts()) {
-					echo '<ul class="bb-course-list bb-course-items grid-view bb-grid" aria-live="assertive" aria-relevant="all">';
+					echo '<ul id="courses-placement" class="bb-course-list bb-course-items grid-view bb-grid" aria-live="assertive" aria-relevant="all">';
 					while ($the_query->have_posts()) {
 						$the_query->the_post();
 
@@ -297,11 +328,7 @@ function displayCourseItem($course_id, $user_id)
 				wp_reset_postdata();
 				?>
 			</div>
-			<p class="header-placement-subtitle" style="color: #333; font-size: 18px; line-height: 115.375%;">
-				כדי להצליח בתהליך חיפוש העבודה, חשוב להשלים את הקורסים האלו. הם יעזרו לכם לבנות את היכולות והידע
-				הנדרשים,
-				כך שתהיו יותר מוכנים להצלחה בראיונות העבודה ובקבלה למשרה שתתאים לכם.
-			</p>
+		
 		</div>
 
 	</div>

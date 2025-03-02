@@ -93,6 +93,7 @@ function updateSubSectorOptions() {
     }
 }
 
+
 function initialize() {
     setupModalClickOutsideClose();
     setupButtonEventHandlers('ticketHistoryBtn', handleTicketHistoryBtnClick);

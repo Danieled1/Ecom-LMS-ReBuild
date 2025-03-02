@@ -72,8 +72,8 @@ function enqueue_page_tickets_assets()
 {
     // MAKE SURE IN THE PAGE WORDPRESS EDITOR, THAT THE TEMPLATE NAME IS PICKED(LISTED AT THE START OF A PAGE WE CREATE)
     if (is_page_template('page-tickets.php')) {
-        wp_enqueue_style('page-tickets-style', get_stylesheet_directory_uri() . '/assets/css/page-tickets.css', array(), '1.0.0');
-        wp_enqueue_script('page-tickets-script', get_stylesheet_directory_uri() . '/assets/js/page-tickets.js', array(), '1.0.0', true);
+        wp_enqueue_style('page-tickets-style', get_stylesheet_directory_uri() . '/assets/css/min/page-tickets.min.css', array(), '1.0.1');
+        wp_enqueue_script('page-tickets-script', get_stylesheet_directory_uri() . '/assets/js/min/page-tickets.min.js', array(), '1.0.1', true);
 
     }
 }
@@ -96,6 +96,9 @@ function enqueue_page_placement_assets()
         acf_enqueue_scripts();
         wp_enqueue_style('page-placement-style', get_stylesheet_directory_uri() . '/assets/css/page-placement.css', array(), '1.0.0');
         wp_enqueue_script('page-placement-script', get_stylesheet_directory_uri() . '/assets/js/page-placement.js', array(), '1.0.0', true);
+        wp_localize_script('page-placement-script', 'adminAjax', array(
+            'ajaxUrl' => admin_url('admin-ajax.php')
+        ));
     }
 }
 add_action('wp_enqueue_scripts', 'enqueue_page_placement_assets');

@@ -95,7 +95,7 @@ function render_user_row($user)
 ?>
     <tr id="user-<?php echo $user->ID; ?>">
         <?php
-        echo render_username_cell($user);
+        echo render_username_cell2($user);
         echo render_email_cell($user);
         echo render_group_cell($user);
         echo render_job_status_cell($user);
@@ -106,6 +106,28 @@ function render_user_row($user)
         ?>
     </tr>
 <?php
+    return ob_get_clean();
+}
+function render_username_cell2($user) {
+    ob_start();
+
+    // BuddyPress profile URL
+
+    // Admin profile edit URL
+    $admin_profile_url = 'https://dev.digitalschool.co.il/wp-admin/user-edit.php?user_id=' . $user->ID;
+
+    // Check if the current user can manage options (admin or manager), adjust this capability as needed
+    if (current_user_can('edit_users')) {
+        echo '<td class="username column-username" data-colname="Username">';
+        // Admin URL for editing user profiles
+        echo '<a target="_blank" href="' . esc_url($admin_profile_url) . '">' . esc_html($user->display_name) . '</a>';
+        // BuddyPress profile link
+        echo '</td>';
+    } else {
+        // Just display the name if the current user doesn't have the capability to edit users
+        echo '<td class="username column-username" data-colname="Username">' . esc_html($user->display_name) . '</td>';
+    }
+
     return ob_get_clean();
 }
 

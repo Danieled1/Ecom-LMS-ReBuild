@@ -9,40 +9,7 @@
 
 /****************************** THEME SETUP ******************************/
 require get_stylesheet_directory() . '/inc/theme-setup.php';
-// // Block LearnDash API requests to `checkout.learndash.com`
-// add_filter('http_request_args', function ($args, $url) {
-//     if (strpos($url, 'https://checkout.learndash.com') !== false) {
-//         // Block the request by reducing the timeout
-//         $args['timeout'] = 0.01; 
-//         error_log('Blocked LearnDash API call to: ' . $url);
-//     }
-//     return $args;
-// }, 10, 2);
 
-// // Prevent redundant triggers of LearnDash API calls by unhooking the action early
-// add_action('init', function () {
-//     if (class_exists('LearnDash\Hub\Framework\Base')) {
-//         remove_filter('site_transient_update_plugins', ['LearnDash\Hub\Controller\Projects_Controller', 'push_update'], 10);
-//     }
-// });
-
-// // Replace the LearnDash API call response to prevent warnings
-// add_action('plugins_loaded', function () {
-//     if (class_exists('LearnDash\Hub\Framework\Base')) {
-//         class Custom_LearnDash_Base extends \LearnDash\Hub\Framework\Base {
-//             public function do_api_request($url, $args = []) {
-//                 if (strpos($url, 'https://checkout.learndash.com') !== false) {
-//                     // Mock the API response
-//                     error_log('Intercepted and blocked LearnDash API request to: ' . $url);
-//                     return ['success' => false, 'data' => []];
-//                 }
-//                 return parent::do_api_request($url, $args);
-//             }
-//         }
-//         // Override LearnDash Base class functionality
-//         $GLOBALS['learndash_hub_base'] = new Custom_LearnDash_Base();
-//     }
-// });
 // Disable LearnDash Hub API Calls
 add_filter('pre_http_request', function ($response, $args, $url) {
     if (strpos($url, 'checkout.learndash.com') !== false) {
@@ -62,23 +29,6 @@ add_action('init', function () {
     }
     remove_filter('bp_ajax_queryst', 'bb_disabled_notification_actions_by_user', 10, 2);
 });
-
-
-// add_action('template_redirect', function () {
-//     // Check if we are on the homepage
-//     if (is_front_page()) {
-//         // Check if the user is logged in
-//         if (is_user_logged_in()) {
-//             // Redirect to the LearnDash "My Profile" template
-//             bp_core_redirect(bp_loggedin_user_domain());
-//         } else {
-//             // Redirect non-logged-in users to the default homepage or login page
-//             wp_redirect(wp_login_url(home_url()));
-//             exit;
-//         }
-//     }
-// });
-
 
 /****************************** CUSTOM FUNCTIONS ******************************/
 /****************************** BuddyPress and LearnDash Integration ******************************/
@@ -155,27 +105,6 @@ function customize_learndash_content_tabs($tabs, $context, $course_id, $user_id)
     return $tabs;
 }
 
-
-add_action('bp_setup_nav', 'customize_bp_nav_items', 99);
-function customize_bp_nav_items()
-{
-    global $bp;
-
-    // Check if the 'members' component and nav items exist
-    if (isset($bp->members->nav) && is_object($bp->members->nav)) {
-        foreach ($bp->members->nav->get() as $nav_item) {
-            // Access specific nav items and modify them
-            if ($nav_item->slug === 'profile') {
-                $nav_item->name = __('פרופיל', 'textdomain'); // Change the label to Hebrew for 'Profile'
-            } elseif ($nav_item->slug === 'friends') {
-                $nav_item->name = __('חיבורים', 'textdomain'); // Change the label to Hebrew for 'Settings'
-            }
-            // You can add more conditions to customize other navigation items
-        }
-    } else {
-        error_log('No navigation items found.');
-    }
-}
 
 /**
  * More strightfoward way to Create LearnDash courses from a JSON file. - exported from CRM

@@ -1,5 +1,26 @@
 <?php
 require_once 'utility-functions.php';
+// TODO : page-placement.php - ajax request to update interview details - student interaction to update interview
+// add_action('wp_ajax_update_interview_detail', function() {
+//     $user_id = intval($_POST['user_id']);
+//     $keys = isset($_POST['key']) ? $_POST['key'] : [];
+//     $values = isset($_POST['value']) ? $_POST['value'] : [];
+
+//     if (count($keys) === count($values)) {
+//         foreach ($keys as $index => $key) {
+//             $value = sanitize_text_field($values[$index]);
+//             error_log('user_id = ' . $user_id . ' key = ' . $key . ' value = ' . $value);
+//             // Handle updating the field here (e.g., using update_field or another method)
+//             update_field($key, $value, 'user_' . $user_id);
+//         }
+        
+//         wp_send_json_success(['message' => 'Testing Updated successfully']);
+//     } else {
+//         wp_send_json_error(['message' => 'Failed to update. Key-Value mismatch.']);
+//     }
+// });
+
+
 
 // Admin-Resume ajax actions
 function changeSubmittedOutputEmailAddress()

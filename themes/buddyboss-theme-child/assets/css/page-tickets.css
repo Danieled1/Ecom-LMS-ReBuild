@@ -19,7 +19,10 @@
     align-items: flex-start;
     gap: 20px;
 }
-
+#page .footer-bottom{
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
 /* Header image and text */
 .header-image-wrapper {
     width: 100%;
@@ -59,10 +62,11 @@
 
 .header-title {
     color: white;
-    font-size: 36px;
+    font-size: clamp(36px, 3vw, 54px);
+
     font-family: Heebo, sans-serif;
     font-weight: 400;
-    line-height: 34.20px;
+    line-height: clamp(40px, 3.5vw, 60px);
     text-align: right;
 }
 
@@ -273,7 +277,6 @@
     }
 }
 
-/* The Close Button */
 .close {
     color: #aaa;
     float: right;
@@ -318,18 +321,38 @@
 .modal-section-header {
     font-weight: bold;
     margin-bottom: 10px;
+    color: #333;
 }
 
 .modal-content {
-    /* Limit the width to make the content more readable */
     max-width: 800px;
     margin: 40px auto;
     border-radius: 6px;
-    /* Rounded corners */
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    /* Soft shadow for depth */
     overflow: hidden;
-    /* Ensures the child elements do not overflow */
+}
+.modal-footer {
+    padding: 10px 20px;
+    background-color: #f7f7f7;
+    border-top: 1px solid #e7e7e7;
+    text-align: left;
+}
+
+.feedback-section {
+    text-align: right;
+    color: #333;
+    font-size: 16px;
+    font-family: Heebo, sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 10px 0;
+}
+/* Set a fixed width for the משוב column and ensure truncation */
+.wp-list-table td[data-colname="משוב"] {
+    max-width: 180px; /* Adjust width as needed */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 @media (max-width: 1080px) {
@@ -351,10 +374,8 @@
 
 /* Default styles (for desktop, already working fine) */
 
-/* Small Mobile - 320px */
-@media screen and (max-width: 320px),
-       screen and (max-width: 375px),
-       screen and (max-width: 550px) {
+/* Mobile - 320px - 649px */
+@media screen and (max-width: 649px) {
     .site-content{
         padding-top: 0 !important;
     }
@@ -368,6 +389,7 @@
     .header-image-wrapper{
         margin:0 !important;
     }
+ 
     .header-text{
         padding: 16px !important;
     }
@@ -396,8 +418,9 @@
         gap: 16px;
     }
     .wp-list-table {
-        display: block;
-        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
         border: unset;
     }
 
@@ -457,34 +480,117 @@
     .ticket-history caption{
         display: flex;
     }
+    .wp-list-table td[data-colname="משוב"]{
+        max-width: 100%;
+    }
 }
 
-/* Medium Mobile - 375px */
-@media screen and (max-width: 375px) {
+/* Tablet - Laptop 650px - 1440px  */
+@media screen and (min-width: 650px) and (max-width: 1440px) {
+    .site-content{
+        padding-top: 0 !important;
+    }
+    .container {
+        width: 100%;
+        padding: 0 !important;
+        flex-direction: column;
+        justify-content: unset;
+        align-items: unset;
+    }
+    .header-image-wrapper{
+        margin:0 !important;
+    }
+    .header-text{
+        padding: 16px !important;
+        gap: 16px !important;
+    }
+    .header-title{
+        font-size: 54px !important;
+    }
+    .header-subtitle{
+        font-size: 22px !important;
+    }
+    .content-text{
+        font-size: 22px;
+        padding: 0 16px;
+        width: 100%;
+        font-weight: 500;
+    }
+    .sub-content-text{
+        display: block;
+        width: 100%;
+    }
+    .content-text ul {
+        list-style-type: disclosure-closed;
+        margin: 0;
+        padding: 20px 20px 0 20px;
+    }
+    .content-text ul > li {
+        margin: 0 0 16px 0;
+    }
+    .ticket-buttons-container{
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        gap: 24px;
+        padding: 0 16px;
+    }
+    #content > div > div > div > div > div.content-text > ul > li:nth-child(3){
+        margin:0;
+    }
+    .content{
+        gap:32px !important;
+    }
+    .ticket-history table {
+        margin: 32px 0;
+    }
+    .ticket-history table th, .ticket-history table td {
+        padding: 8px;
+        text-align: center;
+    }
+    .support-button{
+        margin: 0;
+    }
+    .wp-list-table th:nth-child(2),
+    .wp-list-table th:nth-child(3),
+    .wp-list-table td:nth-child(2),
+    .wp-list-table td:nth-child(3) {
+        display: none;
+    }
 
 }
 
-/* Large Mobile - 425px */
-@media screen and (max-width: 425px) {
-   
-}
 
-/* Tablet - 768px */
-@media screen and (max-width: 768px) {
-  
-}
 
 /* Laptop - 1024px */
 @media screen and (max-width: 1024px) {
-    
+
 }
 
 /* Large Laptop - 1440px */
-@media screen and (max-width: 1440px) {
-   
+@media screen and (min-width: 1440px) and (max-width: 1870px){
+    .header-image{
+        width: 100% !important;
+    }
+    .container{
+        max-width: 100% !important;
+        align-items: stretch;
+    }
+    .bb-grid{
+        flex-grow: 1;
+    }
 }
 
 /* 4K - 2560px */
 @media screen and (min-width: 2560px) {
- 
+    .header-image{
+        width: 100% !important;
+    }
+    .container{
+        max-width: 100% !important;
+        align-items: stretch;
+    }
+    .bb-grid{
+        flex-grow: 1;
+    }
 }

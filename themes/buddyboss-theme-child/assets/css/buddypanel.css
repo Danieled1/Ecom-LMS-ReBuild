@@ -32,8 +32,6 @@ body>aside>div>nav>div>div>ul {
     font-weight: 400 !important;
     font-style: normal;
     line-height: normal;
-    height: 35px !important;
-    /* gap: 8px; */
 }
 
 /* Default state: Ensure icons inherit the gray color */

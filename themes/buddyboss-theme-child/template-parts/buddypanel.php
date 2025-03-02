@@ -86,13 +86,26 @@ foreach ($menu_items as $item) {
         $item->url = esc_url(bp_core_get_user_domain($current_user->ID));
     }
     // Categorize by title - Removed 'בלוג איקום' and , 'קבוצות' - temp
-    if (in_array($item->title, ['ניהול מרצה','הקורס שלי', 'תמיכה מקצועית'])) {
+    if (in_array($item->title, ['הפרופיל שלי','ניהול מרצה','הקורס שלי'])) {
         $menu_groups['main'][] = $item;
-    } elseif (in_array($item->title, ['הפרופיל שלי', 'פניות ואישורים', 'השמה'])) {
+    } elseif (in_array($item->title, [ 'תמיכה מקצועית','פניות ואישורים', 'השמה', 'ציונים'])) {
         $menu_groups['settings'][] = $item;
-    } elseif (in_array($item->title, ['משוב', 'ציונים', 'התנתק'])) {
+    } elseif (in_array($item->title, ['משוב' , 'התנתק'])) {
         $menu_groups['footer'][] = $item;
     }
+}
+function clean_and_truncate_course_title($title, $maxWords = 3) {
+    $wordsToRemove = ['קורס', 'digital', 'live']; // Words to remove
+    $words = explode(' ', strtolower($title)); // Convert title to lowercase and split into words
+
+    $filteredWords = array_filter($words, function($word) use ($wordsToRemove) {
+        return !in_array($word, $wordsToRemove); // Remove word if it's in the removal list
+    });
+
+    $result = array_slice($filteredWords, 0, $maxWords); // Get the first $maxWords words
+    $final_title = implode(' ', $result);
+    return strtoupper($final_title); // Combine into a string
+
 }
 
 // error_log("Processing menu items. main=" . count($menu_groups['main']) . 
@@ -166,13 +179,14 @@ $settings_icon_mapping = [
                             <ul class="sub-menu bb-open">
                                 <?php foreach ($courses_with_progress as $course):
                                     $random_icon = $available_icons[array_rand($available_icons)];
+                                    $truncated_title = clean_and_truncate_course_title($course['title'])
                                 ?>
                                     <li id="menu-item-<?php echo esc_attr($course['course_id']); ?>"
                                         class="menu-item menu-item-type-post_type menu-item-object-page">
                                         <a href="<?php echo get_permalink($course['course_id']); ?>" class="bb-menu-item"
                                            data-balloon-pos="right" data-balloon="<?php echo esc_attr($course['title']); ?>">
                                             <i class="_mi _before <?php echo esc_attr($random_icon); ?>" aria-hidden="true"></i>
-                                            <span><?php echo esc_html($course['title']); ?></span>
+                                            <span><?php echo esc_html($truncated_title); ?></span>
                                             <span class="course-progress"><?php echo esc_html($course['percentage']); ?>%</span>
                                         </a>
                                     </li>

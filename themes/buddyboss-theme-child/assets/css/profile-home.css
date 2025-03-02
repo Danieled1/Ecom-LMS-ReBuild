@@ -30,7 +30,7 @@
 
 /* Main container */
 .container {
-    max-width: 100%;
+    max-width:1440px !important;
 }
 
 .site-content {
@@ -41,7 +41,7 @@ body #buddypress #item-header-cover-image {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: white;
+    background: #F2F4F5;
     padding: 20px !important;
     border: 1px solid #fff;
     border-radius: 20px 0 0 0;
@@ -77,7 +77,7 @@ div#item-header-avatar {
 }
 
 #buddypress #header-cover-image.cover-small {
-    height: 225px !important;
+    height: 20vh !important;
     border-radius: 0 0 20px 20px !important;
     flex-grow: 1 !important;
 }
@@ -166,7 +166,7 @@ nav#object-nav {
 }
 
 #page>footer {
-    padding: 0 250px !important;
+    padding: 0 250px ;
 }
 
 @media screen and (max-width: 1400px) {
@@ -180,15 +180,25 @@ nav#object-nav {
         flex-direction: column;
     }
 }
-
+@media screen and (max-width: 649px) {
+    #subnav > ul{
+        display: flex;
+        flex-direction: column;
+    }
+    #subnav > ul > li > ul{
+        left: 0;
+    }
+    #page>footer {
+    padding: 0;
+    }
+    #page .footer-bottom{
+        padding: 0;
+    }
+}
 @media screen and (min-width: 800px) {
     .buddypanel-open:not(.register) .site {
         margin-left: 0 !important;
         /* Overrides any other margin-left settings */
-    }
-
-    .site-content {
-        padding: 0 250px !important;
     }
 
     .bb-buddypanel:not(.activate) .site,

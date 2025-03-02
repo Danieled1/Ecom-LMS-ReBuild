@@ -15,6 +15,7 @@ $is_lms_inner       = (
 	( class_exists( 'LifterLMS' ) && buddypanel_is_lifterlms_inner() ) ||
 	( function_exists( 'tutor' ) && buddyboss_is_tutorlms_inner() )
 );
+
 ?>
 <style>
 	/* NOTICE - data-no-dropdown attribute disables the user profile(for now - we need)
@@ -70,6 +71,8 @@ $is_lms_inner       = (
         /* You may need additional positioning here depending on your specific layout */
     }
 </style>
+
+
 <div id="header-aside" class="header-aside <?php echo esc_attr( $profile_dropdown ); ?>">
 	<div class="header-aside-inner">
 

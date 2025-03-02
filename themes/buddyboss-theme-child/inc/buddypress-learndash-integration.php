@@ -1,22 +1,63 @@
 <?php
 
 // BUDDYPRESS
-function add_certificate_tab()
-{
+// function add_certificate_tab()
+// {
+//     bp_core_new_nav_item([
+//         'name' => __('תעודות', 'text-domain'),
+//         'slug' => 'certificates',
+//         'position' => 99,
+//         'screen_function' => 'show_certificate_screen',
+//         'default_subnav_slug' => 'certificates',
+//         'item_css_id' => 'certificates-personal-li'
+//     ]);
+    
+//         // Remove 'Forums' tab
+//         bp_core_remove_nav_item('forums');
+        
+//         // Remove 'Groups' tab
+//         bp_core_remove_nav_item('groups');
+
+// }
+function customize_bp_nav_items() {
+    // Add the 'Certificates' tab
     bp_core_new_nav_item([
         'name' => __('תעודות', 'text-domain'),
         'slug' => 'certificates',
-        'position' => 30,
+        'position' => 99,
         'screen_function' => 'show_certificate_screen',
         'default_subnav_slug' => 'certificates',
         'item_css_id' => 'certificates-personal-li'
     ]);
-        // Remove 'Forums' tab
-        bp_core_remove_nav_item('forums');
-        
-        // Remove 'Groups' tab
-        bp_core_remove_nav_item('groups');
+
+    // Remove unwanted tabs
+    bp_core_remove_nav_item('forums');
+    bp_core_remove_nav_item('groups');
+
+    add_dynamic_group_tabs();
+
+    // Modify positions or properties of existing tabs
+    global $bp;
+    if (isset($bp->members->nav) && is_object($bp->members->nav)) {
+        $nav_items = $bp->members->nav->get();
+
+        foreach ($nav_items as $item) {
+            if ($item->slug === 'profile') {
+                $item->position = 0;
+                $item->name = __('פרופיל', 'textdomain'); 
+            } elseif ($item->slug === 'friends') {
+                $item->name = __('חיבורים', 'textdomain');
+                $item->position = 99;
+            }
+        }
+    } else {
+        error_log('No navigation items found.');
+    }
+
 }
+
+
+
 // BUDDYPRESS
 function show_certificate_screen()
 {
@@ -71,7 +112,6 @@ function get_user_certificates($user_id)
     }
     return $certificates;
 }
-add_action('bp_setup_nav', 'add_certificate_tab', 99);
 // BUDDYPRESS
 function my_profile_nav_item_classes($classes, $item)
 {
@@ -115,18 +155,6 @@ function add_dynamic_group_tabs() {
 
     $current_group_ids = learndash_get_users_group_ids($user_id);
     $main_group_slug = process_groups($current_group_ids); // Process groups and find main group
-
-    // if (!empty($main_group_slug)) {
-    //     add_action('bp_template_redirect', function() use ($main_group_slug) {
-    //         bp_core_new_nav_default([
-    //             'parent_slug' => 'courses',
-    //             'subnav_slug' => $main_group_slug,
-    //             'screen_function' => function () use ($main_group_slug) {
-    //                 show_group_courses_screen_by_slug($main_group_slug);
-    //             }
-    //         ]);
-    //     });
-    // }
 }
 
 // LEARNDASH/util ? Not sure if its util global or need to be in learndash-functions own util?
@@ -303,5 +331,4 @@ function display_course_item($course_id) {
 
 add_action('learndash_added_user_group', 'clear_user_group_cache', 10, 2);
 add_action('learndash_removed_user_group', 'clear_user_group_cache', 10, 2);
-
-add_action('bp_setup_nav', 'add_dynamic_group_tabs', 100);
+add_action('bp_setup_nav', 'customize_bp_nav_items', 99);

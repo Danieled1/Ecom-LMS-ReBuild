@@ -7,7 +7,7 @@
  */
 error_log("Test TEST TEST TEST ");
 $edit_profile_link = trailingslashit(bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/');
-
+$GENERAL_INFO_GROUP_ID = 1;
 function preload_lcp_image() {
     ?>
     <link rel="preload" as="image" href="https://dev.digitalschool.co.il/wp-content/uploads/buddypress/members/6238/cover-image/679a7aabbb410-bp-cover-image.png" type="image/webp">
@@ -20,7 +20,7 @@ bp_nouveau_xprofile_hook('before', 'loop_content');
 
 <?php
 
-if (bp_has_profile()) {
+if (bp_has_profile(array('profile_group_id' => $GENERAL_INFO_GROUP_ID))) { 
 
         bp_the_profile_group();
         if (bp_profile_group_has_fields()) {
@@ -60,7 +60,6 @@ if (bp_has_profile()) {
                                     }
                                 }
                                 bp_nouveau_xprofile_hook('before', 'field_item');
-
                                 if (bp_field_has_data()):
                                     ?>
                                     <tr<?php bp_field_css_class(); ?>>

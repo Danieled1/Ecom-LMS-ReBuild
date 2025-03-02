@@ -1,7 +1,10 @@
 <?php
-/*
-Template Name: Tickets
-*/
+/**
+ * Template Name: Tickets
+ * Displays user's tickets and form to create new tickets.
+ * Depends on ACF fields for ticket fields group 
+ */
+
 acf_form_head();
 get_header();
 
@@ -10,11 +13,12 @@ $current_user_id = get_current_user_id();
 
 $args = array(
     'post_type' => 'ticket',
-    'posts_per_page' => -1,
-    'author' => $current_user_id, // Fetch tickets created by the current user
-    'post_status' => 'any' // Fetch tickets with any status.
-
+    'posts_per_page' => 20, // Only 20 tickets
+    'paged' => get_query_var('paged') ? get_query_var('paged') : 1,
+    'author' => $current_user_id,
+    'post_status' => 'any'
 );
+
 $user_tickets_query = new WP_Query($args);
 
 ?>
@@ -103,8 +107,6 @@ $user_tickets_query = new WP_Query($args);
                                 <th scope="col" class="manage-column">סטטוס</th>
                                 <th scope="col" class="manage-column">משוב</th>
                                 <th scope="col" id="modified_time" class="manage-column">תאריך שינוי אחרון</th>
-
-                                <!-- Add other headers as needed -->
                             </tr>
                         </thead>
                         <tbody>
@@ -117,8 +119,25 @@ $user_tickets_query = new WP_Query($args);
 
                                    // Ensure it's not empty before parsing
                                     if (!empty($ticket_content)) {
+                                        $allowed_tags = array(
+                                            'p'      => array(),
+                                            'br'     => array(),
+                                            'strong' => array(),
+                                            'em'     => array(),
+                                            'a'      => array(
+                                                'href'   => true,
+                                                'title'  => true,
+                                                'target' => true
+                                            ),
+                                            'img'    => array(
+                                                'src' => true,
+                                                'alt' => true
+                                            ),
+                                        );
+                                        $safe_content = wp_kses($ticket_content, $allowed_tags);
+
                                         $dom = new DOMDocument();
-                                        @$dom->loadHTML(mb_convert_encoding($ticket_content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+                                        @$dom->loadHTML(mb_convert_encoding($safe_content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
                                         
                                         $xpath = new DOMXPath($dom);
                                         $paragraphs = $xpath->query('//p'); // Selects <p> but not those directly containing <img> or <a>
@@ -126,61 +145,70 @@ $user_tickets_query = new WP_Query($args);
                                         $links = $xpath->query('//a[@href]'); // Selects <a> tags with an href attribute
                                     } else {
                                         // Handle empty content gracefully
-                                        error_log("⚠️ Warning: Empty ticket content for post ID " . get_the_ID());
                                         $paragraphs = null;
                                         $images = null;
                                         $links = null;
                                     }
                                     ?>
-                                    <tr>
-                                        <td data-colname="נוצר בתאריך" style="border-radius: 5px 5px 0 0;"><?php the_time('F j, Y'); ?></td>
+                                    <tr class="ticket-row">
+                                        <td data-colname="נוצר בתאריך" style="border-radius: 5px 5px 0 0;">
+                                            <?php the_time('F j, Y'); ?>
+                                        </td>
                                         <td class="sector column-sector" data-colname="מחלקה">
                                             <?php echo esc_html(get_field('ticket_sector')['label']); ?>
                                         </td>
                                         <td class="sector column-sector" data-colname="תת נושא">
                                             <?php echo esc_html(get_field('ticket_sector_subject')['label']); ?>
                                         </td>
-                                        <td data-colname="כותרת"><?php echo esc_html(get_field('ticket_title')); ?></td>
-                                        <td class="content column-content" data-colname="תוכן" style="border-radius: 0 0 5px 5px;">
-                                            <button class="content-button button-text"
-                                                onclick="openModal('<?php the_ID(); ?>')">תוכן
-                                                הודעה</button>
+                                        <td data-colname="כותרת">
+                                            <?php echo esc_html(get_field('ticket_title')); ?>
                                         </td>
-                                        <td data-colname="סטטוס"><?php
-                                        $ticket_status = get_field('ticket_status');
-                                        echo esc_html($ticket_status ? $ticket_status['label'] : 'טרם נצפה'); ?></td>
-                                        <td data-colname="משוב"><?php echo esc_html(get_field('sector_feedback')); ?></td>
+                                        <td class="content column-content" data-colname="תוכן" style="border-radius: 0 0 5px 5px;">
+                                            <button class="content-button button-text" onclick="openModal('<?php the_ID(); ?>')">
+                                                תוכן הודעה
+                                            </button>
+                                        </td>
+                                        <td data-colname="סטטוס">
+                                            <?php
+                                            $ticket_status = get_field('ticket_status');
+                                            echo esc_html($ticket_status ? $ticket_status['label'] : 'טרם נצפה'); ?>
+                                        </td>
+                                        <td data-colname="משוב">
+                                            <?php echo esc_html(get_field('sector_feedback')); ?>
+                                        </td>
                                         <td class="modified_time" data-colname="תאריך שינוי אחרון">
                                             <?php echo esc_html($modified_on); ?>
                                         </td>
-
-                                        <!-- Output other columns as necessary -->
                                     </tr>
                                     <div class="modal hidden" id="contentModal-<?php the_ID(); ?>">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <span class="close"
-                                                    onclick="closeModal('<?php the_ID(); ?>')">&times;</span>
-                                                <h2><?php echo esc_html(get_field('ticket_title')); ?></h2>
+                                                <span class="close" onclick="closeModal('<?php the_ID(); ?>')">
+                                                    &times;
+                                                </span>
+                                                <h2>
+                                                    <?php echo esc_html(get_field('ticket_title')); ?>
+                                                </h2>
                                             </div>
                                             <div class="modal-body">
                                                 <?php if ($paragraphs): ?>
                                                     <div class="modal-section">
-                                                        <div class="modal-section-header">תוכן ההודעה:</div>
+                                                        <div class="modal-section-header">
+                                                            תוכן ההודעה:
+                                                        </div>
                                                         <?php
-                                                        // Display paragraphs
-                                                        foreach ($paragraphs as $paragraph) {
-                                                            foreach ($paragraph->childNodes as $childNode) {
-                                                                // Only output text nodes, skipping <a> tag nodes
-                                                                if ($childNode->nodeType === XML_TEXT_NODE) {
-                                                                    echo '<p>' . htmlspecialchars($childNode->nodeValue) . '</p>';
+                                                            foreach ($paragraphs as $paragraph) {
+                                                                foreach ($paragraph->childNodes as $childNode) {
+                                                                    // Only output text nodes, skipping <a> tag nodes
+                                                                    if ($childNode->nodeType === XML_TEXT_NODE) {
+                                                                        echo '<p>' . htmlspecialchars($childNode->nodeValue) . '</p>';
+                                                                    }
                                                                 }
                                                             }
-                                                        }
                                                         ?>
                                                     </div>
                                                 <?php endif; ?>
-
+                                                
                                                 <?php if ($images): ?>
                                                     <div class="modal-section">
                                                         <div class="modal-section-header">צילומי מסך:</div>
@@ -207,7 +235,14 @@ $user_tickets_query = new WP_Query($args);
                                                 <?php endif; ?>
                                             </div>
                                             <div class="modal-footer">
-                                                <!-- Optional footer content -->
+                                            <?php 
+                                                $sector_feedback = get_field('sector_feedback'); 
+                                                if (!empty($sector_feedback)): ?>
+                                                    <div class="feedback-section">
+                                                        <strong class="modal-section-header ">משוב:</strong>
+                                                        <p><?php echo esc_html($sector_feedback); ?></p>
+                                                    </div>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
@@ -221,13 +256,9 @@ $user_tickets_query = new WP_Query($args);
                     </table>
                 </div>
             </div>
-
-
         </div>
     </div>
-    <!-- Header Section with User Info and General Instructions -->
-
-<?php wp_reset_postdata(); // Reset the query to the main loop 
+<?php wp_reset_postdata(); 
 ?>
 <?php
 get_footer();
