@@ -32,7 +32,7 @@ function getStudentGrades() {
         console.log("Data fetched successfully");
         console.log(data.data);
         
-        requestAnimationFrame(() => populateGradesTableNew(data.data));
+        requestAnimationFrame(() => populateGradesTable2(data.data));
         
       } else {
         console.error("Error fetching grades:", data.data);
@@ -42,44 +42,72 @@ function getStudentGrades() {
       console.error("Error:", error);
     });
 }
+const populateGradesTable2 = (grades) => {
+  const table = document.getElementById("gradesTable");
+  table.innerHTML = ''; // Clear the table content
+  const gradesInfo = document.getElementById("completed-text");
 
-function populateGradesTable(grades) {
-  const tableBody = document
-    .getElementById("gradesTable")
-    .getElementsByTagName("tbody")[0];
-  tableBody.innerHTML = ""; // Clear the table first
+  // Define headers once and use keys for row data mapping
+  const headers = [
+    { key: "grade_name", label: "שם", transform: (val) => val.split(" ").slice(0, -1).join(" ") || val },
+    { key: "grade_type", label: "סוג" },
+    { key: "grade_score", label: "ציון", default: "N/A" },
+    { key: "grade_status", label: "סטטוס", transform: (val) => (val === "Not Submitted" ? "מחכה להגשה" : val) },
+    { key: "grade_deadline", label: "מועד הגשה", default: "א" },
+    { key: "grade_feedback", label: "משוב", default: "אין" },
+    { key: "last_modified", label: "עדכון אחרון", default: "לא ידוע",  className: "modified_time" }
+  ];
+
+  // Create table head in one step
+  const thead = document.createElement('thead');
+  thead.innerHTML = `<tr>${headers.map(h => `<th>${h.label}</th>`).join('')}</tr>`;
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  let counter = 0;
 
   grades.forEach((grade) => {
-    let row = tableBody.insertRow();
-    const nameWithoutLastWord = grade.grade_name.split(" ").slice(0, -1).join(" ");
+    if (grade.grade_score) counter++;
+    const row = document.createElement("tr");
 
-    row.insertCell(0).innerText = grade.grade_name;
-    row.insertCell(1).innerText = grade.grade_type;
-    row.insertCell(2).innerText = grade.grade_score || "N/A";
-    row.insertCell(3).innerText = grade.grade_status;
-    row.insertCell(4).innerText = grade.grade_deadline || "N/A";
-    row.insertCell(5).innerText = grade.grade_feedback || "None";
-    row.insertCell(6).innerText = grade.last_modified || "Unknown";
+    headers.forEach(({ key, label, default: defaultValue, transform, className }) => {
+      const cell = document.createElement("td");
+      let value = grade[key] ?? defaultValue; // Use default if missing
+      if (transform) value = transform(value); // Apply transformation if needed
+      if (className) cell.classList.add(className);
+        
+      cell.innerText = value;
+      cell.setAttribute("data-colname", label); // Add column name for mobile view
+      
+
+      row.appendChild(cell);
+    });
+
+    tbody.appendChild(row);
   });
-}
-const populateGradesTableNew = (grades) => {
+
+  gradesInfo.innerHTML = `${counter}/${grades.length}`;
+  table.appendChild(tbody);
+};
+
+const populateGradesTable = (grades) => {
   const table = document.getElementById("gradesTable");
   table.innerHTML = ''; // Clear the table content
   const thead = document.createElement('thead');
   const headerRow = document.createElement("tr");
 
   const headers = [
-    "שם",
-    "סוג",
-    "ציון",
-    "סטטוס",
-    "מועד הגשה",
-    "משוב",
-    "עדכון אחרון"
+    { key: "grade_name", label: "שם" },
+    { key: "grade_type", label: "סוג" },
+    { key: "grade_score", label: "ציון" },
+    { key: "grade_status", label: "סטטוס" },
+    { key: "grade_deadline", label: "מועד הגשה" },
+    { key: "grade_feedback", label: "משוב" },
+    { key: "last_modified", label: "עדכון אחרון" }
   ];
   headers.forEach((header) => {
     const th = document.createElement("th");
-    th.innerText = header;
+    th.innerText = header.label;
     headerRow.appendChild(th);
   });
   thead.appendChild(headerRow);
@@ -95,24 +123,20 @@ const populateGradesTableNew = (grades) => {
     const row = document.createElement("tr");
     const nameWithoutLastWord = grade.grade_name.split(" ").slice(0, -1).join(" ");
 
-    // Define the row data
     const rowData = [
-      // {
-      //   icon: "link-solid", // Replace with dynamic icon if needed
-      //   text: grade.grade_name,
-      // },
-      nameWithoutLastWord,
-      grade.grade_type,
-      grade.grade_score || "N/A",
-      grade.grade_status === "Not Submitted" ? "מחכה להגשה" : grade.grade_status,
-      grade.grade_deadline || "א",
-      grade.grade_feedback || "אין",
-      grade.last_modified || "לא ידוע"
+      { value: nameWithoutLastWord, label: "שם" },
+      { value: grade.grade_type, label: "סוג" },
+      { value: grade.grade_score || "N/A", label: "ציון" },
+      { value: grade.grade_status === "Not Submitted" ? "מחכה להגשה" : grade.grade_status, label: "סטטוס" },
+      { value: grade.grade_deadline || "א", label: "מועד הגשה" },
+      { value: grade.grade_feedback || "אין", label: "משוב" },
+      { value: grade.last_modified || "לא ידוע", label: "עדכון אחרון" }
     ];
     
     rowData.forEach((data) => {
       const cell = document.createElement("td");
-      cell.innerText = data;
+      cell.innerText = data.value;
+      cell.setAttribute("data-colname", data.label); // Add column name for mobile view
 
       row.appendChild(cell);
     });

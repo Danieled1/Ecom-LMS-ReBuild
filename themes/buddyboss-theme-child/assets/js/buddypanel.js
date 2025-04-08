@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const menuItem = document.querySelector('#menu-item-last-courses');
+    if(!menuItem) return;
     const dropdown = menuItem.querySelector('.sub-menu');
     const arrowIcon = menuItem.querySelector('.bb-icon-angle-down');
     const toggleButton = document.getElementById('toggle-sidebar');
