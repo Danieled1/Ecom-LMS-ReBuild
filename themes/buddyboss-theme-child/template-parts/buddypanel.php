@@ -6,23 +6,31 @@
 
 $user_id     = get_current_user_id();
 $current_user = wp_get_current_user();
+$current_url = $_SERVER['REQUEST_URI'];
+$instructor_dashboard_slug = '/instructor-dashboard';
+$is_instructor_dashboard = strpos($current_url, $instructor_dashboard_slug);
+if ($is_instructor_dashboard !== false) {
+    return; 
+}
 $user_link   = function_exists('bp_core_get_user_domain') 
     ? bp_core_get_user_domain($current_user->ID) 
     : get_author_posts_url($current_user->ID);
 $user_link_url  = esc_url($user_link);
+$is_admin       = user_can($user_id, 'manage_options');
+
 $display_name   = function_exists('bp_core_get_user_displayname') 
     ? bp_core_get_user_displayname($current_user->ID) 
     : $current_user->display_name;
-$is_admin       = user_can($user_id, 'manage_options');
 
-$instructor_dashboard_url = site_url('/wp-admin/admin.php?page=ir_instructor_overview');
+
+$instructor_dashboard_url = site_url('/instructor-dashboard');
 // $extra_courses_tab_url = 
 $allowed_roles = ['wdm_instructor', 'instructor', 'manage_options']; // Extend as needed
 $has_instructor_access = false;
 foreach ($allowed_roles as $role) {
     if (user_can($user_id, $role)) {
         $has_instructor_access = true;
-        // error_log("User has access due to role: " . $role);
+        error_log("User has access due to role: " . $role);
         break;
     }
 }
@@ -145,9 +153,7 @@ $settings_icon_mapping = [
 ?>
 
 
-
-
-<button id="toggle-sidebar" class="buddypanel">&lt;</button>
+<!-- <button id="toggle-sidebar" class="buddypanel">&lt;</button> -->
 <aside class="buddypanel buddypanel--toggle-off">
     <div class="side-panel-inner">
         <nav class="side-panel-menu-container">
