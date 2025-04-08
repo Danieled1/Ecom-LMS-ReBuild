@@ -22,25 +22,18 @@ $current_user = wp_get_current_user();
 $current_user_id = get_current_user_id();
 $grades_banner_webp = get_stylesheet_directory_uri() . '/assets/images/grades-banner-1.webp';
 $grades_banner_png = get_stylesheet_directory_uri() . '/assets/images/grades-banner-1.png';
-// Logging timing for job_status
-$start_time = microtime(true);
+
 $job_status = wp_cache_get('job_status_' . $current_user_id, 'user_meta');
 if ($job_status === false) {
     $job_status = get_field('job_status', 'user_' . $current_user_id);
     wp_cache_set('job_status_' . $current_user_id, $job_status, 'user_meta');
 }
-$end_time = microtime(true);
-error_log('Time to fetch job_status: ' . ($end_time - $start_time) . ' seconds');
-
-// Logging timing for avatar
-$start_time = microtime(true);
 $avatar = wp_cache_get('avatar_' . $current_user_id, 'user_meta');
 if ($avatar === false) {
     $avatar = get_avatar($current_user_id, 100);
     wp_cache_set('avatar_' . $current_user_id, $avatar, 'user_meta');
 }
-$end_time = microtime(true);
-error_log('Time to fetch avatar: ' . ($end_time - $start_time) . ' seconds');
+
 
 
 ?>

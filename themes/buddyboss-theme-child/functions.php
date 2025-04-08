@@ -10,25 +10,26 @@
 /****************************** THEME SETUP ******************************/
 require get_stylesheet_directory() . '/inc/theme-setup.php';
 
+
 // Disable LearnDash Hub API Calls
-add_filter('pre_http_request', function ($response, $args, $url) {
-    if (strpos($url, 'checkout.learndash.com') !== false) {
-        error_log('⚠️ Blocked LearnDash API call: ' . $url);
-        return new WP_Error('blocked_learndash_request', __('Blocked LearnDash API Call -ecom'), ['status' => 403]);
-    }
-    return $response;
-}, 10, 3);
-add_action('init', function () {
-    remove_action('wp_ajax_ld_hub_plugin_action', ['LearnDash\Hub\Controller\Projects_Controller', 'plugin_action']);
-    remove_action('wp_ajax_ld_hub_refresh_repo', ['LearnDash\Hub\Controller\Projects_Controller', 'refresh_repo_data']);
-    remove_action('wp_ajax_ld_hub_bulk_action', ['LearnDash\Hub\Controller\Projects_Controller', 'bulk_action']);
-    if (class_exists('LearnDash\Hub\Controller\Projects_Controller')) {
-        remove_filter('http_request_args', ['LearnDash\Hub\Controller\Projects_Controller', 'maybe_append_auth_headers'], 10);
-        remove_filter('site_transient_update_plugins', ['LearnDash\Hub\Controller\Projects_Controller', 'push_update'], 10);
+// add_filter('pre_http_request', function ($response, $args, $url) {
+//     if (strpos($url, 'checkout.learndash.com') !== false) {
+//         error_log('⚠️ Blocked LearnDash API call: ' . $url);
+//         return new WP_Error('blocked_learndash_request', __('Blocked LearnDash API Call -ecom'), ['status' => 403]);
+//     }
+//     return $response;
+// }, 10, 3);
+// add_action('init', function () {
+//     remove_action('wp_ajax_ld_hub_plugin_action', ['LearnDash\Hub\Controller\Projects_Controller', 'plugin_action']);
+//     remove_action('wp_ajax_ld_hub_refresh_repo', ['LearnDash\Hub\Controller\Projects_Controller', 'refresh_repo_data']);
+//     remove_action('wp_ajax_ld_hub_bulk_action', ['LearnDash\Hub\Controller\Projects_Controller', 'bulk_action']);
+//     if (class_exists('LearnDash\Hub\Controller\Projects_Controller')) {
+//         remove_filter('http_request_args', ['LearnDash\Hub\Controller\Projects_Controller', 'maybe_append_auth_headers'], 10);
+//         remove_filter('site_transient_update_plugins', ['LearnDash\Hub\Controller\Projects_Controller', 'push_update'], 10);
         
-    }
-    remove_filter('bp_ajax_queryst', 'bb_disabled_notification_actions_by_user', 10, 2);
-});
+//     }
+//     remove_filter('bp_ajax_queryst', 'bb_disabled_notification_actions_by_user', 10, 2);
+// });
 
 /****************************** CUSTOM FUNCTIONS ******************************/
 /****************************** BuddyPress and LearnDash Integration ******************************/
@@ -186,103 +187,121 @@ add_action('after_setup_theme', function () {
     remove_action('wp_footer', 'buddyboss_theme_buddypanel');
 });
 
+add_filter('bp_ajax_querystring', function($query_string, $object) {
+    if ($object === 'notifications') {
+        error_log('Fixing BuddyBoss notification AJAX call.');
 
+        // Ensure $query_string is an array
+        parse_str($query_string, $query_array);
 
-function my_bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' ) {
-    if ( empty( $user_id ) || bb_enabled_legacy_email_preference() ) {
-        return array();
-    }
-
-    $preferences = bb_register_notification_preferences();
-    $enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
-    $all_notifications = array();
-    $settings_by_admin = array();
-
-    if ( empty( $preferences ) ) {
-        return [];
-    }
-
-    $preferences = array_column( $preferences, 'fields', null );
-    foreach ( $preferences as $key => $val ) {
-        $all_notifications = array_merge( $all_notifications, (array) $val ); // Ensure it's always an array
-    }
-
-    $all_notifications = array_map(
-        function ( $n ) use ( $type ) {
-            if (
-                ! empty( $n['notifications'] ) &&
-                in_array( $type, array( 'web', 'app' ), true )
-            ) {
-                $n['key'] = $n['key'] . '_' . $type;
-                return $n;
-            } elseif (
-                ! empty( $n['email_types'] ) &&
-                'email' === $type
-            ) {
-                $n['key'] = $n['key'] . '_' . $type;
-                return $n;
-            }
-        },
-        $all_notifications
-    );
-
-    $all_actions = array_column( array_filter( $all_notifications ), 'notifications', 'key' );
-
-    if ( empty( $all_actions ) ) {
-        return [];
-    }
-
-    foreach ( $all_actions as $key => $val ) {
-        $all_actions[ $key ] = array_column( array_filter( (array) $val ), 'component_action' ); // Ensure it's an array
-    }
-
-    $admin_excluded_actions = [];
-    $all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
-
-    if ( ! empty( $enabled_all_notification ) ) {
-        foreach ( $enabled_all_notification as $key => $types ) {
-            if ( isset( $types['main'] ) && 'no' === $types['main'] ) {
-                $admin_excluded_actions = array_merge( $admin_excluded_actions, (array) $all_actions[ $key . '_' . $type ] );
-            }
-            if ( isset( $types[ $type ] ) ) {
-                $settings_by_admin[ $key . '_' . $type ] = $types[ $type ];
-            }
-        }
-    }
-
-    $notifications = bp_parse_args( $settings_by_admin, $all_notifications );
-    $excluded_actions = [];
-    $notifications_type_key = 'enable_notification';
-    if ( in_array( $type, array( 'web', 'app' ), true ) ) {
-        $notifications_type_key .= '_' . $type;
-    }
-
-    foreach ( $notifications as $key => $val ) {
-        $user_val = get_user_meta( $user_id, $key, true );
-        if ( $user_val ) {
-            $notifications[ $key ] = $user_val;
+        // Prevent undefined array key error
+        if (!isset($query_array['bb_activity_following_post_web'])) {
+            $query_array['bb_activity_following_post_web'] = false;
+            error_log("Setting missing bb_activity_following_post_web to false.");
         }
 
-        if (
-            isset( $all_actions[ $key ] ) &&
-            is_array( $all_actions[ $key ] ) &&
-            (
-                'no' === $notifications[ $key ] ||
-                'no' === bp_get_user_meta( $user_id, $notifications_type_key, true )
-            )
-        ) {
-            $excluded_actions = array_merge( $excluded_actions, (array) $all_actions[ $key ] );
-        }
+        // Convert back to query string
+        return http_build_query($query_array);
     }
+    return $query_string;
+}, 10, 2);
 
-    if ( ! empty( $admin_excluded_actions ) ) {
-        $excluded_actions = array_merge( $excluded_actions, (array) $admin_excluded_actions );
-    }
-    return array_unique( (array) $excluded_actions ); // Ensure return is always an array
-}
+
+// function my_bb_disabled_notification_actions_by_user( $user_id = 0, $type = 'web' ) {
+//     if ( empty( $user_id ) || bb_enabled_legacy_email_preference() ) {
+//         return array();
+//     }
+
+//     $preferences = bb_register_notification_preferences();
+//     $enabled_all_notification = bp_get_option( 'bb_enabled_notification', array() );
+//     $all_notifications = array();
+//     $settings_by_admin = array();
+
+//     if ( empty( $preferences ) ) {
+//         return [];
+//     }
+
+//     $preferences = array_column( $preferences, 'fields', null );
+//     foreach ( $preferences as $key => $val ) {
+//         $all_notifications = array_merge( $all_notifications, (array) $val ); // Ensure it's always an array
+//     }
+
+//     $all_notifications = array_map(
+//         function ( $n ) use ( $type ) {
+//             if (
+//                 ! empty( $n['notifications'] ) &&
+//                 in_array( $type, array( 'web', 'app' ), true )
+//             ) {
+//                 $n['key'] = $n['key'] . '_' . $type;
+//                 return $n;
+//             } elseif (
+//                 ! empty( $n['email_types'] ) &&
+//                 'email' === $type
+//             ) {
+//                 $n['key'] = $n['key'] . '_' . $type;
+//                 return $n;
+//             }
+//         },
+//         $all_notifications
+//     );
+
+//     $all_actions = array_column( array_filter( $all_notifications ), 'notifications', 'key' );
+
+//     if ( empty( $all_actions ) ) {
+//         return [];
+//     }
+
+//     foreach ( $all_actions as $key => $val ) {
+//         $all_actions[ $key ] = array_column( array_filter( (array) $val ), 'component_action' ); // Ensure it's an array
+//     }
+
+//     $admin_excluded_actions = [];
+//     $all_notifications = array_column( array_filter( $all_notifications ), 'default', 'key' );
+
+//     if ( ! empty( $enabled_all_notification ) ) {
+//         foreach ( $enabled_all_notification as $key => $types ) {
+//             if ( isset( $types['main'] ) && 'no' === $types['main'] ) {
+//                 $admin_excluded_actions = array_merge( $admin_excluded_actions, (array) $all_actions[ $key . '_' . $type ] );
+//             }
+//             if ( isset( $types[ $type ] ) ) {
+//                 $settings_by_admin[ $key . '_' . $type ] = $types[ $type ];
+//             }
+//         }
+//     }
+
+//     $notifications = bp_parse_args( $settings_by_admin, $all_notifications );
+//     $excluded_actions = [];
+//     $notifications_type_key = 'enable_notification';
+//     if ( in_array( $type, array( 'web', 'app' ), true ) ) {
+//         $notifications_type_key .= '_' . $type;
+//     }
+
+//     foreach ( $notifications as $key => $val ) {
+//         $user_val = get_user_meta( $user_id, $key, true );
+//         if ( $user_val ) {
+//             $notifications[ $key ] = $user_val;
+//         }
+
+//         if (
+//             isset( $all_actions[ $key ] ) &&
+//             is_array( $all_actions[ $key ] ) &&
+//             (
+//                 'no' === $notifications[ $key ] ||
+//                 'no' === bp_get_user_meta( $user_id, $notifications_type_key, true )
+//             )
+//         ) {
+//             $excluded_actions = array_merge( $excluded_actions, (array) $all_actions[ $key ] );
+//         }
+//     }
+
+//     if ( ! empty( $admin_excluded_actions ) ) {
+//         $excluded_actions = array_merge( $excluded_actions, (array) $admin_excluded_actions );
+//     }
+//     return array_unique( (array) $excluded_actions ); // Ensure return is always an array
+// }
 
 // Hook the function back
-add_filter('bp_ajax_queryst', 'my_bb_disabled_notification_actions_by_user', 10, 2);
+// add_filter('bp_ajax_queryst', 'my_bb_disabled_notification_actions_by_user', 10, 2);
 
 
 // function compress_large_images() {
@@ -434,3 +453,24 @@ function load_custom_buddypanel() {
     wp_enqueue_script('buddypanel-script', get_stylesheet_directory_uri() . '/assets/js/buddypanel.js', ['jquery'], '1.0', true);
 }
 add_action('wp_enqueue_scripts', 'load_custom_buddypanel', 1); // Priority 1 ensures it loads first
+
+
+add_filter('auth_redirect_scheme', function () {
+    return 'logged_in'; // Prevent WordPress from forcing unnecessary reauth
+});
+// Redirect users to homepage after logout
+function redirect_after_logout() {
+    wp_safe_redirect(home_url()); // Redirects to homepage
+    exit;
+}
+add_action('wp_logout', 'redirect_after_logout');
+
+function fix_instructor_role_learndash() {
+    if (current_user_can('wdm_instructor') || current_user_can('instructor')) {
+        add_filter('learndash_get_course_id', function ($course_id) {
+            return $course_id ?: 0;
+        });
+    }
+}
+add_action('init', 'fix_instructor_role_learndash');
+
