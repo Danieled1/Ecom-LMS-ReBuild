@@ -813,6 +813,10 @@ div.bb-lms-header .bb-position {
     opacity: 1 !important;
 
 }
+
+
+
+
 /* Modifing course card size on larger screens */
 @media screen and (min-width: 1400px) {
     .bb-course-items.grid-view .bb-course-item-wrap {

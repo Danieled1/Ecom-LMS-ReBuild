@@ -72,6 +72,7 @@
     background: #FFF;
     box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15);
     padding: 20px;
+    margin-bottom: 20px;
 
 }
 
@@ -296,4 +297,74 @@
     font-weight: 900;
     line-height: 22px;
     /* 183.333% */
+}
+
+@media screen and (max-width: 649px) {
+    .site-content{
+        padding-top: 0 !important;
+    }
+    .container {
+        width: 100%;
+        padding: 0 !important;
+        flex-direction: column;
+        justify-content: unset;
+        align-items: unset;
+    }
+    .header-image-wrapper{
+        margin:0 !important;
+    }
+    .header-text{
+        padding: 16px !important;
+    }
+    .grades-page-content{
+        padding: 0 !important;
+    }
+    div.grades-table-container > div > div.status-container{
+        display: none;
+    }
+    .grades-table-container{
+        padding: 16px;
+    }
+    #gradesTable{
+        padding: unset;
+        border: unset;
+        gap: 16px;
+    }
+    #gradesTable thead{
+        display: none;
+    }
+    #gradesTable tbody{
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    #gradesTable tbody tr {
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 8px;
+        position: relative;
+        height: 100%;
+    }
+    #gradesTable tbody tr td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: none;
+        height: 50px;
+        width: 100% !important;
+        background: #f8f8f8 !important;
+    }
+    
+    #gradesTable tbody tr td::before {
+        content: attr(data-colname); /* יציג את שם העמודה */
+        font-weight: bold;
+        color: #6836FF;
+    }
+    #gradesTable>tbody>tr>td:nth-child(7){
+        font-size: 12px;
+        color: #666;
+    }
 }
