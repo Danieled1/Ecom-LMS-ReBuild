@@ -4,12 +4,66 @@
  */
 
 
+
 /**
  * Creates a LearnDash course and associated group if they do not already exist, logging the process.
  * @param array $course Contains 'generationName' and 'startDate' to form the course name.
  * @return void
  */
-function create_ld_course($course)
+function create_ld_course_new($course)
+{
+    // Extract course name and start date from generation name
+    preg_match('/קורס\s(.+?)\s(\d{2}\/\d{2}\/\d{2})/', $course['generationName'], $matches);
+    if (!$matches) {
+        error_log("Failed to extract course name and date from: " . $course['generationName']);
+        return;
+    }
+
+    $course_name = trim($matches[1]); // Extracted course name (e.g., CYBER LIVE)
+    $course_start_date = trim($matches[2]); // Extracted course date (e.g., 19/03/25)
+    $course_gen_name = "קורס " . $course_name . " " . $course_start_date;
+
+    // Check if course already exists
+    $existing_course_id = post_exists($course_gen_name, '', '', 'sfwd-courses');
+    
+    if (!$existing_course_id) {
+        $course_id = insert_new_learndash_post($course_gen_name, 'sfwd-courses');
+
+        if ($course_id) {
+            // ✅ Set course price type to 'closed'
+            update_post_meta($course_id, '_ld_course_price_type', 'closed');
+            update_post_meta($course_id, 'sfwd-courses_course_price_type', 'closed');
+
+            // ✅ Enable expiration & set access period to 1850 days
+            update_post_meta($course_id, 'sfwd-courses_expire_access', 'on');
+            update_post_meta($course_id, 'sfwd-courses_expire_access_days', 1850);
+
+            // ✅ Convert start date to timestamp and save it
+            $date_parts = explode("/", $course_start_date);
+            if (count($date_parts) === 3) {
+                $start_date_timestamp = strtotime("20" . $date_parts[2] . "-" . $date_parts[1] . "-" . $date_parts[0]); // Convert to YYYY-MM-DD
+                update_post_meta($course_id, 'sfwd-courses_course_start_date', $start_date_timestamp);
+            }
+
+            // ✅ Set default course material
+            update_post_meta($course_id, 'sfwd-courses_course_materials', "<p>כאן אפשר להוסיף קישורים למדריכי התקנות שיהיו נגישים</p>");
+
+            error_log('Created new course: ' . $course_gen_name);
+
+            // ✅ Create associated group
+            create_ld_group($course_gen_name, $course_id);
+            error_log("Course and group creation process completed for " . $course_gen_name);
+        } else {
+            error_log('Failed to create course: ' . $course_gen_name);
+            return;
+        }
+    } else {
+        $course_id = $existing_course_id;
+        error_log('Course already exists: ' . $course_gen_name);
+    }
+}
+
+ function create_ld_course($course)
 {
     $course_gen_name = "קורס " . $course['generationName'] . " " . $course['startDate'];
     $existing_course_id = post_exists($course_gen_name, '', '', 'sfwd-courses');
@@ -30,6 +84,14 @@ function create_ld_course($course)
         error_log('Course already exists: ' . $course_gen_name);
     }
 }
+// function debug_ld_course_meta($course_id) {
+//     $course_meta = get_post_meta($course_id);
+
+//     error_log("Course Meta for ID $course_id: " . print_r($course_meta, true));
+// }
+
+// // Example: Replace `123` with an actual course ID to debug
+// debug_ld_course_meta(100057778  );
 
 /**
  * Creates a LearnDash group for a given course.
